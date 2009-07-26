@@ -48,3 +48,6 @@ extern int width;
 extern bool aspectratio;
 extern uint8 convert_buffer[1024*768*3];
 extern char InputDisplayString[128];
+
+void WritePrivateProfileBool(char* appname, char* keyname, bool val, char* file);
+bool GetPrivateProfileBool(const char* appname, const char* keyname, bool defval, const char* filename);

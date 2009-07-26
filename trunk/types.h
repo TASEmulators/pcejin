@@ -16,6 +16,8 @@
 #define MEDNAFEN_VERSION "0.8.A"
 #define MEDNAFEN_VERSION_NUMERIC 0x00080A
 
+#define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
+
 #else
 #endif
 
@@ -61,6 +63,7 @@ typedef signed short s16;
 typedef signed int s32;
 
 typedef uint8 bool8;
+typedef unsigned __int64 u64;
 
 #ifdef __GNUC__
  typedef unsigned long long uint64;
