@@ -24,6 +24,9 @@
 #include "aviout.h"
 #include "video.h"
 
+#include "aggdraw.h"
+#include "GPU_osd.h"
+
 bool FastForward;
 
 SoundDriver * soundDriver = 0;
@@ -103,6 +106,12 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	InitCustomKeys(&CustomKeys);
 	LoadHotkeyConfig();
 	LoadInputConfig();
+
+	extern void Agg_init();
+	Agg_init();
+
+	if (osd)  {delete osd; osd =NULL; }
+	osd  = new OSDCLASS(-1);
 
 	di_init();
 
@@ -251,6 +260,9 @@ void LoadIniSettings(){
 	aspectratio = GetPrivateProfileInt("Video", "aspectratio", 0, IniName);
 	windowSize = GetPrivateProfileInt("Video", "windowSize", 1, IniName);
 	ScaleScreen(windowSize);
+	Hud.FrameCounterDisplay = GetPrivateProfileBool("Display","FrameCounter", false, IniName);
+	Hud.ShowInputDisplay = GetPrivateProfileBool("Display","Display Input", false, IniName);
+	Hud.ShowLagFrameCounter = GetPrivateProfileBool("Display","Display Lag Counter", false, IniName);
 }
 
 void SaveIniSettings(){
@@ -357,6 +369,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		checkMenu(IDC_WINDOW3X, ((windowSize==3)));
 		checkMenu(IDC_WINDOW4X, ((windowSize==4)));//bool aspectratio = false;
 		checkMenu(IDC_ASPECT, ((aspectratio)));
+		checkMenu(ID_VIEW_FRAMECOUNTER,Hud.FrameCounterDisplay);
+		checkMenu(ID_VIEW_DISPLAYINPUT,Hud.ShowInputDisplay);
+		checkMenu(ID_VIEW_DISPLAYLAG,Hud.ShowLagFrameCounter);
 		break;
 	case WM_EXITMENULOOP:
 		soundDriver->resume();
@@ -445,6 +460,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			DialogBox(g_hInstance, MAKEINTRESOURCE(IDD_BIOS), hWnd, (DLGPROC) BiosSettingsDlgProc);
 			// DialogBox(g_hInstance, MAKEINTRESOURCE(IDD_KEYCUSTOM), hWnd, BiosSettingsDlgProc);
 			soundDriver->resume();
+		case ID_VIEW_FRAMECOUNTER:
+			Hud.FrameCounterDisplay ^= true;
+			WritePrivateProfileBool("Display", "FrameCounter", Hud.FrameCounterDisplay, IniName);
+			return 0;
+
+		case ID_VIEW_DISPLAYINPUT:
+			Hud.ShowInputDisplay ^= true;
+			WritePrivateProfileBool("Display", "Display Input", Hud.ShowInputDisplay, IniName);
+			osd->clear();
+			return 0;
+
+		case ID_VIEW_DISPLAYLAG:
+			Hud.ShowLagFrameCounter ^= true;
+			WritePrivateProfileBool("Display", "Display Lag Counter", Hud.ShowLagFrameCounter, IniName);
+			osd->clear();
+			return 0;
 
 		case IDM_STOPMOVIE:
 			FCEUI_StopMovie();
@@ -532,8 +563,8 @@ void initialize(){
 
 	MDFNGameInfo = &EmulatedPCE;
 
-	MDFNI_LoadGame("m:\\leg.pce");
-	started = true;
+//	MDFNI_LoadGame("m:\\leg.pce");
+//	started = true;
 	initespec();
 	initsound();
 }

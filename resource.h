@@ -129,6 +129,9 @@
 #define IDC_WINDOW3X 502
 #define IDC_WINDOW4X 503
 #define IDC_ASPECT 504
+#define ID_VIEW_FRAMECOUNTER 505
+#define ID_VIEW_DISPLAYINPUT 506
+#define ID_VIEW_DISPLAYLAG 507
 #define IDC_LABEL_HK1                   60001
 #define IDC_LABEL_HK2                   60002
 #define IDC_LABEL_HK3                   60003

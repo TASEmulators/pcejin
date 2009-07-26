@@ -5,6 +5,8 @@
 #include "mednafen.h"
 #include "movie.h"
 #include "video.h"
+#include "aggdraw.h"
+#include "GPU_osd.h"
 
 DDSURFACEDESC2			ddsd;
 LPDIRECTDRAW			lpdd = NULL;
@@ -302,10 +304,6 @@ void render() {
 
 	SetInputDisplayCharacters(padonedata);
 
-	snprintf(temp, 128, "%s %d %d %s", "pcejin", currFrameCounter, lagFrameCounter, InputDisplayString);
-
-	SetWindowText(g_hWnd, temp);
-
 	UpdateSrcRect();
 	UpdateWndRects(g_hWnd);
 
@@ -336,6 +334,10 @@ void render() {
 		}
 		break;
 	}
+
+	DrawHUD();
+
+	aggDraw.hud->attach(convert_buffer, width, height, 4*width);
 
 	uint32 *dst = (uint32*)ddsd.lpSurface;
 

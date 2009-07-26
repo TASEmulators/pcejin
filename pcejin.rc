@@ -54,14 +54,20 @@ BEGIN
     POPUP "&Emulation"
     BEGIN
         MENUITEM "R&eset",                IDM_RESET
-		MENUITEM SEPARATOR
+    END
+	POPUP "&View"
+	BEGIN
 	    MENUITEM "1x",                          IDC_WINDOW1X
         MENUITEM "2x",                          IDC_WINDOW2X
         MENUITEM "3x",                          IDC_WINDOW3X
         MENUITEM "4x",                          IDC_WINDOW4X
 		MENUITEM SEPARATOR
 		MENUITEM "4/3 Aspect Ratio",            IDC_ASPECT
-    END
+	    MENUITEM SEPARATOR
+        MENUITEM "Display Frame Counter",       ID_VIEW_FRAMECOUNTER
+        MENUITEM "Display Input",               ID_VIEW_DISPLAYINPUT
+        MENUITEM "Display Lag Counter",         ID_VIEW_DISPLAYLAG
+	END
     POPUP "&Config"
     BEGIN
 		MENUITEM "Hotkey Config",				IDM_HOTKEY_CONFIG
@@ -104,7 +110,7 @@ FONT 8, "MS Shell Dlg"
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
     LTEXT           "pcejin SVN",IDC_STATIC,42,14,114,8,SS_NOPREFIX
-    LTEXT           "googlecode/pcejin",IDC_STATIC,42,26,114,8
+    LTEXT           "http://code.google.com/p/pcejin/",IDC_STATIC,42,26,114,8
     DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
 END
 
