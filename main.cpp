@@ -219,11 +219,9 @@ void LoadGame(){
 
 void RecordAvi()
 {
-	// WCHAR filter[1024];
-	// char text[MAX_PATH];
-	// OPENFILENAME ofn;
+
 	char szChoice[MAX_PATH]={0};
-	std::string fname;//[MAX_PATH]={0};
+	std::string fname;
 	int x;
 	std::wstring la = L"";
 	OPENFILENAME ofn;
@@ -231,16 +229,14 @@ void RecordAvi()
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = g_hWnd;
-	ofn.lpstrFilter = "Avi file (*.avi)\0*.mc2\0All files(*.*)\0*.*\0\0";
+	ofn.lpstrFilter = "Avi file (*.avi)\0*.avi\0All files(*.*)\0*.*\0\0";
 	ofn.lpstrFile = (LPSTR)szChoice;
 	ofn.lpstrTitle = "Avi Thingy";
 	ofn.lpstrDefExt = "avi";
 	ofn.nMaxFile = MAX_PATH;
 	ofn.Flags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
-	// GetSaveFileName(&ofn);
-	// snprintf(szChoice, 260, "%s", MDFN_GetSettingS("mmmfile").c_str());
-	snprintf(szChoice, 260, "%s", "M:\\newmed.avi");
-	DRV_AviBegin(szChoice);
+    if(GetSaveFileName(&ofn))
+		DRV_AviBegin(szChoice);
 }
 
 void StopAvi()
@@ -706,7 +702,7 @@ void emulate(){
 	espec.SoundBufSize = &ssize;
 	espec.soundmultiplier = 1;
 
-	if(FastForward && currFrameCounter%30)
+	if(FastForward && currFrameCounter%30 && !DRV_AviIsRecording())
 		espec.skip = 1;
 	else
 		espec.skip = 0;

@@ -476,3 +476,10 @@ void DRV_AviEnd()
 
 	avi_destroy(&avi_file);
 }
+
+int DRV_AviIsRecording() {
+	if(avi_file)
+		return true;
+	else
+		return false;
+}
