@@ -1,0 +1,50 @@
+#include "sound.h"
+#include "windows.h"
+#include "git.h"
+
+void WritePrivateProfileInt(char* appname, char* keyname, int val, char* file);
+extern char IniName[MAX_PATH];
+
+void GetINIPath();
+
+extern HWND g_hWnd;
+extern HINSTANCE g_hInstance;
+
+int MDFNSS_Save(const char *fname, const char *suffix, uint32 *fb, MDFN_Rect *LineWidths);
+int MDFNSS_Load(const char *fname, const char *suffix);
+extern uint32 *VTBuffer[2];
+extern MDFN_Rect *VTLineWidths[2];
+extern volatile int VTBackBuffer ;
+
+extern int CurrentState;
+
+extern void LoadInputConfig();
+extern BOOL di_init();
+extern INT_PTR CALLBACK DlgInputConfig(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam);
+extern void PCE_Power();
+extern void PCEINPUT_SetInput(int port, const char *type, void *ptr);
+extern SoundDriver *newDirectSound();
+extern void input_process();
+extern SoundDriver * soundDriver;
+extern bool FastForward;
+
+void IncreaseSpeed();
+void DecreaseSpeed();
+
+LRESULT CALLBACK BiosSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+extern u8 padonedata;
+void SetInputDisplayCharacters(uint16 new_data);
+INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+extern EmulateSpecStruct espec;
+extern void render();
+extern int lagFrameFlag;
+extern int lagFrameCounter;
+
+extern bool started;
+
+extern int height;
+extern int width;
+extern bool aspectratio;
+extern uint8 convert_buffer[1024*768*3];
+extern char InputDisplayString[128];
