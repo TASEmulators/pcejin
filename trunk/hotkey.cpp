@@ -296,7 +296,7 @@ SJoypad DefaultJoypad[16] = {
 			0, 0, 0, 0,             /* Left_Up, Left_Down, Right_Up, Right_Down */
 			VK_RETURN, VK_RSHIFT,    /* Start, Select */
 			0, 0,					/* Lid, Debug */
-			'D', 'F',				/* A B */
+			'F', 'D',				/* A B */
 			'S', 'A',				/* X Y */
 			'Q', 'W'				/* L R */
     },
