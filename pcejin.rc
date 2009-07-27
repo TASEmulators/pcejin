@@ -54,6 +54,8 @@ BEGIN
     POPUP "&Emulation"
     BEGIN
         MENUITEM "R&eset",                IDM_RESET
+		MENUITEM SEPARATOR
+		MENUITEM "M&ute",                IDM_MUTE
     END
 	POPUP "&View"
 	BEGIN

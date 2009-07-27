@@ -98,6 +98,9 @@ int WINAPI WinMain( HINSTANCE hInstance,
 		return E_FAIL;
 
 	GetINIPath();
+
+	soundInit();
+
 	LoadIniSettings();
 
 	DirectDrawInit();
@@ -261,12 +264,15 @@ void LoadIniSettings(){
 	Hud.ShowInputDisplay = GetPrivateProfileBool("Display","Display Input", false, IniName);
 	Hud.ShowLagFrameCounter = GetPrivateProfileBool("Display","Display Lag Counter", false, IniName);
 	Hud.DisplayStateSlots = GetPrivateProfileBool("Display","Display State Slots", false, IniName);
+	soundDriver->volume(GetPrivateProfileInt("Main", "SoundVolume", 100, IniName));
 }
 
 void SaveIniSettings(){
 
 	WritePrivateProfileInt("Video", "aspectratio", aspectratio, IniName);
 	WritePrivateProfileInt("Video", "windowSize", windowSize, IniName);
+	if(soundDriver->currentVolume == -10000)
+		WritePrivateProfileInt("Main", "SoundVolume", 0, IniName);
 
 }
 
@@ -374,6 +380,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		checkMenu(ID_VIEW_DISPLAYINPUT,Hud.ShowInputDisplay);
 		checkMenu(ID_VIEW_DISPLAYSTATESLOTS,Hud.DisplayStateSlots);
 		checkMenu(ID_VIEW_DISPLAYLAG,Hud.ShowLagFrameCounter);
+		checkMenu(IDM_MUTE,soundDriver->currentVolume == -10000);
 		break;
 	case WM_EXITMENULOOP:
 		soundDriver->resume();
@@ -484,7 +491,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			WritePrivateProfileBool("Display", "Display Lag Counter", Hud.ShowLagFrameCounter, IniName);
 			osd->clear();
 			return 0;
-
+		case IDM_MUTE:
+			if(soundDriver->currentVolume == -10000)
+				soundDriver->volume(100);
+			else
+				soundDriver->volume(0);
+			break;
 		case IDM_STOPMOVIE:
 			FCEUI_StopMovie();
 			return 0;
@@ -661,13 +673,13 @@ bool soundInit()
 
 	if (!soundDriver->init(44100))
 		return false;
+
+	soundDriver->resume();
 }
 
 void initsound(){
 	MDFNI_Sound(44100);
 	MDFNI_SetSoundVolume(100);
-	soundInit();
-	soundDriver->resume();
 	FSettings.soundmultiplier = 1;
 }
 

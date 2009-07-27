@@ -43,29 +43,10 @@ public:
 	virtual void write(u16 * finalWave, int length) = 0;
 
 	virtual void setThrottle(unsigned short throttle) { };
+
+	virtual void volume(signed int volume) = 0;
+
+	int currentVolume;
 };
 
 #endif // __VBA_SOUND_DRIVER_H__
-
-
-//#ifndef __MDFN_DRIVERS_SOUND_H
-//#define __MDFN_DRIVERS_SOUND_H
-//
-///*
-//#include "git.h"
-//#include "types.h"
-//
-//int InitSound(MDFNGI *gi);
-//void WriteSound(int16 *Buffer, int Count);
-//void WriteSoundSilence(int ms);
-//int KillSound(void);
-//uint32 GetMaxSound(void);
-//uint32 GetWriteSound(void);
-//void SilenceSound(int s);
-//*/
-//#include "types.h"
-//
-//void SNDDXUpdateAudio(s16 *buffer, u32 num_samples);
-//void SNDDXSetVolume(int volume);
-//int SNDDXInit(int buffersize);
-//#endif

@@ -133,6 +133,7 @@
 #define ID_VIEW_DISPLAYSTATESLOTS 508
 #define IDC_JPCOMBO 509
 #define IDC_JPTOGGLE 510
+#define IDM_MUTE 511
 #define IDC_LABEL_HK1                   60001
 #define IDC_LABEL_HK2                   60002
 #define IDC_LABEL_HK3                   60003

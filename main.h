@@ -53,3 +53,4 @@ void WritePrivateProfileBool(char* appname, char* keyname, bool val, char* file)
 bool GetPrivateProfileBool(const char* appname, const char* keyname, bool defval, const char* filename);
 
 void S9xUpdateJoypadButtons ();
+bool soundInit();
