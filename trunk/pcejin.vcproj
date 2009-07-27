@@ -120,7 +120,7 @@
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories=".\blip;.\compress;.\zlib;.\trio;.;&quot;.\libcdio-0.81\include\&quot;;&quot;libcdio-0.81/lib/driver&quot;;.\src;.\src\pce"
+				AdditionalIncludeDirectories=".\blip;.\compress;.\zlib;.\trio;.;&quot;.\libcdio-0.81\include\&quot;;&quot;libcdio-0.81/lib/driver&quot;;.\src;.\src\pce;agg\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;WANT_PCE_EMU;NEED_CDEMU;EXTERNAL_LIBCDIO_CONFIG_H;NO_CODECS;HAVE_DIRECTSOUND"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -143,9 +143,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vfw32.lib directx\dxerr8.lib directx\dsound.lib directx\dinput8.lib directx\ddraw.lib Winmm.lib zlib-2008-x32.lib"
+				AdditionalDependencies="vfw32.lib directx\dxerr8.lib directx\dsound.lib directx\dinput8.lib directx\ddraw.lib Winmm.lib zlib-2008-x32.lib agg-2.5.lib"
 				LinkIncremental="0"
-				AdditionalLibraryDirectories="zlib"
+				AdditionalLibraryDirectories="zlib;agg"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
