@@ -568,8 +568,8 @@ void initialize(){
 
 	MDFNGameInfo = &EmulatedPCE;
 
-	MDFNI_LoadGame("m:\\leg.pce");
-	started = true;
+//	MDFNI_LoadGame("m:\\leg.pce");
+//	started = true;
 	initespec();
 	initsound();
 }
@@ -718,7 +718,7 @@ void emulate(){
 	if(!espec.skip)
 		render();
 
-//	soundDriver->write((u16*)*espec.SoundBuf, *espec.SoundBufSize);
+	soundDriver->write((u16*)*espec.SoundBuf, *espec.SoundBufSize);
 
 	DRV_AviSoundUpdate(*espec.SoundBuf, *espec.SoundBufSize);
 	DRV_AviVideoUpdate((uint16*)espec.pixels, &espec);

@@ -1,7 +1,7 @@
 #ifndef __MDFN_CDROMFILE_H
 #define __MDFN_CDROMFILE_H
 
-#include "../tremor/ivorbisfile.h"
+//#include "../tremor/ivorbisfile.h"
 //#include <mpcdec/mpcdec.h>
 
 #ifndef NO_CODECS
