@@ -213,7 +213,8 @@ void LoadGame(){
 				return;
 			}
 		}
-		MDFNI_LoadGame(szChoice);
+		if(!MDFNI_LoadGame(szChoice))
+			started = false;
 	}
 }
 
