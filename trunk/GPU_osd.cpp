@@ -182,9 +182,11 @@ static char number[10];
 
 static void DrawStateSlots(){
 
+	if(!Hud.DisplayStateSlots)
+		return;
+
 	const int yloc = Hud.SavestateSlots.y; //160
 	const int xloc = Hud.SavestateSlots.x; //8
-
 
 	int alpha = fadecounter;
 	if(HudEditorMode)

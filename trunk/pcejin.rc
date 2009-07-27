@@ -67,6 +67,7 @@ BEGIN
         MENUITEM "Display Frame Counter",       ID_VIEW_FRAMECOUNTER
         MENUITEM "Display Input",               ID_VIEW_DISPLAYINPUT
         MENUITEM "Display Lag Counter",         ID_VIEW_DISPLAYLAG
+		MENUITEM "Display State Slots",         ID_VIEW_DISPLAYSTATESLOTS
 	END
     POPUP "&Config"
     BEGIN

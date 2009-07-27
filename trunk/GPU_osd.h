@@ -63,6 +63,7 @@ public:
 	bool ShowInputDisplay;
 	bool FrameCounterDisplay;
 	bool ShowLagFrameCounter;
+	bool DisplayStateSlots;
 
 	HudCoordinates &hud(int i) { return ((HudCoordinates*)this)[i]; }
 	void reset();
