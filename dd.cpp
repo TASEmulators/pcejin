@@ -302,7 +302,7 @@ void render() {
 
 	char temp[256];
 
-	SetInputDisplayCharacters(pcepaddata[0]);
+	SetInputDisplayCharacters(pcepaddata);
 
 	UpdateSrcRect();
 	UpdateWndRects(g_hWnd);

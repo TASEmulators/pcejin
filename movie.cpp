@@ -91,7 +91,8 @@ void MovieData::insertEmpty(int at, int frames)
 
 void MovieRecord::clear()
 { 
-	pad = 0;
+	for (int i = 0; i < 5; i++)
+		pad[i] = 0;
 	commands = 0;
 	touch.padding = 0;
 }
@@ -146,7 +147,10 @@ void MovieRecord::parse(MovieData* md, std::istream* is)
 	
 	is->get(); //eat the pipe
 
-	parsePad(is, pad);
+	for (int i = 0; i < md->ports; i++) {
+		parsePad(is, pad[i]);
+		is->get();
+	}
 //	touch.x = u32DecFromIstream(is);
 //	touch.y = u32DecFromIstream(is);
 //	touch.touch = u32DecFromIstream(is);
@@ -165,11 +169,16 @@ void MovieRecord::dump(MovieData* md, std::ostream* os, int index)
 	putdec<uint8,1,true>(os,commands);
 
 	os->put('|');
-	dumpPad(os, pad);
+//	dumpPad(os, pad);
+	for (int i = 0; i < md->ports; i++) 
+	{
+		dumpPad(os,pad[i]); 
+		os->put('|');
+	}
 //	putdec<u8,3,true>(os,touch.x); os->put(' ');
 //	putdec<u8,3,true>(os,touch.y); os->put(' ');
 //	putdec<u8,1,true>(os,touch.touch);
-	os->put('|');
+//	os->put('|');
 	
 	//each frame is on a new line
 	os->put('\n');
@@ -202,6 +211,8 @@ void MovieData::installValue(std::string& key, std::string& val)
 		installInt(val,rerecordCount);
 	else if(key == "romFilename")
 		romFilename = val;
+	else if(key == "ports")
+		installInt(val, ports);
 //	else if(key == "romChecksum")
 //		StringToBytes(val,&romChecksum,MD5DATA::size);
 //	else if(key == "guid")
@@ -243,6 +254,7 @@ int MovieData::dump(std::ostream *os, bool binary)
 	*os << "version " << version << endl;
 	*os << "emuVersion " << emuVersion << endl;
 	*os << "rerecordCount " << rerecordCount << endl;
+	*os << "ports " << ports << endl;
 /*	*os << "cdGameName " << cdip->gamename << endl;
 	*os << "cdInfo " << cdip->cdinfo << endl;
 	*os << "cdItemNum " << cdip->itemnum << endl;
@@ -470,7 +482,6 @@ void FCEUI_LoadMovie(const char *fname, bool _read_only, bool tasedit, int _paus
 	//}
 
 	//LoadFM2(currMovieData, fp->stream, INT_MAX, false);
-
 	
 	fstream fs (fname);
 	LoadFM2(currMovieData, &fs, INT_MAX, false);
@@ -490,7 +501,7 @@ void FCEUI_LoadMovie(const char *fname, bool _read_only, bool tasedit, int _paus
 	//	bool success = MovieData::loadSavestateFrom(&currMovieData.savestate);
 	//	if(!success) return;
 	//}
-
+	
 	lagFrameCounter = 0;
 	lagFrameFlag = 0;
 	currFrameCounter = 0;
@@ -550,6 +561,7 @@ static void openRecordingMovie(const char* fname)
 	lagFrameFlag = 0;
 	PCE_Power();
 //	_HACK_DONT_STOPMOVIE = false;
+	currMovieData.ports = 2;
 
 	//todo ?
 	//poweron(true);
@@ -599,20 +611,22 @@ static void openRecordingMovie(const char* fname)
 
 uint16 pcepad;
 
- void NDS_setPadFromMovie(uint16 pad)
- {
-	 pcepad = 0;
+void NDS_setPadFromMovie(uint16 pad[])
+{
+	for (int i = 0; i < currMovieData.ports; i++) {
+	pcepad = 0;
 
- if(pad &(1 << 7)) pcepad |= (1 << 4);//u
- if(pad &(1 << 6)) pcepad |= (1 << 6);//d
- if(pad &(1 << 5)) pcepad |= (1 << 7);//l
- if(pad &(1 << 4)) pcepad |= (1 << 5);//r
- if(pad &(1 << 3)) pcepad |= (1 << 1);//o
- if(pad &(1 << 2)) pcepad |= (1 << 0);//t
-if(pad &(1 << 0)) pcepad |= (1 << 2);//s
-if(pad &(1 << 1)) pcepad |= (1 << 3);//n
+	if(pad[i] &(1 << 7)) pcepad |= (1 << 4);//u
+	if(pad[i] &(1 << 6)) pcepad |= (1 << 6);//d
+	if(pad[i] &(1 << 5)) pcepad |= (1 << 7);//l
+	if(pad[i] &(1 << 4)) pcepad |= (1 << 5);//r
+	if(pad[i] &(1 << 3)) pcepad |= (1 << 1);//o
+	if(pad[i] &(1 << 2)) pcepad |= (1 << 0);//t
+	if(pad[i] &(1 << 0)) pcepad |= (1 << 2);//s
+	if(pad[i] &(1 << 1)) pcepad |= (1 << 3);//n
 
-pcepaddata[0] = pcepad;
+	pcepaddata[i] = pcepad;
+	}
 
 }
  static int _currCommand = 0;
@@ -621,7 +635,7 @@ extern void *PortDataCache[16];
  //either dumps the current joystick state or loads one state from the movie
 void FCEUMOV_AddInputState()
  {
-	 uint16 pad;
+//	 uint16 pad;
 	 //todo - for tasedit, either dump or load depending on whether input recording is enabled
 	 //or something like that
 	 //(input recording is just like standard read+write movie recording with input taken from gamepad)
@@ -655,9 +669,8 @@ void FCEUMOV_AddInputState()
 
 			// {}
 			 //ResetNES();
-
 			 NDS_setPadFromMovie(mr->pad);
-			 NDS_setTouchFromMovie();
+//			 NDS_setTouchFromMovie();
 		 }
 
 		 //if we are on the last frame, then pause the emulator if the player requested it
@@ -688,81 +701,32 @@ void FCEUMOV_AddInputState()
 
 		 strcpy(MovieStatusM, "Recording");
 
-		 ///////////////////////
+		 int II, I, n, s, u, r, d, l;
 
-//	 int pdc = 1;// *(char *)inputdata;//(int)inputdata;
-//	 int pd2 = 0;// ((char*)inputdata)[1];
+		 for (int i = 0; i < currMovieData.ports; i++) {
 
-		 pcepad = pcepaddata[0];
+			 pcepad = pcepaddata[i];
 
-		 #define FIX(b) (b?1:0)
-	int II = FIX(pcepad &(1 << 0));
-	int I = FIX(pcepad & (1 << 1));
-	int n = FIX(pcepad & (1 << 2));
-	int s = FIX(pcepad & (1 << 3));
-	int u = FIX(pcepad & (1 << 4));
-	int r = FIX(pcepad & (1 << 7));
-	int d = FIX(pcepad & (1 << 6));
-	int l = FIX(pcepad & (1 << 5));
+#define FIX(b) (b?1:0)
+			 II = FIX(pcepad &(1 << 0));
+			 I = FIX(pcepad & (1 << 1));
+			 n = FIX(pcepad & (1 << 2));
+			 s = FIX(pcepad & (1 << 3));
+			 u = FIX(pcepad & (1 << 4));
+			 r = FIX(pcepad & (1 << 7));
+			 d = FIX(pcepad & (1 << 6));
+			 l = FIX(pcepad & (1 << 5));
 
-	pad =
-		(FIX(r)<<5)|
-		(FIX(l)<<4)|
-		(FIX(u)<<7)|
-		(FIX(d)<<6)|
-		(FIX(I)<<3)|
-		(FIX(II)<<2)|
-		(FIX(s)<<1)|
-		(FIX(n)<<0);
-//		(FIX(x)<<4)|
-//		(FIX(y)<<3)|
-//		(FIX(z)<<2)|
-//		(FIX(w)<<1)|
-//		(FIX(e)<<0);
-
-/*
-		 #define FIX(b) (b?1:0)
-	int r = FIX(~PORTDATA1.data[2] & (1 << 6));//const char* Buttons[8] = {"B", "C", "A", "S", "U", "D", "R", "L"};
-	int l = FIX(~PORTDATA1.data[2] & (1 << 7));//const char* Buttons2[8] = {"", "", "", "L", "Z", "Y", "X", "R"};
-	int d = FIX(~PORTDATA1.data[2] & (1 << 5));
-	int u = FIX(~PORTDATA1.data[2] & (1 << 4));
-	int s = FIX(~PORTDATA1.data[2] & (1 << 3));
-	int a = FIX(~PORTDATA1.data[2] & (1 << 2));
-	int b = FIX(~PORTDATA1.data[2] & (1 << 0));
-	int c = FIX(~PORTDATA1.data[2] & (1 << 1));
-	int x = FIX(~PORTDATA1.data[3] & (1 << 6));
-	int y = FIX(~PORTDATA1.data[3] & (1 << 5));
-	int z = FIX(~PORTDATA1.data[3] & (1 << 4));
-	int w = FIX(~PORTDATA1.data[3] & (1 << 3));
-	int e = FIX(~PORTDATA1.data[3] & (1 << 7));
-
-
-	pad =
-		(FIX(r)<<12)|
-		(FIX(l)<<11)|
-		(FIX(d)<<9)|
-		(FIX(u)<<10)|
-		(FIX(s)<<8)|
-		(FIX(a)<<7)|
-		(FIX(b)<<6)|
-		(FIX(c)<<5)|
-		(FIX(x)<<4)|
-		(FIX(y)<<3)|
-		(FIX(z)<<2)|
-		(FIX(w)<<1)|
-		(FIX(e)<<0);
-	//////////////////////*/
-
-		 mr.pad = pad;
-/*		 if(nds.isTouch) {
-			 mr.touch.x = nds.touchX >> 4;
-			 mr.touch.y = nds.touchY >> 4;
-			 mr.touch.touch = 1;
-		 } else {
-			 mr.touch.x = 0;
-			 mr.touch.y = 0;
-			 mr.touch.touch = 0;
-		 }*/
+			 mr.pad[i] =
+				 (FIX(r)<<5)|
+				 (FIX(l)<<4)|
+				 (FIX(u)<<7)|
+				 (FIX(d)<<6)|
+				 (FIX(I)<<3)|
+				 (FIX(II)<<2)|
+				 (FIX(s)<<1)|
+				 (FIX(n)<<0);
+		 }
 
 		 mr.dump(&currMovieData, osRecordingMovie,currMovieData.records.size());
 		 currMovieData.records.push_back(mr);
@@ -1044,7 +1008,18 @@ bool FCEUI_MovieGetInfo(std::istream* fp, MOVIE_INFO& info, bool skipFrameCount)
 bool MovieRecord::parseBinary(MovieData* md, std::istream* is)
 {
 	commands=is->get();
-	is->read((char *) &pad, sizeof pad);
+		
+	for (int i = 0; i < md->ports; i++)
+	{
+		is->read((char *) &pad[i], sizeof pad[i]);
+
+	//	parseJoy(is,pad[0]); is->get(); //eat the pipe
+	//	parseJoy(is,joysticks[1]); is->get(); //eat the pipe
+//		parseJoy(is,joysticks[2]); is->get(); //eat the pipe
+//		parseJoy(is,joysticks[3]); is->get(); //eat the pipe
+	}
+//	else
+//		is->read((char *) &pad, sizeof pad);
 //	is->read((char *) &touch.x, sizeof touch.x);
 //	is->read((char *) &touch.y, sizeof touch.y);
 //	is->read((char *) &touch.touch, sizeof touch.touch);
@@ -1055,7 +1030,9 @@ bool MovieRecord::parseBinary(MovieData* md, std::istream* is)
 void MovieRecord::dumpBinary(MovieData* md, std::ostream* os, int index)
 {
 	os->put(md->records[index].commands);
-	os->write((char *) &md->records[index].pad, sizeof md->records[index].pad);
+	for (int i = 0; i < md->ports; i++) {
+	os->write((char *) &md->records[index].pad[i], sizeof md->records[index].pad[i]);
+	}
 //	os->write((char *) &md->records[index].touch.x, sizeof md->records[index].touch.x);
 //	os->write((char *) &md->records[index].touch.y, sizeof md->records[index].touch.y);
 //	os->write((char *) &md->records[index].touch.touch, sizeof md->records[index].touch.touch);

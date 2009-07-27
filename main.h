@@ -34,7 +34,7 @@ void DecreaseSpeed();
 LRESULT CALLBACK BiosSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 extern u8 pcepaddata[5];
-void SetInputDisplayCharacters(uint16 new_data);
+void SetInputDisplayCharacters(uint8 new_data[]);
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 extern EmulateSpecStruct espec;
 extern void render();

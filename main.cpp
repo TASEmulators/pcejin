@@ -597,17 +597,20 @@ const char* Spaces[8] = {" ", " ", " ", " ", " ", " ", " ", " "};
 
 char str[64];
 
-void SetInputDisplayCharacters(uint16 new_data){
+void SetInputDisplayCharacters(uint8 new_data[]){
 
 	strcpy(str, "");
 
-	for (int x = 0; x < 8; x++) {
+	for ( int i = 0; i < 5; i++) {
 
-		if(new_data & (1 << x)) {
-			strcat(str, Buttons[x]);
+		for (int x = 0; x < 8; x++) {
+
+			if(new_data[i] & (1 << x)) {
+				strcat(str, Buttons[x]);
+			}
+			else
+				strcat(str, Spaces[x]);
 		}
-		else
-			strcat(str, Spaces[x]);
 	}
 
 	strcpy(InputDisplayString, str);
@@ -685,8 +688,6 @@ void emulate(){
 
 	lagFrameFlag = 1;
 
-//	input_process();
-
 	S9xUpdateJoypadButtons();
 
 	pcepaddata[0] = joypads [0];
@@ -717,7 +718,7 @@ void emulate(){
 	if(!espec.skip)
 		render();
 
-	soundDriver->write((u16*)*espec.SoundBuf, *espec.SoundBufSize);
+//	soundDriver->write((u16*)*espec.SoundBuf, *espec.SoundBufSize);
 
 	DRV_AviSoundUpdate(*espec.SoundBuf, *espec.SoundBufSize);
 	DRV_AviVideoUpdate((uint16*)espec.pixels, &espec);
