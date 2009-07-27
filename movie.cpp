@@ -622,8 +622,8 @@ void NDS_setPadFromMovie(uint16 pad[])
 	if(pad[i] &(1 << 6)) pcepad |= (1 << 6);//d
 	if(pad[i] &(1 << 5)) pcepad |= (1 << 7);//l
 	if(pad[i] &(1 << 4)) pcepad |= (1 << 5);//r
-	if(pad[i] &(1 << 3)) pcepad |= (1 << 1);//o
-	if(pad[i] &(1 << 2)) pcepad |= (1 << 0);//t
+	if(pad[i] &(1 << 3)) pcepad |= (1 << 0);//o
+	if(pad[i] &(1 << 2)) pcepad |= (1 << 1);//t
 	if(pad[i] &(1 << 0)) pcepad |= (1 << 2);//s
 	if(pad[i] &(1 << 1)) pcepad |= (1 << 3);//n
 
@@ -710,8 +710,8 @@ void FCEUMOV_AddInputState()
 			 pcepad = pcepaddata[i];
 
 #define FIX(b) (b?1:0)
-			 II = FIX(pcepad &(1 << 0));
-			 I = FIX(pcepad & (1 << 1));
+			 II = FIX(pcepad &(1 << 1));
+			 I = FIX(pcepad & (1 << 0));
 			 n = FIX(pcepad & (1 << 2));
 			 s = FIX(pcepad & (1 << 3));
 			 u = FIX(pcepad & (1 << 4));

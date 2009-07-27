@@ -595,7 +595,7 @@ void initinput(){
 	PCEINPUT_SetInput(1, "gamepad", &pcepaddata[1]);
 }
 
-const char* Buttons[8] = {"II ", "I ", "S", "Run ", "U", "R", "D", "L"};
+const char* Buttons[8] = {"I ", "II ", "S", "Run ", "U", "R", "D", "L"};
 const char* Spaces[8] = {" ", " ", " ", " ", " ", " ", " ", " "};
 
 char str[64];
