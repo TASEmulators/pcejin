@@ -287,7 +287,9 @@ void RecordMovie(HWND hWnd){
 	ofn.lpstrDefExt = "mc2";
 	ofn.nMaxFile = MAX_PATH;
 	ofn.Flags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
-	GetSaveFileName(&ofn);
+
+	if(GetSaveFileName(&ofn))
+		FCEUI_SaveMovie(szChoice, a);
 
 	//If user did not specify an extension, add .dsm for them
 	// fname = szChoice;
@@ -297,7 +299,7 @@ void RecordMovie(HWND hWnd){
 
 
 
-	FCEUI_SaveMovie(szChoice, a);
+	
 
 	// SetDlgItemText(hwndDlg, IDC_EDIT_FILENAME, fname.c_str());
 	//if(GetSaveFileName(&ofn))
@@ -323,9 +325,10 @@ void PlayMovie(HWND hWnd){
 	ofn.lpstrDefExt = "mc2";
 	ofn.nMaxFile = MAX_PATH;
 	ofn.Flags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
-	GetOpenFileName(&ofn);
+	if(GetOpenFileName(&ofn))
+		FCEUI_LoadMovie(szChoice, 1, 0, 0);
 	// Replay_LoadMovie();
-	FCEUI_LoadMovie(szChoice, 1, 0, 0);
+	
 	soundDriver->resume();
 
 }
