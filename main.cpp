@@ -260,6 +260,7 @@ void LoadIniSettings(){
 	Hud.FrameCounterDisplay = GetPrivateProfileBool("Display","FrameCounter", false, IniName);
 	Hud.ShowInputDisplay = GetPrivateProfileBool("Display","Display Input", false, IniName);
 	Hud.ShowLagFrameCounter = GetPrivateProfileBool("Display","Display Lag Counter", false, IniName);
+	Hud.DisplayStateSlots = GetPrivateProfileBool("Display","Display State Slots", false, IniName);
 }
 
 void SaveIniSettings(){
@@ -368,6 +369,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		checkMenu(IDC_ASPECT, ((aspectratio)));
 		checkMenu(ID_VIEW_FRAMECOUNTER,Hud.FrameCounterDisplay);
 		checkMenu(ID_VIEW_DISPLAYINPUT,Hud.ShowInputDisplay);
+		checkMenu(ID_VIEW_DISPLAYSTATESLOTS,Hud.DisplayStateSlots);
 		checkMenu(ID_VIEW_DISPLAYLAG,Hud.ShowLagFrameCounter);
 		break;
 	case WM_EXITMENULOOP:
@@ -465,6 +467,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		case ID_VIEW_DISPLAYINPUT:
 			Hud.ShowInputDisplay ^= true;
 			WritePrivateProfileBool("Display", "Display Input", Hud.ShowInputDisplay, IniName);
+			osd->clear();
+			return 0;
+
+		case ID_VIEW_DISPLAYSTATESLOTS:
+			Hud.DisplayStateSlots ^= true;
+			WritePrivateProfileBool("Display", "Display State Slots", Hud.DisplayStateSlots, IniName);
 			osd->clear();
 			return 0;
 
