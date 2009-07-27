@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="blip;compress;zlib;trio;&quot;libcdio-0.81\include\&quot;;&quot;libcdio-0.81/include&quot;;&quot;libcdio-0.81/lib/driver&quot;;.;.\src;.\src\pce"
+				AdditionalIncludeDirectories="blip;compress;zlib;trio;&quot;libcdio-0.81\include\&quot;;&quot;libcdio-0.81/include&quot;;&quot;libcdio-0.81/lib/driver&quot;;.;.\src;.\src\pce;agg\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;WANT_PCE_EMU;NEED_CDEMU;EXTERNAL_LIBCDIO_CONFIG_H;NO_CODECS;HAVE_DIRECTSOUND"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,10 +61,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="directx\dxerr8.lib directx\dsound.lib directx\dinput8.lib directx\ddraw.lib vfw32.lib Winmm.lib zlib-2008-x32.lib"
+				AdditionalDependencies="directx\dxerr8.lib directx\dsound.lib directx\dinput8.lib directx\ddraw.lib vfw32.lib Winmm.lib zlib-2008-x32.lib agg-2.5.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_debug.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="zlib"
+				AdditionalLibraryDirectories="zlib;agg"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"

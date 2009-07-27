@@ -568,8 +568,8 @@ void initialize(){
 
 	MDFNGameInfo = &EmulatedPCE;
 
-//	MDFNI_LoadGame("m:\\leg.pce");
-//	started = true;
+	MDFNI_LoadGame("m:\\leg.pce");
+	started = true;
 	initespec();
 	initsound();
 }
@@ -583,12 +583,13 @@ int32 ssize;
 
 void initvideo();
 
-u8 padonedata;
+u8 pcepaddata[5];
 
 
 void initinput(){
 
-	PCEINPUT_SetInput(0, "gamepad", &padonedata);
+	PCEINPUT_SetInput(0, "gamepad", &pcepaddata[0]);
+	PCEINPUT_SetInput(1, "gamepad", &pcepaddata[1]);
 }
 
 const char* Buttons[8] = {"II ", "I ", "S", "Run ", "U", "R", "D", "L"};
@@ -611,21 +612,6 @@ void SetInputDisplayCharacters(uint16 new_data){
 
 	strcpy(InputDisplayString, str);
 }
-
-void setinput(bool up, bool down, bool left, bool right, bool I, bool II, bool run, bool select){
-
-	padonedata = 0;
-
-	padonedata |= I << 0;
-	padonedata |= II << 1;
-	padonedata |= select << 2;
-	padonedata |= run << 3;
-	padonedata |= up << 4;
-	padonedata |= right<< 5;
-	padonedata |= down << 6;
-	padonedata |= left << 7;
-}
-
 
 void initespec(){
 
@@ -690,6 +676,8 @@ int lagFrameFlag = 0;
 int lagFrameCounter = 0;
 bool frameAdvance = false;
 
+extern u32 joypads [8];
+
 void emulate(){
 
 	if(!started)
@@ -697,7 +685,12 @@ void emulate(){
 
 	lagFrameFlag = 1;
 
-	input_process();
+//	input_process();
+
+	S9xUpdateJoypadButtons();
+
+	pcepaddata[0] = joypads [0];
+	pcepaddata[1] = joypads [1];
 
 	FCEUMOV_AddInputState();
 

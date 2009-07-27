@@ -33,7 +33,7 @@ void DecreaseSpeed();
 
 LRESULT CALLBACK BiosSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-extern u8 padonedata;
+extern u8 pcepaddata[5];
 void SetInputDisplayCharacters(uint16 new_data);
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 extern EmulateSpecStruct espec;
@@ -51,3 +51,5 @@ extern char InputDisplayString[128];
 
 void WritePrivateProfileBool(char* appname, char* keyname, bool val, char* file);
 bool GetPrivateProfileBool(const char* appname, const char* keyname, bool defval, const char* filename);
+
+void S9xUpdateJoypadButtons ();

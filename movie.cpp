@@ -612,7 +612,7 @@ uint16 pcepad;
 if(pad &(1 << 0)) pcepad |= (1 << 2);//s
 if(pad &(1 << 1)) pcepad |= (1 << 3);//n
 
-padonedata = pcepad;
+pcepaddata[0] = pcepad;
 
 }
  static int _currCommand = 0;
@@ -693,7 +693,7 @@ void FCEUMOV_AddInputState()
 //	 int pdc = 1;// *(char *)inputdata;//(int)inputdata;
 //	 int pd2 = 0;// ((char*)inputdata)[1];
 
-		 pcepad = padonedata;
+		 pcepad = pcepaddata[0];
 
 		 #define FIX(b) (b?1:0)
 	int II = FIX(pcepad &(1 << 0));
