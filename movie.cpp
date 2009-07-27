@@ -482,6 +482,8 @@ void FCEUI_LoadMovie(const char *fname, bool _read_only, bool tasedit, int _paus
 	//}
 
 	//LoadFM2(currMovieData, fp->stream, INT_MAX, false);
+
+	currMovieData.ports = 1;	
 	
 	fstream fs (fname);
 	LoadFM2(currMovieData, &fs, INT_MAX, false);
