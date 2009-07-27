@@ -87,8 +87,6 @@
 #define IDC_II 405
 #define IDC_RUN 406
 #define IDC_SELECT 407
-#define IDC_A 408
-#define IDC_B 409
 #define IDC_LABEL_RIGHT 410
 #define IDC_LABEL_UP 411
 #define IDC_LABEL_LEFT 412
@@ -133,6 +131,8 @@
 #define ID_VIEW_DISPLAYINPUT 506
 #define ID_VIEW_DISPLAYLAG 507
 #define ID_VIEW_DISPLAYSTATESLOTS 508
+#define IDC_JPCOMBO 509
+#define IDC_JPTOGGLE 510
 #define IDC_LABEL_HK1                   60001
 #define IDC_LABEL_HK2                   60002
 #define IDC_LABEL_HK3                   60003

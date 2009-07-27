@@ -13,10 +13,6 @@
 
 #include <string>
 
-//#include "mmsystem.h"
-
-
-
 #if (((defined(_MSC_VER) && _MSC_VER >= 1300)) || defined(__MINGW32__))
 	// both MINGW and VS.NET use fstream instead of fstream.h which is deprecated
 	#include <fstream>
@@ -73,21 +69,21 @@ struct SJoypad {
     WORD R;
 };
 
-#define LEFT_MASK 0x0001
-#define RIGHT_MASK 0x0002
-#define UP_MASK 0x0004
-#define DOWN_MASK 0x0008
-#define RUN_MASK 0x0010
-#define SELECT_MASK 0x0020
+#define I_MASK 0x0001
+#define II_MASK 0x0002
+#define SELECT_MASK 0x0004
+#define RUN_MASK 0x0008
+#define UP_MASK 0x0010
+#define RIGHT_MASK 0x0020
+#define DOWN_MASK 0x0040
+#define LEFT_MASK 0x0080
+
 #define LID_MASK 0x0040
 #define DEBUG_MASK 0x0080
-#define I_MASK 0x0100
-#define II_MASK 0x0200
 #define X_MASK 0x0400
 #define Y_MASK 0x0800
 #define L_MASK 0x1000
 #define R_MASK 0x2000
-
 
 struct SJoyState{
     bool Attached;
@@ -416,68 +412,13 @@ BOOL CALLBACK EnumObjects(const DIDEVICEOBJECTINSTANCE* pdidoi,VOID* pContext)
 	return DIENUM_CONTINUE;
 }
 
-static void ReadControl(const char* name, WORD& output)
+static void ReadControl(const char* name, const char* controller, WORD& output)
 {
 	UINT temp;
-	temp = GetPrivateProfileInt("Controls",name,-1,IniName);
+	temp = GetPrivateProfileInt(controller,name,-1,IniName);
 	if(temp != -1) {
 		output = temp;
 	}
-}
-/*
-static void ReadHotkey(const char* name, WORD& output)
-{
-	UINT temp;
-	temp = GetPrivateProfileInt("Hotkeys",name,-1,IniName);
-	if(temp != -1) {
-		output = temp;
-	}
-}
-*/
-//static void ReadGuitarControl(const char* name, WORD& output)
-//{
-//	UINT temp;
-//	temp = GetPrivateProfileInt("GBAslot.GuitarGrip",name,-1,IniName);
-//	if(temp != -1) {
-//		output = temp;
-//	}
-//}
-/*
-static void LoadHotkeyConfig()
-{
-	SCustomKey *key = &CustomKeys.key(0);
-
-	while (!IsLastCustomKey(key)) {
-		ReadHotkey(key->code,key->key); 
-		std::string modname = (std::string)key->code + (std::string)" MOD";
-		ReadHotkey(modname.c_str(),key->modifiers);
-		key++;
-	}
-}*/
-/*
-static void SaveHotkeyConfig()
-{
-	SCustomKey *key = &CustomKeys.key(0);
-
-	while (!IsLastCustomKey(key)) {
-		WritePrivateProfileInt("Hotkeys",(char*)key->code,key->key,IniName);
-		std::string modname = (std::string)key->code + (std::string)" MOD";
-		WritePrivateProfileInt("Hotkeys",(char*)modname.c_str(),key->modifiers,IniName);
-		key++;
-	}
-}
-*/
-static void LoadGuitarConfig()
-{
-	memcpy(&Guitar,&DefaultGuitar,sizeof(Guitar));
-
-	//Guitar.Enabled = true;
-#define DO(X) ReadControl(#X,Guitar.X);
-	DO(GREEN);
-	DO(RED);
-	DO(YELLOW);
-	DO(BLUE);
-#undef DO
 }
 
 void LoadInputConfig()
@@ -486,7 +427,16 @@ void LoadInputConfig()
 	
 	//read from configuration file
 	Joypad[0].Enabled = true;
-#define DO(X) ReadControl(#X,Joypad[0] . X);
+	Joypad[1].Enabled = true;
+#define DO(X) ReadControl(#X, "Controller1", Joypad[0] . X);
+	DO(Left); DO(Right); DO(Up); DO(Down);
+	DO(Left_Up); DO(Left_Down); DO(Right_Up); DO(Right_Down);
+	DO(Run); DO(Select); 
+	DO(Lid); DO(Debug);
+	DO(I); DO(II); DO(X); DO(Y);
+	DO(L); DO(R);
+#undef DO
+#define DO(X) ReadControl(#X, "Controller2", Joypad[1] . X);
 	DO(Left); DO(Right); DO(Up); DO(Down);
 	DO(Left_Up); DO(Left_Down); DO(Right_Up); DO(Right_Down);
 	DO(Run); DO(Select); 
@@ -496,14 +446,22 @@ void LoadInputConfig()
 #undef DO
 }
 
-static void WriteControl(char* name, WORD val)
+static void WriteControl(char* name, char* controller, WORD val)
 {
-	WritePrivateProfileInt("Controls",name,val,IniName);
+	WritePrivateProfileInt(controller,name,val,IniName);
 }
 
 static void SaveInputConfig()
 {
-#define DO(X) WriteControl(#X,Joypad[0] . X);
+#define DO(X) WriteControl(#X,"Controller1",Joypad[0] . X);
+	DO(Left); DO(Right); DO(Up); DO(Down);
+	DO(Left_Up); DO(Left_Down); DO(Right_Up); DO(Right_Down);
+	DO(Run); DO(Select); 
+	DO(Lid); DO(Debug);
+	DO(I); DO(II); DO(X); DO(Y);
+	DO(L); DO(R);
+#undef DO
+#define DO(X) WriteControl(#X,"Controller2",Joypad[1] . X);
 	DO(Left); DO(Right); DO(Up); DO(Down);
 	DO(Left_Up); DO(Left_Down); DO(Right_Up); DO(Right_Down);
 	DO(Run); DO(Select); 
@@ -951,196 +909,8 @@ void FunkyJoyStickTimer()
 	di_poll_scan();
 }
 
-//void TranslateKey(WORD keyz,char *out)
-//{
-////	sprintf(out,"%d",keyz);
-////	return;
-//
-//	char temp[128];
-//	if(keyz&0x8000)
-//	{
-//		sprintf(out,GAMEDEVICE_JOYNUMPREFIX,((keyz>>8)&0xF));
-//		switch(keyz&0xFF)
-//		{
-//		case 0:  strcat(out,GAMEDEVICE_XNEG); break;
-//		case 1:  strcat(out,GAMEDEVICE_XPOS); break;
-//        case 2:  strcat(out,GAMEDEVICE_YPOS); break;
-//		case 3:  strcat(out,GAMEDEVICE_YNEG); break;
-//		case 4:  strcat(out,GAMEDEVICE_POVLEFT); break;
-//		case 5:  strcat(out,GAMEDEVICE_POVRIGHT); break;
-//		case 6:  strcat(out,GAMEDEVICE_POVUP); break;
-//		case 7:  strcat(out,GAMEDEVICE_POVDOWN); break;
-//		case 49: strcat(out,GAMEDEVICE_POVDNLEFT); break;
-//		case 50: strcat(out,GAMEDEVICE_POVDNRIGHT); break;
-//		case 51: strcat(out,GAMEDEVICE_POVUPLEFT); break;
-//		case 52: strcat(out,GAMEDEVICE_POVUPRIGHT); break;
-//		case 41: strcat(out,GAMEDEVICE_ZPOS); break;
-//		case 42: strcat(out,GAMEDEVICE_ZNEG); break;
-//		case 43: strcat(out,GAMEDEVICE_RPOS); break;
-//		case 44: strcat(out,GAMEDEVICE_RNEG); break;
-//		case 45: strcat(out,GAMEDEVICE_UPOS); break;
-//		case 46: strcat(out,GAMEDEVICE_UNEG); break;
-//		case 47: strcat(out,GAMEDEVICE_VPOS); break;
-//		case 48: strcat(out,GAMEDEVICE_VNEG); break;
-//		default:
-//			if ((keyz & 0xff) > 40)
-//            {
-//				sprintf(temp,GAMEDEVICE_JOYBUTPREFIX,keyz&0xFF);
-//				strcat(out,temp);
-//				break;
-//            }
-//
-//			sprintf(temp,GAMEDEVICE_BUTTON,(keyz&0xFF)-8);
-//			strcat(out,temp);
-//			break;
-//
-//		}
-//		return;
-//	}
-//	sprintf(out,GAMEDEVICE_KEY,keyz);
-//	if((keyz>='0' && keyz<='9')||(keyz>='A' &&keyz<='Z'))
-//	{
-//		sprintf(out,"%c",keyz);
-//		return;
-//	}
-//
-//	if( keyz >= VK_NUMPAD0 && keyz <= VK_NUMPAD9)
-//    {
-//
-//		sprintf(out,GAMEDEVICE_NUMPADPREFIX,'0'+(keyz-VK_NUMPAD0));
-//
-//        return ;
-//    }
-//	switch(keyz)
-//    {
-//        case 0:				sprintf(out,GAMEDEVICE_DISABLED); break;
-//        case VK_TAB:		sprintf(out,GAMEDEVICE_VK_TAB); break;
-//        case VK_BACK:		sprintf(out,GAMEDEVICE_VK_BACK); break;
-//        case VK_CLEAR:		sprintf(out,GAMEDEVICE_VK_CLEAR); break;
-//        case VK_RETURN:		sprintf(out,GAMEDEVICE_VK_RETURN); break;
-//        case VK_LSHIFT:		sprintf(out,GAMEDEVICE_VK_LSHIFT); break;
-//		case VK_RSHIFT:		sprintf(out,GAMEDEVICE_VK_RSHIFT); break;
-//        case VK_LCONTROL:	sprintf(out,GAMEDEVICE_VK_LCONTROL); break;
-//		case VK_RCONTROL:	sprintf(out,GAMEDEVICE_VK_RCONTROL); break;
-//        case VK_LMENU:		sprintf(out,GAMEDEVICE_VK_LMENU); break;
-//		case VK_RMENU:		sprintf(out,GAMEDEVICE_VK_RMENU); break;
-//        case VK_PAUSE:		sprintf(out,GAMEDEVICE_VK_PAUSE); break;
-//        case VK_CANCEL:		sprintf(out,GAMEDEVICE_VK_PAUSE); break; // the Pause key can resolve to either "Pause" or "Cancel" depending on when it's pressed
-//        case VK_CAPITAL:	sprintf(out,GAMEDEVICE_VK_CAPITAL); break;
-//        case VK_ESCAPE:		sprintf(out,GAMEDEVICE_VK_ESCAPE); break;
-//        case VK_SPACE:		sprintf(out,GAMEDEVICE_VK_SPACE); break;
-//        case VK_PRIOR:		sprintf(out,GAMEDEVICE_VK_PRIOR); break;
-//        case VK_NEXT:		sprintf(out,GAMEDEVICE_VK_NEXT); break;
-//        case VK_HOME:		sprintf(out,GAMEDEVICE_VK_HOME); break;
-//        case VK_END:		sprintf(out,GAMEDEVICE_VK_END); break;
-//        case VK_LEFT:		sprintf(out,GAMEDEVICE_VK_LEFT ); break;
-//        case VK_RIGHT:		sprintf(out,GAMEDEVICE_VK_RIGHT); break;
-//        case VK_UP:			sprintf(out,GAMEDEVICE_VK_UP); break;
-//        case VK_DOWN:		sprintf(out,GAMEDEVICE_VK_DOWN); break;
-//        case VK_SELECT:		sprintf(out,GAMEDEVICE_VK_SELECT); break;
-//        case VK_PRINT:		sprintf(out,GAMEDEVICE_VK_PRINT); break;
-//        case VK_EXECUTE:	sprintf(out,GAMEDEVICE_VK_EXECUTE); break;
-//        case VK_SNAPSHOT:	sprintf(out,GAMEDEVICE_VK_SNAPSHOT); break;
-//        case VK_INSERT:		sprintf(out,GAMEDEVICE_VK_INSERT); break;
-//        case VK_DELETE:		sprintf(out,GAMEDEVICE_VK_DELETE); break;
-//        case VK_HELP:		sprintf(out,GAMEDEVICE_VK_HELP); break;
-//        case VK_LWIN:		sprintf(out,GAMEDEVICE_VK_LWIN); break;
-//        case VK_RWIN:		sprintf(out,GAMEDEVICE_VK_RWIN); break;
-//        case VK_APPS:		sprintf(out,GAMEDEVICE_VK_APPS); break;
-//        case VK_MULTIPLY:	sprintf(out,GAMEDEVICE_VK_MULTIPLY); break;
-//        case VK_ADD:		sprintf(out,GAMEDEVICE_VK_ADD); break;
-//        case VK_SEPARATOR:	sprintf(out,GAMEDEVICE_VK_SEPARATOR); break;
-//		case /*VK_OEM_1*/0xBA:		sprintf(out,GAMEDEVICE_VK_OEM_1); break;
-//        case /*VK_OEM_2*/0xBF:		sprintf(out,GAMEDEVICE_VK_OEM_2); break;
-//        case /*VK_OEM_3*/0xC0:		sprintf(out,GAMEDEVICE_VK_OEM_3); break;
-//        case /*VK_OEM_4*/0xDB:		sprintf(out,GAMEDEVICE_VK_OEM_4); break;
-//        case /*VK_OEM_5*/0xDC:		sprintf(out,GAMEDEVICE_VK_OEM_5); break;
-//        case /*VK_OEM_6*/0xDD:		sprintf(out,GAMEDEVICE_VK_OEM_6); break;
-//		case /*VK_OEM_7*/0xDE:		sprintf(out,GAMEDEVICE_VK_OEM_7); break;
-//		case /*VK_OEM_COMMA*/0xBC:	sprintf(out,GAMEDEVICE_VK_OEM_COMMA );break;
-//		case /*VK_OEM_PERIOD*/0xBE:	sprintf(out,GAMEDEVICE_VK_OEM_PERIOD);break;
-//        case VK_SUBTRACT:	sprintf(out,GAMEDEVICE_VK_SUBTRACT); break;
-//        case VK_DECIMAL:	sprintf(out,GAMEDEVICE_VK_DECIMAL); break;
-//        case VK_DIVIDE:		sprintf(out,GAMEDEVICE_VK_DIVIDE); break;
-//        case VK_NUMLOCK:	sprintf(out,GAMEDEVICE_VK_NUMLOCK); break;
-//        case VK_SCROLL:		sprintf(out,GAMEDEVICE_VK_SCROLL); break;
-//        case /*VK_OEM_MINUS*/0xBD:	sprintf(out,GAMEDEVICE_VK_OEM_MINUS); break;
-//        case /*VK_OEM_PLUS*/0xBB:	sprintf(out,GAMEDEVICE_VK_OEM_PLUS); break;
-//        case VK_SHIFT:		sprintf(out,GAMEDEVICE_VK_SHIFT); break;
-//        case VK_CONTROL:	sprintf(out,GAMEDEVICE_VK_CONTROL); break;
-//        case VK_MENU:		sprintf(out,GAMEDEVICE_VK_MENU); break;
-//        case VK_F1:			sprintf(out,GAMEDEVICE_VK_F1); break;
-//        case VK_F2:			sprintf(out,GAMEDEVICE_VK_F2); break;
-//        case VK_F3:			sprintf(out,GAMEDEVICE_VK_F3); break;
-//        case VK_F4:			sprintf(out,GAMEDEVICE_VK_F4); break;
-//        case VK_F5:			sprintf(out,GAMEDEVICE_VK_F5); break;
-//        case VK_F6:			sprintf(out,GAMEDEVICE_VK_F6); break;
-//        case VK_F7:			sprintf(out,GAMEDEVICE_VK_F7); break;
-//        case VK_F8:			sprintf(out,GAMEDEVICE_VK_F8); break;
-//        case VK_F9:			sprintf(out,GAMEDEVICE_VK_F9); break;
-//        case VK_F10:		sprintf(out,GAMEDEVICE_VK_F10); break;
-//        case VK_F11:		sprintf(out,GAMEDEVICE_VK_F11); break;
-//        case VK_F12:		sprintf(out,GAMEDEVICE_VK_F12); break;
-//    }
-//
-//    return ;
-//
-//
-//
-//}
-
 bool IsReserved (WORD Key, int modifiers);
 
-//bool IsReserved (WORD Key, int modifiers)
-//{
-//	// keys that do other stuff in Windows
-//	if(Key == VK_CAPITAL || Key == VK_NUMLOCK || Key == VK_SCROLL || Key == VK_SNAPSHOT
-//	|| Key == VK_LWIN    || Key == VK_RWIN    || Key == VK_APPS || Key == /*VK_SLEEP*/0x5F
-//	|| (Key == VK_F4 && (modifiers & CUSTKEY_ALT_MASK) != 0)) // alt-f4 (behaves unlike accelerators)
-//		return true;
-//
-//	// menu shortcuts (accelerators) -- TODO: should somehow parse GUI.Accelerators for this information
-//	if(modifiers == CUSTKEY_CTRL_MASK
-//	 && (Key == 'O')
-//	|| modifiers == CUSTKEY_ALT_MASK
-//	 && (Key == VK_F5 || Key == VK_F7 || Key == VK_F8 || Key == VK_F9
-//	  || Key == 'R' || Key == 'T' || Key == /*VK_OEM_4*/0xDB || Key == /*VK_OEM_6*/0xDD
-//	  || Key == 'E' || Key == 'A' || Key == VK_RETURN || Key == VK_DELETE)
-//	  || Key == VK_MENU || Key == VK_CONTROL)
-//		return true;
-//
-//	return false;
-//}
-
-/*
-int GetNumHotKeysAssignedTo (WORD Key, int modifiers)
-{
-	int count = 0;
-	{
-		#define MATCHES_KEY(k) \
-			(Key != 0 && Key != VK_ESCAPE \
-		   && ((Key == k->key && modifiers == k->modifiers) \
-		   || (Key == VK_SHIFT   && k->modifiers & CUSTKEY_SHIFT_MASK) \
-		   || (Key == VK_MENU    && k->modifiers & CUSTKEY_ALT_MASK) \
-		   || (Key == VK_CONTROL && k->modifiers & CUSTKEY_CTRL_MASK) \
-		   || (k->key == VK_SHIFT   && modifiers & CUSTKEY_SHIFT_MASK) \
-		   || (k->key == VK_MENU    && modifiers & CUSTKEY_ALT_MASK) \
-		   || (k->key == VK_CONTROL && modifiers & CUSTKEY_CTRL_MASK)))
-
-		SCustomKey *key = &CustomKeys.key(0);
-		while (!IsLastCustomKey(key)) {
-			if (MATCHES_KEY(key)) {
-				count++;
-			}
-			key++;
-		}
-
-
-		#undef MATCHES_KEY
-	}
-	return count;
-}
-*/
 int GetNumButtonsAssignedTo (WORD Key)
 {
 	int count = 0;
@@ -1217,124 +987,7 @@ COLORREF CheckHotKey( WORD Key, int modifiers)
 
     return white;
 }
-/*
-static void InitCustomControls()
-{
 
-    WNDCLASSEX wc;
-
-    wc.cbSize         = sizeof(wc);
-    wc.lpszClassName  = szClassName;
-    wc.hInstance      = GetModuleHandle(0);
-    wc.lpfnWndProc    = InputCustomWndProc;
-    wc.hCursor        = LoadCursor (NULL, IDC_ARROW);
-    wc.hIcon          = 0;
-    wc.lpszMenuName   = 0;
-    wc.hbrBackground  = (HBRUSH)GetSysColorBrush(COLOR_BTNFACE);
-    wc.style          = 0;
-    wc.cbClsExtra     = 0;
-    wc.cbWndExtra     = sizeof(InputCust *);
-    wc.hIconSm        = 0;
-
-
-    RegisterClassEx(&wc);
-
-    wc.cbSize         = sizeof(wc);
-    wc.lpszClassName  = szHotkeysClassName;
-    wc.hInstance      = GetModuleHandle(0);
-    wc.lpfnWndProc    = HotInputCustomWndProc;
-    wc.hCursor        = LoadCursor (NULL, IDC_ARROW);
-    wc.hIcon          = 0;
-    wc.lpszMenuName   = 0;
-    wc.hbrBackground  = (HBRUSH)GetSysColorBrush(COLOR_BTNFACE);
-    wc.style          = 0;
-    wc.cbClsExtra     = 0;
-    wc.cbWndExtra     = sizeof(InputCust *);
-    wc.hIconSm        = 0;
-
-
-    RegisterClassEx(&wc);
-
-	wc.cbSize         = sizeof(wc);
-    wc.lpszClassName  = szGuitarClassName;
-    wc.hInstance      = GetModuleHandle(0);
-    wc.lpfnWndProc    = GuitarInputCustomWndProc;
-    wc.hCursor        = LoadCursor (NULL, IDC_ARROW);
-    wc.hIcon          = 0;
-    wc.lpszMenuName   = 0;
-    wc.hbrBackground  = (HBRUSH)GetSysColorBrush(COLOR_BTNFACE);
-    wc.style          = 0;
-    wc.cbClsExtra     = 0;
-    wc.cbWndExtra     = sizeof(InputCust *);
-    wc.hIconSm        = 0;
-
-
-    RegisterClassEx(&wc);
-}
-/*
-
-*/
-
-//InputCust * GetInputCustom(HWND hwnd)
-//{
-//	return (InputCust *)GetWindowLong(hwnd, 0);
-//}
-////}
-////*//*
-////void SetInputCustom(HWND hwnd, InputCust *icp)
-//{
-//    SetWindowLong(hwnd, 0, (LONG)icp);
-//}*/
-///*
-/*
-
-
-LRESULT InputCustom_OnPaint(InputCust *ccp, WPARAM wParam, LPARAM lParam)
-{
-    HDC				hdc;
-    PAINTSTRUCT		ps;
-    HANDLE			hOldFont;
-    TCHAR			szText[200];
-    RECT			rect;
-	SIZE			sz;
-	int				x,y;
-
-    // Get a device context for this window
-    hdc = BeginPaint(ccp->hwnd, &ps);
-
-    // Set the font we are going to use
-    hOldFont = SelectObject(hdc, ccp->hFont);
-
-    // Set the text colours
-    SetTextColor(hdc, ccp->crForeGnd);
-    SetBkColor  (hdc, ccp->crBackGnd);
-
-    // Find the text to draw
-    GetWindowText(ccp->hwnd, szText, sizeof(szText));
-
-    // Work out where to draw
-    GetClientRect(ccp->hwnd, &rect);
-
-
-    // Find out how big the text will be
-    GetTextExtentPoint32(hdc, szText, lstrlen(szText), &sz);
-
-    // Center the text
-    x = (rect.right  - sz.cx) / 2;
-    y = (rect.bottom - sz.cy) / 2;
-
-    // Draw the text
-    ExtTextOut(hdc, x, y, ETO_OPAQUE, &rect, szText, lstrlen(szText), 0);
-
-    // Restore the old font when we have finished
-    SelectObject(hdc, hOldFont);
-
-    // Release the device context
-    EndPaint(ccp->hwnd, &ps);
-
-    return 0;
-}
-*/
 void SetInputCustom(HWND hwnd, InputCust *icp);
 static LRESULT CALLBACK InputCustomWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -1620,301 +1273,8 @@ static LRESULT CALLBACK GuitarInputCustomWndProc(HWND hwnd, UINT msg, WPARAM wPa
     }
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
-/*
-static void TranslateKeyWithModifiers(int wParam, int modifiers, char * outStr)
-{
 
-	// if the key itself is a modifier, special case output:
-	if(wParam == VK_SHIFT)
-		strcpy(outStr, "Shift");
-	else if(wParam == VK_MENU)
-		strcpy(outStr, "Alt");
-	else if(wParam == VK_CONTROL)
-		strcpy(outStr, "Control");
-	else
-	{
-		// otherwise, prepend the modifier(s)
-		if(wParam != VK_ESCAPE && wParam != 0)
-		{
-			if((modifiers & CUSTKEY_CTRL_MASK) != 0)
-			{
-				sprintf(outStr,HOTKEYS_CONTROL_MOD);
-				outStr += strlen(HOTKEYS_CONTROL_MOD);
-			}
-			if((modifiers & CUSTKEY_ALT_MASK) != 0)
-			{
-				sprintf(outStr,HOTKEYS_ALT_MOD);
-				outStr += strlen(HOTKEYS_ALT_MOD);
-			}
-			if((modifiers & CUSTKEY_SHIFT_MASK) != 0)
-			{
-				sprintf(outStr,HOTKEYS_SHIFT_MOD);
-				outStr += strlen(HOTKEYS_SHIFT_MOD);
-			}
-		}
-
-		// and append the translated non-modifier key
-		TranslateKey(wParam,outStr);
-	}
-}
-*/
 static bool keyPressLock = false;
-
-//static LRESULT CALLBACK HotInputCustomWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
-//{
-//	// retrieve the custom structure POINTER for THIS window
-//    InputCust *icp = GetInputCustom(hwnd);
-//	HWND pappy = (HWND__ *)GetWindowLongPtr(hwnd,GWL_HWNDPARENT);
-//	funky= hwnd;
-//
-//	static HWND selectedItem = NULL;
-//
-//	char temp[100];
-//	COLORREF col;
-//    switch(msg)
-//    {
-//
-//	case WM_GETDLGCODE:
-//		return DLGC_WANTARROWS|DLGC_WANTALLKEYS|DLGC_WANTCHARS;
-//		break;
-//
-//
-//    case WM_NCCREATE:
-//
-//        // Allocate a new CustCtrl structure for this window.
-//        icp = (InputCust *) malloc( sizeof(InputCust) );
-//
-//        // Failed to allocate, stop window creation.
-//        if(icp == NULL) return FALSE;
-//
-//        // Initialize the CustCtrl structure.
-//        icp->hwnd      = hwnd;
-//        icp->crForeGnd = GetSysColor(COLOR_WINDOWTEXT);
-//        icp->crBackGnd = GetSysColor(COLOR_WINDOW);
-//        icp->hFont     = (HFONT__ *) GetStockObject(DEFAULT_GUI_FONT);
-//
-//        // Assign the window text specified in the call to CreateWindow.
-//        SetWindowText(hwnd, ((CREATESTRUCT *)lParam)->lpszName);
-//
-//        // Attach custom structure to this window.
-//        SetInputCustom(hwnd, icp);
-//
-//		InvalidateRect(icp->hwnd, NULL, FALSE);
-//		UpdateWindow(icp->hwnd);
-//
-//		keyPressLock = false;
-//
-//		selectedItem = NULL;
-//
-//		SetTimer(hwnd,747,125,NULL);
-//
-//        // Continue with window creation.
-//        return TRUE;
-//
-//    // Clean up when the window is destroyed.
-//    case WM_NCDESTROY:
-//        free(icp);
-//        break;
-//	case WM_PAINT:
-//		return InputCustom_OnPaint(icp,wParam,lParam);
-//		break;
-//	case WM_ERASEBKGND:
-//		return 1;
-///*
-//	case WM_KEYUP:
-//		{
-//			int count = 0;
-//			for(int i=0;i<256;i++)
-//				if(GetAsyncKeyState(i) & 1)
-//					count++;
-//
-//			if(count < 2)
-//			{
-//				int p = count;
-//			}
-//			if(count < 1)
-//			{
-//				int p = count;
-//			}
-//
-//			TranslateKey(wParam,temp);
-//			col = CheckButtonKey(wParam);
-//
-//			icp->crForeGnd = ((~col) & 0x00ffffff);
-//			icp->crBackGnd = col;
-//			SetWindowText(hwnd,temp);
-//			InvalidateRect(icp->hwnd, NULL, FALSE);
-//			UpdateWindow(icp->hwnd);
-//			SendMessage(pappy,WM_USER+43,wParam,(LPARAM)hwnd);
-//		}
-//		break;
-//*/
-//	case WM_SYSKEYDOWN:
-//	case WM_KEYDOWN:
-//
-//		{
-//			int count = 0;
-//			for(int i=2;i<256;i++)
-//			{
-//				if(i >= VK_LSHIFT && i <= VK_RMENU)
-//					continue;
-//				if(GetAsyncKeyState(i) & 1)
-//					count++;
-//			}
-//
-//			if(count <= 1)
-//			{
-//				keyPressLock = false;
-//			}
-//		}
-//
-//		// no break
-//
-//	case WM_USER+45:
-//		// assign a hotkey:
-//		{
-//			// don't assign pure modifiers on key-down (they're assigned on key-up)
-//			if(wParam == VK_SHIFT || wParam == VK_MENU || wParam == VK_CONTROL)
-//				break;
-//
-//			int modifiers = 0;
-//			if(GetAsyncKeyState(VK_MENU))
-//				modifiers |= CUSTKEY_ALT_MASK;
-//			if(GetAsyncKeyState(VK_CONTROL))
-//				modifiers |= CUSTKEY_CTRL_MASK;
-//			if(GetAsyncKeyState(VK_SHIFT))
-//				modifiers |= CUSTKEY_SHIFT_MASK;
-//
-//			TranslateKeyWithModifiers(wParam, modifiers, temp);
-//
-//			col = CheckHotKey(wParam,modifiers);
-/////			if(col == RGB(255,0,0)) // un-redify
-/////				col = RGB(255,255,255);
-//
-//			icp->crForeGnd = ((~col) & 0x00ffffff);
-//			icp->crBackGnd = col;
-//			SetWindowText(hwnd,temp);
-//			InvalidateRect(icp->hwnd, NULL, FALSE);
-//			UpdateWindow(icp->hwnd);
-//			SendMessage(pappy,WM_USER+43,wParam,(LPARAM)hwnd);
-//
-//			keyPressLock = true;
-//
-//		}
-//		break;
-//	case WM_SYSKEYUP:
-//	case WM_KEYUP:
-//		if(!keyPressLock)
-//		{
-//			int count = 0;
-//			for(int i=2;i<256;i++)
-//			{
-//				if(i >= VK_LSHIFT && i <= VK_RMENU)
-//					continue;
-//				if(GetAsyncKeyState(i) & 1) // &1 seems to solve an weird non-zero return problem, don't know why
-//					count++;
-//			}
-//			if(count <= 1)
-//			{
-//				if(wParam == VK_SHIFT || wParam == VK_MENU || wParam == VK_CONTROL)
-//				{
-//					if(wParam == VK_SHIFT)
-//						sprintf(temp, "Shift");
-//					if(wParam == VK_MENU)
-//						sprintf(temp, "Alt");
-//					if(wParam == VK_CONTROL)
-//						sprintf(temp, "Control");
-//
-//					col = CheckHotKey(wParam,0);
-//
-//					icp->crForeGnd = ((~col) & 0x00ffffff);
-//					icp->crBackGnd = col;
-//					SetWindowText(hwnd,temp);
-//					InvalidateRect(icp->hwnd, NULL, FALSE);
-//					UpdateWindow(icp->hwnd);
-//					SendMessage(pappy,WM_USER+43,wParam,(LPARAM)hwnd);
-//				}
-//			}
-//		}
-//		break;
-//	case WM_USER+44:
-//
-//		// set a hotkey field:
-//		{
-//		int modifiers = lParam;
-//
-//		TranslateKeyWithModifiers(wParam, modifiers, temp);
-//
-//		if(IsWindowEnabled(hwnd))
-//		{
-//			col = CheckHotKey(wParam,modifiers);
-/////			if(col == RGB(255,0,0)) // un-redify
-/////				col = RGB(255,255,255);
-//		}
-//		else
-//		{
-//			col = RGB( 192,192,192);
-//		}
-//		icp->crForeGnd = ((~col) & 0x00ffffff);
-//		icp->crBackGnd = col;
-//		SetWindowText(hwnd,temp);
-//		InvalidateRect(icp->hwnd, NULL, FALSE);
-//		UpdateWindow(icp->hwnd);
-//		}
-//		break;
-//
-//	case WM_SETFOCUS:
-//	{
-//		selectedItem = hwnd;
-//		col = RGB( 0,255,0);
-//		icp->crForeGnd = ((~col) & 0x00ffffff);
-//		icp->crBackGnd = col;
-//		InvalidateRect(icp->hwnd, NULL, FALSE);
-//		UpdateWindow(icp->hwnd);
-////		tid = wParam;
-//
-//		break;
-//	}
-//	case WM_KILLFOCUS:
-//	{
-//		selectedItem = NULL;
-//		SendMessage(pappy,WM_USER+46,wParam,(LPARAM)hwnd); // refresh fields on deselect
-//		break;
-//	}
-//
-//	case WM_TIMER:
-//		if(hwnd == selectedItem)
-//		{
-//			//FunkyJoyStickTimer();
-//		}
-//		SetTimer(hwnd,747,125,NULL);
-//		break;
-//	case WM_LBUTTONDOWN:
-//		SetFocus(hwnd);
-//		break;
-//	case WM_ENABLE:
-//		COLORREF col;
-//		if(wParam)
-//		{
-//			col = RGB( 255,255,255);
-//			icp->crForeGnd = ((~col) & 0x00ffffff);
-//			icp->crBackGnd = col;
-//		}
-//		else
-//		{
-//			col = RGB( 192,192,192);
-//			icp->crForeGnd = ((~col) & 0x00ffffff);
-//			icp->crBackGnd = col;
-//		}
-//		InvalidateRect(icp->hwnd, NULL, FALSE);
-//		UpdateWindow(icp->hwnd);
-//		return true;
-//    default:
-//        break;
-//    }
-//
-//    return DefWindowProc(hwnd, msg, wParam, lParam);
-//}
 
 static void set_buttoninfo(int index, HWND hDlg)
 {
@@ -1983,23 +1343,48 @@ void EnableDisableKeyFields (int index, HWND hDlg)
 
 INT_PTR CALLBACK DlgInputConfig(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	static HBITMAP hBmp;
 	char temp[256];
 	short C;
 	int i, which;
 	static int index=0;
-
-
-	static SJoypad savepad[10];
-
-
+	
+	
+	static SJoypad pads[10]; //save Joypad here for undo if cancel
+	
+	
 	//HBRUSH g_hbrBackground;
 
+//	InitInputCustomControl();
 switch(msg)
 	{
+		case WM_PAINT:
+		{
+			PAINTSTRUCT ps;
+			BeginPaint (hDlg, &ps);
+			if(hBmp)
+			{
+				BITMAP bmp;
+				ZeroMemory(&bmp, sizeof(BITMAP));
+				RECT r;
+				GetClientRect(hDlg, &r);
+				HDC hdc=GetDC(hDlg);
+				HDC hDCbmp=CreateCompatibleDC(hdc);
+				GetObject(hBmp, sizeof(BITMAP), &bmp);
+				HBITMAP hOldBmp=(HBITMAP)SelectObject(hDCbmp, hBmp);
+				StretchBlt(hdc, 0,0,r.right,r.bottom,hDCbmp,0,0,bmp.bmWidth,bmp.bmHeight,SRCCOPY);
+				SelectObject(hDCbmp, hOldBmp);
+				DeleteDC(hDCbmp);
+				ReleaseDC(hDlg, hdc);
+			}
+			
+			EndPaint (hDlg, &ps);
+		}
+		return true;
 	case WM_INITDIALOG:
-		//if(DirectX.Clipped) S9xReRefresh();
+//		if(DirectX.Clipped) S9xReRefresh();
 		SetWindowText(hDlg,INPUTCONFIG_TITLE);
-		//SetDlgItemText(hDlg,IDC_JPTOGGLE,INPUTCONFIG_JPTOGGLE);
+		SetDlgItemText(hDlg,IDC_JPTOGGLE,INPUTCONFIG_JPTOGGLE);
 		SetDlgItemText(hDlg,IDOK,BUTTON_OK);
 		SetDlgItemText(hDlg,IDCANCEL,BUTTON_CANCEL);
 ///		SetDlgItemText(hDlg,IDC_DIAGTOGGLE,INPUTCONFIG_DIAGTOGGLE);
@@ -2023,43 +1408,40 @@ switch(msg)
 		for(i=5;i<10;i++)
 			Joypad[i].Left_Up = Joypad[i].Right_Up = Joypad[i].Left_Down = Joypad[i].Right_Down = 0;
 
-		memcpy(savepad, Joypad, 10*sizeof(SJoypad));
+		hBmp=(HBITMAP)LoadImage(NULL, TEXT("PBortas.bmp"), IMAGE_BITMAP, 0,0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		memcpy(pads, Joypad, 10*sizeof(SJoypad));
 
 		for( i=0;i<256;i++)
 			GetAsyncKeyState(i);
 
-		//for( C = 0; C != 16; C ++)
-	 //       JoystickF[C].Attached = joyGetDevCaps( JOYSTICKID1+C, &JoystickF[C].Caps, sizeof( JOYCAPS)) == JOYERR_NOERROR;
+//		for( C = 0; C != 16; C ++)
+//	        JoystickF[C].Attached = joyGetDevCaps( JOYSTICKID1+C, &JoystickF[C].Caps, sizeof( JOYCAPS)) == JOYERR_NOERROR;
 
-		memset(&JoystickF[0],0,sizeof(JoystickF[0]));
-		JoystickF[0].Attached = pJoystick != NULL;
+		for(i=1;i<6;i++)
+		{
+			sprintf(temp,INPUTCONFIG_JPCOMBO,i);
+			SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_ADDSTRING,0,(LPARAM)(LPCTSTR)temp);
+		}
 
+		for(i=6;i<11;i++)
+		{
+			sprintf(temp,INPUTCONFIG_JPCOMBO INPUTCONFIG_LABEL_CONTROLLER_TURBO_PANEL_MOD,i-5);
+			SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_ADDSTRING,0,(LPARAM)(LPCTSTR)temp);
+		}
 
-		//for(i=1;i<6;i++)
-		//{
-		//	sprintf(temp,INPUTCONFIG_JPCOMBO,i);
-		//	SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_ADDSTRING,0,(LPARAM)(LPCTSTR)temp);
-		//}
+		SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_SETCURSEL,(WPARAM)0,0);
 
-		//for(i=6;i<11;i++)
-		//{
-		//	sprintf(temp,INPUTCONFIG_JPCOMBO INPUTCONFIG_LABEL_CONTROLLER_TURBO_PANEL_MOD,i-5);
-		//	SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_ADDSTRING,0,(LPARAM)(LPCTSTR)temp);
-		//}
-
-		//SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_SETCURSEL,(WPARAM)0,0);
-
-		//SendDlgItemMessage(hDlg,IDC_JPTOGGLE,BM_SETCHECK, Joypad[index].Enabled ? (WPARAM)BST_CHECKED : (WPARAM)BST_UNCHECKED, 0);
-		//SendDlgItemMessage(hDlg,IDC_ALLOWLEFTRIGHT,BM_SETCHECK, Settings.UpAndDown ? (WPARAM)BST_CHECKED : (WPARAM)BST_UNCHECKED, 0);
+		SendDlgItemMessage(hDlg,IDC_JPTOGGLE,BM_SETCHECK, Joypad[index].Enabled ? (WPARAM)BST_CHECKED : (WPARAM)BST_UNCHECKED, 0);
+//		SendDlgItemMessage(hDlg,IDC_ALLOWLEFTRIGHT,BM_SETCHECK, Settings.UpAndDown ? (WPARAM)BST_CHECKED : (WPARAM)BST_UNCHECKED, 0);
 
 		set_buttoninfo(index,hDlg);
 
 		EnableDisableKeyFields(index,hDlg);
 
-		//PostMessage(hDlg,WM_COMMAND, CBN_SELCHANGE<<16, 0);
-
-		//SetFocus(GetDlgItem(hDlg,IDC_JPCOMBO));
-
+		PostMessage(hDlg,WM_COMMAND, CBN_SELCHANGE<<16, 0);
+		
+		SetFocus(GetDlgItem(hDlg,IDC_JPCOMBO));
+		
 		return true;
 		break;
 	case WM_CLOSE:
@@ -2067,12 +1449,11 @@ switch(msg)
 		return TRUE;
 	case WM_USER+46:
 		// refresh command, for clicking away from a selected field
-		//index = SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_GETCURSEL,0,0);
-		//if(index > 4) index += 3; // skip controllers 6, 7, and 8 in the input dialog
+		index = SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_GETCURSEL,0,0);
 		set_buttoninfo(index,hDlg);
 		return TRUE;
 	case WM_USER+43:
-		//MessageBox(hDlg,"USER+43 CAUGHT","moo",MB_OK);
+//		MessageBox(hDlg,"USER+43 CAUGHT","moo",MB_OK);
 		which = GetDlgCtrlID((HWND)lParam);
 		switch(which)
 		{
@@ -2103,7 +1484,7 @@ switch(msg)
 		case IDC_X:
 			Joypad[index].X = wParam;
 
-			break;
+			break;		
 		case IDC_Y:
 			Joypad[index].Y = wParam;
 
@@ -2114,7 +1495,7 @@ switch(msg)
 
 		case IDC_R:
 			Joypad[index].R = wParam;
-
+	
 			break;
 		case IDC_SELECT:
 			Joypad[index].Select = wParam;
@@ -2140,14 +1521,6 @@ switch(msg)
 			Joypad[index].Right_Down = wParam;
 
 			break;
-		case IDC_LID:
-			Joypad[index].Lid = wParam;
-
-			break;
-		case IDC_DEBUG:
-			Joypad[index].Debug = wParam;
-
-			break;
 
 		}
 
@@ -2159,46 +1532,54 @@ switch(msg)
 		switch(LOWORD(wParam))
 		{
 		case IDCANCEL:
-			memcpy(Joypad, savepad, 10*sizeof(SJoypad));
+			memcpy(Joypad, pads, 10*sizeof(SJoypad));
 			EndDialog(hDlg,0);
+			if(hBmp)
+			{
+				DeleteObject(hBmp);
+				hBmp=NULL;
+			}
 			break;
 
 		case IDOK:
-			//Settings.UpAndDown = IsDlgButtonChecked(hDlg, IDC_ALLOWLEFTRIGHT);
+//			Settings.UpAndDown = IsDlgButtonChecked(hDlg, IDC_ALLOWLEFTRIGHT);
 			SaveInputConfig();
 			EndDialog(hDlg,0);
+			if(hBmp)
+			{
+				DeleteObject(hBmp);
+				hBmp=NULL;
+			}
 			break;
 
-		//case IDC_JPTOGGLE: // joypad Enable toggle
-		//	index = SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_GETCURSEL,0,0);
-		//	if(index > 4) index += 3; // skip controllers 6, 7, and 8 in the input dialog
-		//	Joypad[index].Enabled=IsDlgButtonChecked(hDlg,IDC_JPTOGGLE);
-		//	set_buttoninfo(index, hDlg); // update display of conflicts
-		//	break;
+		case IDC_JPTOGGLE: // joypad Enable toggle
+			index = SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_GETCURSEL,0,0);
+			Joypad[index].Enabled=IsDlgButtonChecked(hDlg,IDC_JPTOGGLE);
+			set_buttoninfo(index, hDlg); // update display of conflicts
+			break;
 
 		}
 		switch(HIWORD(wParam))
 		{
-			//case CBN_SELCHANGE:
-			//	index = SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_GETCURSEL,0,0);
-			//	SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_SETCURSEL,(WPARAM)index,0);
-			//	if(index > 4) index += 3; // skip controllers 6, 7, and 8 in the input dialog
-			//	if(index < 8)
-			//	{
-			//		SendDlgItemMessage(hDlg,IDC_JPTOGGLE,BM_SETCHECK, Joypad[index].Enabled ? (WPARAM)BST_CHECKED : (WPARAM)BST_UNCHECKED, 0);
-			//		EnableWindow(GetDlgItem(hDlg,IDC_JPTOGGLE),TRUE);
-			//	}
-			//	else
-			//	{
-			//		SendDlgItemMessage(hDlg,IDC_JPTOGGLE,BM_SETCHECK, Joypad[index-8].Enabled ? (WPARAM)BST_CHECKED : (WPARAM)BST_UNCHECKED, 0);
-			//		EnableWindow(GetDlgItem(hDlg,IDC_JPTOGGLE),FALSE);
-			//	}
+			case CBN_SELCHANGE:
+				index = SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_GETCURSEL,0,0);
+				SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_SETCURSEL,(WPARAM)index,0);
+				if(index < 5)
+				{
+					SendDlgItemMessage(hDlg,IDC_JPTOGGLE,BM_SETCHECK, Joypad[index].Enabled ? (WPARAM)BST_CHECKED : (WPARAM)BST_UNCHECKED, 0);
+					EnableWindow(GetDlgItem(hDlg,IDC_JPTOGGLE),TRUE);
+				}
+				else
+				{
+					SendDlgItemMessage(hDlg,IDC_JPTOGGLE,BM_SETCHECK, Joypad[index-5].Enabled ? (WPARAM)BST_CHECKED : (WPARAM)BST_UNCHECKED, 0);
+					EnableWindow(GetDlgItem(hDlg,IDC_JPTOGGLE),FALSE);
+				}
 
-			//	set_buttoninfo(index,hDlg);
+				set_buttoninfo(index,hDlg);
 
-			//	EnableDisableKeyFields(index,hDlg);
+				EnableDisableKeyFields(index,hDlg);
 
-			//	break;
+				break;
 		}
 		return FALSE;
 
@@ -2447,217 +1828,63 @@ void input_init()
 	
 	LoadInputConfig();
 	LoadHotkeyConfig();
-	LoadGuitarConfig();
 
 	di_init();
 //	FeedbackON = input_feedback;
 }
 
-void input_process()
+uint32 S9xReadJoypad (int which1)
 {
-	S9xWinScanJoypads();
+    if (which1 > 4)
+        return 0;
 
-	//not appropriate right now in desmume
-	//if (paused) return;
+    if (which1 == 0 )//&& !Settings.NetPlay
+        S9xWinScanJoypads ();
 
-	bool R = joypads[0] & RIGHT_MASK;
-	bool L = joypads[0] & LEFT_MASK;
-	bool D = joypads[0] & DOWN_MASK;
-	bool U = joypads[0] & UP_MASK;
-	bool T = joypads[0] & RUN_MASK;
-	bool S = joypads[0] & SELECT_MASK;
-	bool B = joypads[0] & II_MASK;
-	bool A = joypads[0] & I_MASK;
-	bool Y = joypads[0] & Y_MASK;
-	bool X = joypads[0] & X_MASK;
-	bool W = joypads[0] & L_MASK;
-	bool E = joypads[0] & R_MASK;
-	bool G = joypads[0] & DEBUG_MASK;
-	bool F = joypads[0] & LID_MASK;
+#ifdef NETPLAY_SUPPORT
+    if (Settings.NetPlay)
+	return (S9xNPGetJoypad (which1));
+#endif
 
-/*	if(AutoHoldPressed && R) AutoHold.Right  ^= true;
-	if(AutoHoldPressed && L) AutoHold.Left   ^= true;
-	if(AutoHoldPressed && D) AutoHold.Down   ^= true;
-	if(AutoHoldPressed && U) AutoHold.Up     ^= true;
-	if(AutoHoldPressed && T) AutoHold.Select ^= true;
-	if(AutoHoldPressed && S) AutoHold.Start  ^= true;
-	if(AutoHoldPressed && B) AutoHold.B      ^= true;
-	if(AutoHoldPressed && A) AutoHold.A      ^= true;
-	if(AutoHoldPressed && Y) AutoHold.Y      ^= true;
-	if(AutoHoldPressed && X) AutoHold.X      ^= true;
-	if(AutoHoldPressed && W) AutoHold.L      ^= true;
-	if(AutoHoldPressed && E) AutoHold.R      ^= true;
-*/
-	extern void setinput(bool up, bool down, bool left, bool right, bool I, bool II, bool run, bool select);
-	setinput(U, D, L, R, A, B, T, S);
-//	NDS_setPad( R, L, D, U, T, S, B, A, Y, X, W, E, G, F);
+    return (joypads [which1]);
+}
 
-	if (Guitar.Enabled)
+void S9xUpdateJoypadButtons ()
+{
+    int i;
+
+	for (i = 0; i < 5; i++)
 	{
-		bool gG=!S9xGetState(Guitar.GREEN);
-		bool gR=!S9xGetState(Guitar.RED);
-		bool gY=!S9xGetState(Guitar.YELLOW);
-		bool gB=!S9xGetState(Guitar.BLUE);
-//		guitarGrip_setKey(gG, gR, gY, gB);
+	//	if (S9xLuaUsingJoypad(i))
+	//		IPPU.Joypads[i] = S9xLuaReadJoypad(i);
+	//	else
+			joypads[i] = S9xReadJoypad (i);
 	}
-}
+
+//	S9xMovieUpdate();
+//	pad_read = false;
 /*
-static void set_hotkeyinfo(HWND hDlg)
-{
-	HotkeyPage page = (HotkeyPage) SendDlgItemMessage(hDlg,IDC_HKCOMBO,CB_GETCURSEL,0,0);
-	SCustomKey *key = &CustomKeys.key(0);
-	int i = 0;
-
-	while (!IsLastCustomKey(key) && i < NUM_HOTKEY_CONTROLS) {
-		if (page == key->page) {
-			SendDlgItemMessage(hDlg, IDC_HOTKEY_Table[i], WM_USER+44, key->key, key->modifiers);
-			SetDlgItemTextW(hDlg, IDC_LABEL_HK_Table[i], key->name.c_str());
-			ShowWindow(GetDlgItem(hDlg, IDC_HOTKEY_Table[i]), SW_SHOW);
-			i++;
-		}
-		key++;
-	}
-	// disable unused controls
-	for (; i < NUM_HOTKEY_CONTROLS; i++) {
-		SendDlgItemMessage(hDlg, IDC_HOTKEY_Table[i], WM_USER+44, 0, 0);
-		SetDlgItemText(hDlg, IDC_LABEL_HK_Table[i], INPUTCONFIG_LABEL_UNUSED);
-		ShowWindow(GetDlgItem(hDlg, IDC_HOTKEY_Table[i]), SW_HIDE);
-	}
-}
-*/
-/*
-// DlgHotkeyConfig
-INT_PTR CALLBACK DlgHotkeyConfig(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-	int i, which;
-	static HotkeyPage page = (HotkeyPage) 0;
-
-
-	static SCustomKeys keys;
-
-	//HBRUSH g_hbrBackground;
-switch(msg)
+	if(!Settings.UpAndDown)
 	{
-		case WM_PAINT:
+		for (i = 0; i < 5; i++)
 		{
-			PAINTSTRUCT ps;
-			BeginPaint (hDlg, &ps);
-
-			EndPaint (hDlg, &ps);
+			if (IPPU.Joypads [i] & SNES_LEFT_MASK)
+				IPPU.Joypads [i] &= ~SNES_RIGHT_MASK;
+			if (IPPU.Joypads [i] & SNES_UP_MASK)
+				IPPU.Joypads [i] &= ~SNES_DOWN_MASK;
 		}
-		return true;
-	case WM_INITDIALOG:
-		//if(DirectX.Clipped) S9xReRefresh();
-		SetWindowText(hDlg,HOTKEYS_TITLE);
-
-		// insert hotkey page list items
-		for(i = 0 ; i < NUM_HOTKEY_PAGE ; i++)
-		{
-			SendDlgItemMessage(hDlg, IDC_HKCOMBO, CB_ADDSTRING, 0, (LPARAM)(LPCTSTR)hotkeyPageTitle[i]);
-		}
-
-		SendDlgItemMessage(hDlg,IDC_HKCOMBO,CB_SETCURSEL,(WPARAM)0,0);
-
-		InitCustomKeys(&keys);
-		CopyCustomKeys(&keys, &CustomKeys);
-		for( i=0;i<256;i++)
-		{
-			GetAsyncKeyState(i);
-		}
-
-		SetDlgItemText(hDlg,IDC_LABEL_BLUE,HOTKEYS_LABEL_BLUE);
-
-		set_hotkeyinfo(hDlg);
-
-		PostMessage(hDlg,WM_COMMAND, CBN_SELCHANGE<<16, 0);
-
-		SetFocus(GetDlgItem(hDlg,IDC_HKCOMBO));
-
-
-		return true;
-		break;
-	case WM_CLOSE:
-		EndDialog(hDlg, 0);
-		return TRUE;
-	case WM_USER+46:
-		// refresh command, for clicking away from a selected field
-		page = (HotkeyPage) SendDlgItemMessage(hDlg, IDC_HKCOMBO, CB_GETCURSEL, 0, 0);
-		set_hotkeyinfo(hDlg);
-		return TRUE;
-	case WM_USER+43:
-	{
-		//MessageBox(hDlg,"USER+43 CAUGHT","moo",MB_OK);
-		int modifiers = GetModifiers(wParam);
-
-		page = (HotkeyPage) SendDlgItemMessage(hDlg, IDC_HKCOMBO, CB_GETCURSEL, 0, 0);
-		wchar_t text[256];
-
-		which = GetDlgCtrlID((HWND)lParam);
-		for (i = 0; i < NUM_HOTKEY_CONTROLS; i++) {
-			if (which == IDC_HOTKEY_Table[i])
-				break;
-		}
-		GetDlgItemTextW(hDlg, IDC_LABEL_HK_Table[i], text, COUNT(text));
-
-		SCustomKey *key = &CustomKeys.key(0);
-		while (!IsLastCustomKey(key)) {
-			if (page == key->page) {
-				if(text == key->name) {
-					key->key = wParam;
-					key->modifiers = modifiers;
-					break;
-				}
-			}
-			key++;
-		}
-
-		set_hotkeyinfo(hDlg);
-		PostMessage(hDlg,WM_NEXTDLGCTL,0,0);
-//		PostMessage(hDlg,WM_KILLFOCUS,0,0);
-	}
-		return true;
-	case WM_COMMAND:
-		switch(LOWORD(wParam))
-		{
-		case IDCANCEL:
-			CopyCustomKeys(&CustomKeys, &keys);
-			EndDialog(hDlg,0);
-			break;
-		case IDOK:
-			SaveHotkeyConfig();
-			EndDialog(hDlg,0);
-			break;
-		}
-		switch(HIWORD(wParam))
-		{
-			case CBN_SELCHANGE:
-				page = (HotkeyPage) SendDlgItemMessage(hDlg, IDC_HKCOMBO, CB_GETCURSEL, 0, 0);
-				SendDlgItemMessage(hDlg, IDC_HKCOMBO, CB_SETCURSEL, (WPARAM)page, 0);
-
-				set_hotkeyinfo(hDlg);
-
-				SetFocus(GetDlgItem(hDlg, IDC_HKCOMBO));
-
-				break;
-		}
-		return FALSE;
-
 	}
 
-	return FALSE;
+    // BJ: This is correct behavior AFAICT (used to be Touhaiden hack)
+    if (IPPU.Controller == SNES_JOYPAD || IPPU.Controller == SNES_MULTIPLAYER5)
+    {
+		for (i = 0; i < 5; i++)
+		{
+			if (IPPU.Joypads [i])
+				IPPU.Joypads [i] |= 0xffff0000;
+		}
+    }*/
 }
-*/
-/*
-void RunInputConfig()
-{
-	DialogBox(g_hInstance, MAKEINTRESOURCE(IDD_INPUTCONFIG), g_hWnd, DlgInputConfig);
-}*/
-/*
-void RunHotkeyConfig()
-{
-	DialogBox(hAppInst, MAKEINTRESOURCE(IDD_KEYCUSTOM), MainWindow->getHWnd(), DlgHotkeyConfig);
-}
-*/
 
 #include "hotkey.h"
 #include "resource.h"
@@ -2668,23 +1895,6 @@ void RunHotkeyConfig()
 #include "types.h"
 #include <commctrl.h>
 
-extern "C" {
-//char inifilename[MAX_PATH];
-}
-
-
-/*
-extern void TogglePause();
-extern void ResetGame();
-extern void SaveState(int num);
-extern void LoadState(int num);
-extern void YuiPlayMovie(HWND hWnd);
-extern void YuiRecordMovie(HWND hWnd);
-extern void ToggleFullScreenHK();
-extern void YuiScreenshot(HWND hWnd);
-extern void YuiRecordAvi(HWND hWnd);
-extern void YuiStopAvi();
-*/
 //static TCHAR szHotkeysClassName[] = _T("InputCustomHot");
 
 static LRESULT CALLBACK HotInputCustomWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
