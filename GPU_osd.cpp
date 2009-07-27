@@ -130,7 +130,7 @@ void HudStruct::reset()
 	Microphone.ysize=10;
 */
 	SavestateSlots.x = 8;
-	SavestateSlots.y = 160;
+	SavestateSlots.y = 200;
 	SavestateSlots.xsize = 240;
 	SavestateSlots.ysize = 24;
 
@@ -179,7 +179,7 @@ static void TouchDisplay() {
 static int previousslot = 0;
 static int fadecounter;
 static char number[10];
-/*
+
 static void DrawStateSlots(){
 
 	const int yloc = Hud.SavestateSlots.y; //160
@@ -202,7 +202,7 @@ static void DrawStateSlots(){
 
 			aggDraw.hud->fillLinearGradient(xloc + xpos, yloc - yheight, xloc + 22 + xpos, yloc + 20 + yheight+20, agg::rgba8(100,200,255,alpha), agg::rgba8(255,255,255,0));
 
-			if(lastSaveState == i) {
+			if(CurrentState == i) {
 				yheight = 5;
 				aggDraw.hud->fillLinearGradient(xloc + xpos, yloc - yheight, 22 + xloc + xpos, yloc + 20 + yheight+20, agg::rgba8(100,255,255,alpha), agg::rgba8(255,255,255,0));
 			}
@@ -214,12 +214,12 @@ static void DrawStateSlots(){
 		}
 	}
 
-	if(lastSaveState != previousslot) fadecounter = 256;
-	previousslot = lastSaveState;
-	fadecounter--;
+	if(CurrentState != previousslot) fadecounter = 256;
+	previousslot = CurrentState;
+	fadecounter = fadecounter - 6;
 
 	if(fadecounter < 1) fadecounter = 0;
-}*/
+}
 #ifdef WIN32
 //#include "lua-engine.h"
 #endif
@@ -265,7 +265,7 @@ void DrawHUD()
 #ifdef WIN32
 //	CallRegisteredLuaFunctions(LUACALL_AFTEREMULATIONGUI);
 #endif
-//	DrawStateSlots();
+	DrawStateSlots();
 }
 
 
