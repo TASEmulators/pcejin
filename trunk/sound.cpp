@@ -33,6 +33,7 @@ public:
 	void reset();  // stop and reset the secondary sound buffer
 	void resume(); // resume the secondary sound buffer
 	void write(u16 * finalWave, int length);  // write the emulated sound to the secondary sound buffer
+	void volume(signed int volume);
 };
 
 
@@ -145,7 +146,7 @@ bool DirectSound::init(long sampleRate)
 	// Create secondary sound buffer
 	ZeroMemory( &dsbdesc, sizeof(DSBUFFERDESC) );
 	dsbdesc.dwSize = sizeof(DSBUFFERDESC);
-	dsbdesc.dwFlags = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLPOSITIONNOTIFY | DSBCAPS_GLOBALFOCUS;
+	dsbdesc.dwFlags = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLPOSITIONNOTIFY | DSBCAPS_GLOBALFOCUS | DSBCAPS_CTRLVOLUME;
 //	if( theApp.dsoundDisableHardwareAcceleration ) {
 		dsbdesc.dwFlags |= DSBCAPS_LOCSOFTWARE;
 //	}
@@ -312,4 +313,11 @@ void DirectSound::write(u16 * finalWave, int length)
 SoundDriver *newDirectSound()
 {
 	return new DirectSound();
+}
+
+void DirectSound::volume(signed int volume) {
+
+	if (!dsbSecondary) return ;
+	currentVolume = (((LONG)volume) - 100) * 100;
+		IDirectSoundBuffer8_SetVolume (dsbSecondary, currentVolume);
 }
