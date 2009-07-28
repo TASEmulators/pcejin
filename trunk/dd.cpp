@@ -331,7 +331,9 @@ void render() {
 		break;
 	}
 
+	osd->update();
 	DrawHUD();
+	osd->clear();
 
 	aggDraw.hud->attach(convert_buffer, pcejin.width, pcejin.height, 4*pcejin.width);
 
