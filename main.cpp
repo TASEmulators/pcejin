@@ -213,7 +213,7 @@ void LoadGame(){
 			if(std::string(ret) == "pce.cdbios PATH NOT SET") {
 				pcejin.started = false;
 				pcejin.romLoaded = false;
-				printf("specify your PCE CD bios");
+				MDFN_DispMessage("specify your PCE CD bios");
 				return;
 			}
 		}

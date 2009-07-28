@@ -1185,8 +1185,7 @@ void FCEUI_MoviePlayFromBeginning(void)
 	{
 		char *fname = strdup(curMovieFilename);
 		FCEUI_LoadMovie(fname, true, false, 0);
-		printf("Movie is now Read-Only. Playing from beginning.");
-//		FCEU_DispMessage("Movie is now Read-Only. Playing from beginning.");
+		MDFN_DispMessage("Movie is now Read-Only. Playing from beginning.");
 		free(fname);
 	}
 }

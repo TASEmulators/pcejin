@@ -11,6 +11,7 @@
 #include "types.h"
 #include "main.h"
 #include "pcejin.h"
+#include "mednafen.h"
 
 #include <string>
 
@@ -1908,7 +1909,7 @@ int SaveStateSlot=1;
 
 void DisplayMessage(char* str) {
 
-	printf(str);
+	MDFN_DispMessage(str);
 }
 
 ///////////////////////////

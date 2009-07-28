@@ -5,6 +5,7 @@
 #include "memory.h"
 #include "md5.h"
 #include "windows.h"
+#include "GPU_osd.h"
 
 MDFNS FSettings;
 
@@ -324,6 +325,8 @@ void MDFN_DispMessage(char const *format, ...)
 	va_end(ap);
 
 	// MDFND_DispMessage((UTF8*)msg);
+	osd->addLine("%s", msg);
+
 	puts(msg);
 }
 
