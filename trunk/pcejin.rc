@@ -201,10 +201,10 @@ BEGIN
     CONTROL         " ",IDC_SELECT,"InputCustom",WS_TABSTOP,161,52,71,12,WS_EX_CLIENTEDGE
     CONTROL         " ",IDC_L,"InputCustom",WS_TABSTOP,161,65,71,12,WS_EX_CLIENTEDGE
     CONTROL         " ",IDC_R,"InputCustom",WS_TABSTOP,161,78,71,12,WS_EX_CLIENTEDGE
-    CONTROL         " ",IDC_UPLEFT,"InputCustom",WS_DISABLED | WS_TABSTOP,161,91,71,12,WS_EX_CLIENTEDGE
-    CONTROL         " ",IDC_UPRIGHT,"InputCustom",WS_DISABLED | WS_TABSTOP,161,104,71,12,WS_EX_CLIENTEDGE
-    CONTROL         " ",IDC_DWNRIGHT,"InputCustom",WS_DISABLED | WS_TABSTOP,161,117,71,12,WS_EX_CLIENTEDGE
-    CONTROL         " ",IDC_DWNLEFT,"InputCustom",WS_DISABLED | WS_TABSTOP,161,129,71,12,WS_EX_CLIENTEDGE
+    CONTROL         " ",IDC_UPLEFT,"InputCustom",WS_TABSTOP,161,91,71,12,WS_EX_CLIENTEDGE
+    CONTROL         " ",IDC_UPRIGHT,"InputCustom",WS_TABSTOP,161,104,71,12,WS_EX_CLIENTEDGE
+    CONTROL         " ",IDC_DWNRIGHT,"InputCustom",WS_TABSTOP,161,117,71,12,WS_EX_CLIENTEDGE
+    CONTROL         " ",IDC_DWNLEFT,"InputCustom",WS_TABSTOP,161,129,71,12,WS_EX_CLIENTEDGE
     PUSHBUTTON      "Cancel",IDCANCEL,242,127,39,14
     PUSHBUTTON      "OK",IDOK,282,127,41,14
     LTEXT           "Blue means the button is already mapped.\nPink means it conflicts with a custom hotkey.\nRed means it's reserved by Windows.\nButtons can be disabled using Escape.",IDC_LABEL_BLUE,166,0,157,32

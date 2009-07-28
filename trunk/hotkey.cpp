@@ -1335,12 +1335,16 @@ void EnableDisableKeyFields (int index, HWND hDlg)
 		enableUnTurboable = false;
 	}
 
-//	EnableWindow(GetDlgItem(hDlg,IDC_UPLEFT), false);
-//	EnableWindow(GetDlgItem(hDlg,IDC_UPRIGHT), false);
-//	EnableWindow(GetDlgItem(hDlg,IDC_DWNRIGHT), false);
-//	EnableWindow(GetDlgItem(hDlg,IDC_DWNLEFT), false);
-//	EnableWindow(GetDlgItem(hDlg,IDC_DEBUG), false);
-//	EnableWindow(GetDlgItem(hDlg,IDC_LID), true);
+	EnableWindow(GetDlgItem(hDlg,IDC_X), false);
+	EnableWindow(GetDlgItem(hDlg,IDC_Y), false);
+	EnableWindow(GetDlgItem(hDlg,IDC_L), false);
+	EnableWindow(GetDlgItem(hDlg,IDC_R), false);
+	EnableWindow(GetDlgItem(hDlg,IDC_UPLEFT), false);
+	EnableWindow(GetDlgItem(hDlg,IDC_UPRIGHT), false);
+	EnableWindow(GetDlgItem(hDlg,IDC_DWNRIGHT), false);
+	EnableWindow(GetDlgItem(hDlg,IDC_DWNLEFT), false);
+	EnableWindow(GetDlgItem(hDlg,IDC_DEBUG), false);
+	EnableWindow(GetDlgItem(hDlg,IDC_LID), false);
 }
 
 INT_PTR CALLBACK DlgInputConfig(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
