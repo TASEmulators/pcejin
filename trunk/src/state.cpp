@@ -5,6 +5,7 @@
 #include "video.h"
 #include "main.h"
 #include "movie.h"
+#include "pcejin.h"
 
 #define RLSB MDFNSTATE_RLSB //0x80000000
 
@@ -408,7 +409,7 @@ int MDFNSS_SaveSM(StateMem *st, int wantpreview, int data_only, uint32 *fb, MDFN
 	{
 		memset(header+16,0,16);
 		MDFN_en32lsb(header + 12, currFrameCounter);
-		MDFN_en32lsb(header + 16, lagFrameCounter);
+		MDFN_en32lsb(header + 16, pcejin.lagFrameCounter);
 //		MDFN_en32lsb(header + 16, MEDNAFEN_VERSION_NUMERIC);
 		MDFN_en32lsb(header + 24, neowidth);
 		MDFN_en32lsb(header + 28, neoheight);
@@ -508,7 +509,7 @@ int MDFNSS_LoadSM(StateMem *st, int haspreview, int data_only)
 	}
 
 	currFrameCounter = MDFN_de32lsb(header + 12);  
-	lagFrameCounter = MDFN_de32lsb(header + 16);
+	pcejin.lagFrameCounter = MDFN_de32lsb(header + 16);
 
 	if(haspreview)
 	{

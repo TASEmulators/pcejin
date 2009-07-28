@@ -10,6 +10,7 @@
 #include <io.h>
 #include "types.h"
 #include "main.h"
+#include "pcejin.h"
 
 #include <string>
 
@@ -3300,14 +3301,13 @@ void HK_PreviousSaveSlot(int) {
 		lastSaveState--;
 	SaveStateMessages(lastSaveState,2); */
 }
-extern bool started;
+
 void FrameAdvance(bool state);
 
 void HK_FrameAdvanceKeyDown(int) { FrameAdvance(true); }
 void HK_FrameAdvanceKeyUp(int) { FrameAdvance(false); }
 
-void HK_Pause(int) {started ^=1; if(started) soundDriver->resume(); else soundDriver->pause();};// TogglePause(); }
-
+void HK_Pause(int) {pcejin.started ^=1; if(pcejin.started) soundDriver->resume(); else soundDriver->pause();};// TogglePause(); }
 
 void HK_FastForwardToggle(int) {FastForward ^=1;}; //FastForward ^=1; }
 void HK_FastForwardKeyDown(int) {FastForward=true;}; //SpeedThrottleEnable(); }

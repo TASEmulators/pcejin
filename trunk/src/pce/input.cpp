@@ -142,14 +142,14 @@ static ALWAYS_INLINE bool CheckLM(int n)
   return(0);
 }
 
-extern int lagFrameFlag;
+#include "pcejin.h"
 
 uint8 INPUT_Read(unsigned int A)
 {
  uint8 ret = 0xF;
  int tmp_ri = read_index;
 
- lagFrameFlag = 0;
+ pcejin.lagFrameFlag = 0;
 
  if(tmp_ri > 4)
   ret ^= 0xF;

@@ -7,6 +7,7 @@
 #include "video.h"
 #include "aggdraw.h"
 #include "GPU_osd.h"
+#include "pcejin.h"
 
 DDSURFACEDESC2			ddsd;
 LPDIRECTDRAW			lpdd = NULL;
@@ -39,9 +40,9 @@ int CreateDDrawBuffers()
 	ddsd.dwFlags         = DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH;
 	ddsd.ddsCaps.dwCaps  = DDSCAPS_OFFSCREENPLAIN;
 
-	ddsd.dwWidth         = width;//MDFNGameInfo->DisplayRect.w;//256;//video.rotatedwidth();
+	ddsd.dwWidth         = pcejin.width;//MDFNGameInfo->DisplayRect.w;//256;//video.rotatedwidth();
 
-	ddsd.dwHeight        = height;//MDFNGameInfo->DisplayRect.h;//232;//video.rotatedheight();
+	ddsd.dwHeight        = pcejin.height;//MDFNGameInfo->DisplayRect.h;//232;//video.rotatedheight();
 
 		if (IDirectDraw7_CreateSurface(lpdd7, &ddsd, &lpBack, NULL) != DD_OK) return -2;
 
@@ -123,23 +124,20 @@ void setClientSize(int width, int height)
 
 void ScaleScreen(float factor)
 {
-	if(aspectratio)
-		width  = 309;
+	if(pcejin.aspectratio)
+		pcejin.width  = 309;
 
 	if(windowSize == 0)
-		setClientSize(width, height);
+		setClientSize(pcejin.width, pcejin.height);
 	else
 	{
 		if(factor==65535)
 			factor = 1.5f;
 		else if(factor==65534)
 			factor = 2.5f;
-		setClientSize((int)(width * factor), (int)(232 * factor));
+		setClientSize((int)(pcejin.width * factor), (int)(232 * factor));
 	}
 }
-
-int height = 232;
-int width = 256;
 
 RECT MainScreenRect;
 RECT MainScreenSrcRect;
@@ -150,7 +148,7 @@ void UpdateWndRects(HWND hwnd)
 	RECT rc;
 
 	int wndWidth, wndHeight;
-	int defHeight = (height);//; + video.screengap);
+	int defHeight = (pcejin.height);//; + video.screengap);
 	float ratio;
 	int oneScreenHeight, gapHeight;
 
@@ -160,7 +158,7 @@ void UpdateWndRects(HWND hwnd)
 	wndHeight = (rc.bottom - rc.top);
 
 	ratio = ((float)wndHeight / (float)defHeight);
-	oneScreenHeight = (int)((height) * ratio);
+	oneScreenHeight = (int)((pcejin.height) * ratio);
 
 	// Main screen
 	ptClient.x = rc.left;
@@ -181,8 +179,8 @@ void UpdateSrcRect()
 	// Main screen
 	MainScreenSrcRect.left = 0;
 	MainScreenSrcRect.top = 0;
-	MainScreenSrcRect.right = width;
-	MainScreenSrcRect.bottom = height;
+	MainScreenSrcRect.right = pcejin.width;
+	MainScreenSrcRect.bottom = pcejin.height;
 
 }
 
@@ -193,15 +191,15 @@ template<typename T, int bpp> static void doRotate(void* dst) {
 
 	if(ddsd.lPitch == 1024)
 	{
-		for(int i = 0; i < width*height; i++)
+		for(int i = 0; i < pcejin.width*pcejin.height; i++)
 			((T*)buffer)[i] = ((T*)src)[i];
 	}
 	else
 	{
-		for(int y = 0; y < height; y++)
+		for(int y = 0; y < pcejin.height; y++)
 		{
-			for(int x = 0; x < width; x++)
-				((T*)buffer)[x] = ((T*)src)[(y * width) + x];
+			for(int x = 0; x < pcejin.width; x++)
+				((T*)buffer)[x] = ((T*)src)[(y * pcejin.width) + x];
 			buffer += ddsd.lPitch;
 		}
 	}
@@ -288,21 +286,21 @@ static void convert16(const uint8* buffer, EmulateSpecStruct *espec){
 
 void render() {
  
-	if(width != MDFNGameInfo->DisplayRect.w) {
-		width = MDFNGameInfo->DisplayRect.w;
-		height = MDFNGameInfo->DisplayRect.h;
+	if(pcejin.width != MDFNGameInfo->DisplayRect.w) {
+		pcejin.width = MDFNGameInfo->DisplayRect.w;
+		pcejin.height = MDFNGameInfo->DisplayRect.h;
 		CreateDDrawBuffers();
 		ScaleScreen(windowSize);
 	}
 
-	width = MDFNGameInfo->DisplayRect.w;
-	height = MDFNGameInfo->DisplayRect.h;
+	pcejin.width = MDFNGameInfo->DisplayRect.w;
+	pcejin.height = MDFNGameInfo->DisplayRect.h;
 
 	uint32 *src = (uint32*)convert_buffer;
 
 	char temp[256];
 
-	SetInputDisplayCharacters(pcepaddata);
+	SetInputDisplayCharacters(pcejin.pads);
 
 	UpdateSrcRect();
 	UpdateWndRects(g_hWnd);
@@ -337,7 +335,7 @@ void render() {
 
 	DrawHUD();
 
-	aggDraw.hud->attach(convert_buffer, width, height, 4*width);
+	aggDraw.hud->attach(convert_buffer, pcejin.width, pcejin.height, 4*pcejin.width);
 
 	uint32 *dst = (uint32*)ddsd.lpSurface;
 

@@ -2,6 +2,8 @@
 #include "windows.h"
 #include "git.h"
 
+//#include "filter/filter.h"
+
 void WritePrivateProfileInt(char* appname, char* keyname, int val, char* file);
 extern char IniName[MAX_PATH];
 
@@ -33,21 +35,12 @@ void DecreaseSpeed();
 
 LRESULT CALLBACK BiosSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-extern u8 pcepaddata[5];
 void SetInputDisplayCharacters(uint8 new_data[]);
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 extern EmulateSpecStruct espec;
 extern void render();
-extern int lagFrameFlag;
-extern int lagFrameCounter;
 
-extern bool started;
-
-extern int height;
-extern int width;
-extern bool aspectratio;
 extern uint8 convert_buffer[1024*768*3];
-extern char InputDisplayString[128];
 
 void WritePrivateProfileBool(char* appname, char* keyname, bool val, char* file);
 bool GetPrivateProfileBool(const char* appname, const char* keyname, bool defval, const char* filename);
