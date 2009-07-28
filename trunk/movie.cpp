@@ -506,7 +506,7 @@ void FCEUI_LoadMovie(const char *fname, bool _read_only, bool tasedit, int _paus
 	//}
 	
 	pcejin.lagFrameCounter = 0;
-	pcejin.lagFrameFlag = 0;
+	pcejin.isLagFrame = false;
 	currFrameCounter = 0;
 	pauseframe = _pauseframe;
 	movie_readonly = _read_only;
@@ -561,7 +561,7 @@ static void openRecordingMovie(const char* fname)
 //	extern bool _HACK_DONT_STOPMOVIE;
 //	_HACK_DONT_STOPMOVIE = true;
 	pcejin.lagFrameCounter = 0;
-	pcejin.lagFrameFlag = 0;
+	pcejin.isLagFrame = false;
 	PCE_Power();
 //	_HACK_DONT_STOPMOVIE = false;
 	currMovieData.ports = controllers;

@@ -10,7 +10,7 @@ public:
 	bool started;
 	bool romLoaded;
 
-	int lagFrameFlag;
+	bool isLagFrame;
 	int lagFrameCounter;
 	char inputDisplayString[128];
 	int height;

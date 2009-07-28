@@ -149,7 +149,7 @@ uint8 INPUT_Read(unsigned int A)
  uint8 ret = 0xF;
  int tmp_ri = read_index;
 
- pcejin.lagFrameFlag = 0;
+ pcejin.isLagFrame = false;
 
  if(tmp_ri > 4)
   ret ^= 0xF;

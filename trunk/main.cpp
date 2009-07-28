@@ -692,7 +692,7 @@ void emulate(){
 	if(!pcejin.started)
 		return;
 
-	pcejin.lagFrameFlag = 1;
+	pcejin.isLagFrame = true;
 
 	S9xUpdateJoypadButtons();
 
@@ -735,7 +735,7 @@ void emulate(){
 		pcejin.started = false;
 	}
 
-	if (pcejin.lagFrameFlag)
+	if (pcejin.isLagFrame)
 		pcejin.lagFrameCounter++;
 }
 
