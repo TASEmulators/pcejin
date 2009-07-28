@@ -27,6 +27,8 @@
 #include "aggdraw.h"
 #include "GPU_osd.h"
 
+#include "replay.h"
+
 bool FastForward;
 
 SoundDriver * soundDriver = 0;
@@ -295,7 +297,7 @@ void RecordMovie(HWND hWnd){
 	ofn.Flags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
 
 	if(GetSaveFileName(&ofn))
-		FCEUI_SaveMovie(szChoice, a);
+		FCEUI_SaveMovie(szChoice, a, 1);
 
 	//If user did not specify an extension, add .dsm for them
 	// fname = szChoice;
@@ -367,9 +369,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_ENTERMENULOOP:
 		soundDriver->pause();
-		EnableMenuItem(GetMenu(hWnd), IDM_RECORD_MOVIE, MF_BYCOMMAND | (movieMode == MOVIEMODE_INACTIVE) ? MF_ENABLED : MF_GRAYED);
-		EnableMenuItem(GetMenu(hWnd), IDM_PLAY_MOVIE, MF_BYCOMMAND | (movieMode == MOVIEMODE_INACTIVE) ? MF_ENABLED : MF_GRAYED);
+		EnableMenuItem(GetMenu(hWnd), IDM_RECORD_MOVIE, MF_BYCOMMAND | (movieMode == MOVIEMODE_INACTIVE && started) ? MF_ENABLED : MF_GRAYED);
+		EnableMenuItem(GetMenu(hWnd), IDM_PLAY_MOVIE, MF_BYCOMMAND | (movieMode == MOVIEMODE_INACTIVE && started) ? MF_ENABLED : MF_GRAYED);
 		EnableMenuItem(GetMenu(hWnd), IDM_STOPMOVIE, MF_BYCOMMAND | (movieMode != MOVIEMODE_INACTIVE) ? MF_ENABLED : MF_GRAYED);
+
 		//Window Size
 		checkMenu(IDC_WINDOW1X, ((windowSize==1)));
 		checkMenu(IDC_WINDOW2X, ((windowSize==2)));
@@ -442,11 +445,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			soundDriver->resume();
 			break;
 		case IDM_RECORD_MOVIE:
-			RecordMovie(hWnd);
+			MovieRecordTo();
 			return 0;
 		case IDM_PLAY_MOVIE:
-			PlayMovie(hWnd);
-			break;
+			Replay_LoadMovie();
+			return 0;
 		case IDM_INPUT_CONFIG:
 			soundDriver->pause();
 			DialogBox(g_hInstance, MAKEINTRESOURCE(IDD_INPUTCONFIG), hWnd, DlgInputConfig);
