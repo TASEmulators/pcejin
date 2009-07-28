@@ -1177,3 +1177,15 @@ void MakeMovieStateName(const char *filename) {
 	if(movieMode != MOVIEMODE_INACTIVE)
 		strcat ((char *)filename, "movie");
 }
+
+void FCEUI_MoviePlayFromBeginning(void)
+{
+	if (movieMode != MOVIEMODE_INACTIVE)
+	{
+		char *fname = strdup(curMovieFilename);
+		FCEUI_LoadMovie(fname, true, false, 0);
+		printf("Movie is now Read-Only. Playing from beginning.");
+//		FCEU_DispMessage("Movie is now Read-Only. Playing from beginning.");
+		free(fname);
+	}
+}
