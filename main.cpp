@@ -567,8 +567,6 @@ void OnPaint(HWND hwnd)
 	ValidateRect( hwnd, NULL );
 }
 
-char InputDisplayString[128];
-
 /*
 if (lpDDClipPrimary!=NULL) IDirectDraw7_Release(lpDDClipPrimary);
 if (lpPrimary != NULL) IDirectDraw7_Release(lpPrimary);
@@ -626,7 +624,7 @@ void SetInputDisplayCharacters(uint8 new_data[]){
 		}
 	}
 
-	strcpy(InputDisplayString, str);
+	strcpy(pcejin.inputDisplayString, str);
 }
 
 void initespec(){
