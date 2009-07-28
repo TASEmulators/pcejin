@@ -5,6 +5,7 @@
 #include "utils/xstring.h"
 #include "movie.h"
 #include "main.h"
+#include "pcejin.h"
 
 extern void PCE_Power();
 
@@ -504,8 +505,8 @@ void FCEUI_LoadMovie(const char *fname, bool _read_only, bool tasedit, int _paus
 	//	if(!success) return;
 	//}
 	
-	lagFrameCounter = 0;
-	lagFrameFlag = 0;
+	pcejin.lagFrameCounter = 0;
+	pcejin.lagFrameFlag = 0;
 	currFrameCounter = 0;
 	pauseframe = _pauseframe;
 	movie_readonly = _read_only;
@@ -559,8 +560,8 @@ static void openRecordingMovie(const char* fname)
 	
 //	extern bool _HACK_DONT_STOPMOVIE;
 //	_HACK_DONT_STOPMOVIE = true;
-	lagFrameCounter = 0;
-	lagFrameFlag = 0;
+	pcejin.lagFrameCounter = 0;
+	pcejin.lagFrameFlag = 0;
 	PCE_Power();
 //	_HACK_DONT_STOPMOVIE = false;
 	currMovieData.ports = controllers;
@@ -627,7 +628,7 @@ void NDS_setPadFromMovie(uint16 pad[])
 	if(pad[i] &(1 << 0)) pcepad |= (1 << 2);//s
 	if(pad[i] &(1 << 1)) pcepad |= (1 << 3);//n
 
-	pcepaddata[i] = pcepad;
+	pcejin.pads[i] = pcepad;
 	}
 
 }
@@ -707,7 +708,7 @@ void FCEUMOV_AddInputState()
 
 		 for (int i = 0; i < currMovieData.ports; i++) {
 
-			 pcepad = pcepaddata[i];
+			 pcepad = pcejin.pads[i];
 
 #define FIX(b) (b?1:0)
 			 II = FIX(pcepad &(1 << 1));

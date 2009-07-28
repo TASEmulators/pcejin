@@ -109,8 +109,6 @@ std::string MDFN_GetSettingS(const char *name)
 		return "";
 	if(nm == "pce.cdbios")	{
 		GetPrivateProfileString("Main", "Bios", "pce.cdbios PATH NOT SET", ret, MAX_PATH, IniName);
-		if(std::string(ret) == "pce.cdbios PATH NOT SET")
-			started = false;
 		return std::string(ret);
 	}
 

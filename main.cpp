@@ -28,14 +28,13 @@
 #include "GPU_osd.h"
 
 #include "replay.h"
+#include "pcejin.h"
 
 bool FastForward;
 
+Pcejin pcejin;
+
 SoundDriver * soundDriver = 0;
-
-bool aspectratio = false;
-
-bool started;
 
 EmulateSpecStruct espec;
 
@@ -208,18 +207,22 @@ void LoadGame(){
 	ofn.nMaxFile = MAX_PATH;
 	ofn.Flags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
 	if(GetOpenFileName(&ofn)) {
-		started = true;
+		pcejin.romloaded = true;
+		pcejin.started = true;
 		if(strlen(szChoice) > 4 && (!strcasecmp(szChoice + strlen(szChoice) - 4, ".cue") || !strcasecmp(szChoice + strlen(szChoice) - 4, ".toc"))) {
 			char ret[MAX_PATH];
 			GetPrivateProfileString("Main", "Bios", "pce.cdbios PATH NOT SET", ret, MAX_PATH, IniName);
 			if(std::string(ret) == "pce.cdbios PATH NOT SET") {
-				started = false;
+				pcejin.started = false;
+				pcejin.romloaded = false;
 				printf("specify your PCE CD bios");
 				return;
 			}
 		}
-		if(!MDFNI_LoadGame(szChoice))
-			started = false;
+		if(!MDFNI_LoadGame(szChoice)) {
+			pcejin.started = false;
+			pcejin.romloaded = false;
+		}
 	}
 }
 
@@ -250,16 +253,13 @@ void StopAvi()
 	DRV_AviEnd();
 }
 
-
-//char szChoice[MAX_PATH]={0};
-
 DWORD checkMenu(UINT idd, bool check)
 {
 	return CheckMenuItem(GetMenu(g_hWnd), idd, MF_BYCOMMAND | (check?MF_CHECKED:MF_UNCHECKED));
 }
 
 void LoadIniSettings(){
-	aspectratio = GetPrivateProfileInt("Video", "aspectratio", 0, IniName);
+	pcejin.aspectratio = GetPrivateProfileInt("Video", "aspectratio", 0, IniName);
 	windowSize = GetPrivateProfileInt("Video", "windowSize", 1, IniName);
 	ScaleScreen(windowSize);
 	Hud.FrameCounterDisplay = GetPrivateProfileBool("Display","FrameCounter", false, IniName);
@@ -271,7 +271,7 @@ void LoadIniSettings(){
 
 void SaveIniSettings(){
 
-	WritePrivateProfileInt("Video", "aspectratio", aspectratio, IniName);
+	WritePrivateProfileInt("Video", "aspectratio", pcejin.aspectratio, IniName);
 	WritePrivateProfileInt("Video", "windowSize", windowSize, IniName);
 	if(soundDriver->currentVolume == -10000)
 		WritePrivateProfileInt("Main", "SoundVolume", 0, IniName);
@@ -369,16 +369,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_ENTERMENULOOP:
 		soundDriver->pause();
-		EnableMenuItem(GetMenu(hWnd), IDM_RECORD_MOVIE, MF_BYCOMMAND | (movieMode == MOVIEMODE_INACTIVE && started) ? MF_ENABLED : MF_GRAYED);
-		EnableMenuItem(GetMenu(hWnd), IDM_PLAY_MOVIE, MF_BYCOMMAND | (movieMode == MOVIEMODE_INACTIVE && started) ? MF_ENABLED : MF_GRAYED);
+		EnableMenuItem(GetMenu(hWnd), IDM_RECORD_MOVIE, MF_BYCOMMAND | (movieMode == MOVIEMODE_INACTIVE && pcejin.romloaded) ? MF_ENABLED : MF_GRAYED);
+		EnableMenuItem(GetMenu(hWnd), IDM_PLAY_MOVIE, MF_BYCOMMAND | (movieMode == MOVIEMODE_INACTIVE && pcejin.romloaded) ? MF_ENABLED : MF_GRAYED);
 		EnableMenuItem(GetMenu(hWnd), IDM_STOPMOVIE, MF_BYCOMMAND | (movieMode != MOVIEMODE_INACTIVE) ? MF_ENABLED : MF_GRAYED);
 
 		//Window Size
 		checkMenu(IDC_WINDOW1X, ((windowSize==1)));
 		checkMenu(IDC_WINDOW2X, ((windowSize==2)));
 		checkMenu(IDC_WINDOW3X, ((windowSize==3)));
-		checkMenu(IDC_WINDOW4X, ((windowSize==4)));//bool aspectratio = false;
-		checkMenu(IDC_ASPECT, ((aspectratio)));
+		checkMenu(IDC_WINDOW4X, ((windowSize==4)));
+		checkMenu(IDC_ASPECT, ((pcejin.aspectratio)));
 		checkMenu(ID_VIEW_FRAMECOUNTER,Hud.FrameCounterDisplay);
 		checkMenu(ID_VIEW_DISPLAYINPUT,Hud.ShowInputDisplay);
 		checkMenu(ID_VIEW_DISPLAYSTATESLOTS,Hud.DisplayStateSlots);
@@ -429,9 +429,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			WritePrivateProfileInt("Video","Window Size",windowSize,IniName);
 			break;
 		case IDC_ASPECT:
-			aspectratio ^= 1;
+			pcejin.aspectratio ^= 1;
 			ScaleScreen(windowSize);
-			WritePrivateProfileInt("Video","Aspect Ratio",aspectratio,IniName);
+			WritePrivateProfileInt("Video","Aspect Ratio",pcejin.aspectratio,IniName);
 			break;
 		case IDM_EXIT:
 			PostQuitMessage(0);
@@ -587,7 +587,7 @@ void initialize(){
 	MDFNGameInfo = &EmulatedPCE;
 
 //	MDFNI_LoadGame("m:\\leg.pce");
-//	started = true;
+//	pcejin.started = true;
 	initespec();
 	initsound();
 }
@@ -601,13 +601,10 @@ int32 ssize;
 
 void initvideo();
 
-u8 pcepaddata[5];
-
-
 void initinput(){
 
-	PCEINPUT_SetInput(0, "gamepad", &pcepaddata[0]);
-	PCEINPUT_SetInput(1, "gamepad", &pcepaddata[1]);
+	PCEINPUT_SetInput(0, "gamepad", &pcejin.pads[0]);
+	PCEINPUT_SetInput(1, "gamepad", &pcejin.pads[1]);
 }
 
 const char* Buttons[8] = {"I ", "II ", "S", "Run ", "U", "R", "D", "L"};
@@ -692,24 +689,19 @@ void initvideo(){
 	MDFNI_SetPixelFormat(0,8,16,24);
 }
 
-
-int lagFrameFlag = 0;
-int lagFrameCounter = 0;
-bool frameAdvance = false;
-
 extern u32 joypads [8];
 
 void emulate(){
 
-	if(!started)
+	if(!pcejin.started)
 		return;
 
-	lagFrameFlag = 1;
+	pcejin.lagFrameFlag = 1;
 
 	S9xUpdateJoypadButtons();
 
-	pcepaddata[0] = joypads [0];
-	pcepaddata[1] = joypads [1];
+	pcejin.pads[0] = joypads [0];
+	pcejin.pads[1] = joypads [1];
 
 	FCEUMOV_AddInputState();
 
@@ -741,14 +733,14 @@ void emulate(){
 	DRV_AviSoundUpdate(*espec.SoundBuf, *espec.SoundBufSize);
 	DRV_AviVideoUpdate((uint16*)espec.pixels, &espec);
 
-	if (frameAdvance)
+	if (pcejin.frameAdvance)
 	{
-		frameAdvance = false;
-		started = false;
+		pcejin.frameAdvance = false;
+		pcejin.started = false;
 	}
 
-	if (lagFrameFlag)
-		lagFrameCounter++;
+	if (pcejin.lagFrameFlag)
+		pcejin.lagFrameCounter++;
 }
 
 bool first;
@@ -757,25 +749,25 @@ void FrameAdvance(bool state)
 {
 	if(state) {
 		if(first) {
-			started = true;
+			pcejin.started = true;
 			// execute = TRUE;
 			soundDriver->resume();
-			frameAdvance=true;
+			pcejin.frameAdvance=true;
 			first=false;
 		}
 		else {
-			started = true;
+			pcejin.started = true;
 			soundDriver->resume();
 			// execute = TRUE;
 		}
 	}
 	else {
 		first = true;
-		if(frameAdvance)
+		if(pcejin.frameAdvance)
 		{}
 		else
 		{
-			started = false;
+			pcejin.started = false;
 			// emu_halt();
 			soundDriver->pause();
 			// SPU_Pause(1);

@@ -36,6 +36,7 @@
 //#include "NDSSystem.h"
 //#include "mic.h"
 //#include "saves.h"
+#include "pcejin.h"
 
 bool HudEditorMode = false;
 OSDCLASS	*osd = NULL;
@@ -234,7 +235,7 @@ void DrawHUD()
 		std::stringstream ss;
 //		if(nds.isTouch)
 //			ss << (nds.touchX >> 4) << " " << (nds.touchY >> 4); 
-		osd->addFixed(Hud.InputDisplay.x, Hud.InputDisplay.y, "%s",(std::string(InputDisplayString) += ss.str()).c_str());
+		osd->addFixed(Hud.InputDisplay.x, Hud.InputDisplay.y, "%s",(std::string(pcejin.InputDisplayString) += ss.str()).c_str());
 //		TouchDisplay();
 	}
 /*
@@ -255,7 +256,7 @@ void DrawHUD()
 
 	if (Hud.ShowLagFrameCounter) 
 	{
-		osd->addFixed(Hud.LagFrameCounter.x, Hud.LagFrameCounter.y, "%d",lagFrameCounter);
+		osd->addFixed(Hud.LagFrameCounter.x, Hud.LagFrameCounter.y, "%d",pcejin.lagFrameCounter);
 	}
 /*
 	#ifdef WIN32

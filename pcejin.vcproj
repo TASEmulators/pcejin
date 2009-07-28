@@ -874,6 +874,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\pcejin.h"
+			>
+		</File>
+		<File
 			RelativePath=".\pcejin.rc"
 			>
 		</File>
