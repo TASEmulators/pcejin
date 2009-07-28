@@ -21,8 +21,6 @@ ushort *lpscreen = NULL;
 
 bool quit = false;
 
-int windowSize;
-
 int CreateDDrawBuffers()
 {
 	if (lpDDClipPrimary!=NULL) { IDirectDraw7_Release(lpDDClipPrimary); lpDDClipPrimary = NULL; }
@@ -124,10 +122,10 @@ void setClientSize(int width, int height)
 
 void ScaleScreen(float factor)
 {
-	if(pcejin.aspectratio)
+	if(pcejin.aspectRatio)
 		pcejin.width  = 309;
 
-	if(windowSize == 0)
+	if(pcejin.windowSize == 0)
 		setClientSize(pcejin.width, pcejin.height);
 	else
 	{
@@ -290,7 +288,7 @@ void render() {
 		pcejin.width = MDFNGameInfo->DisplayRect.w;
 		pcejin.height = MDFNGameInfo->DisplayRect.h;
 		CreateDDrawBuffers();
-		ScaleScreen(windowSize);
+		ScaleScreen(pcejin.windowSize);
 	}
 
 	pcejin.width = MDFNGameInfo->DisplayRect.w;

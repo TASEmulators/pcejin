@@ -3309,9 +3309,9 @@ void HK_FrameAdvanceKeyUp(int) { FrameAdvance(false); }
 
 void HK_Pause(int) {pcejin.started ^=1; if(pcejin.started) soundDriver->resume(); else soundDriver->pause();};// TogglePause(); }
 
-void HK_FastForwardToggle(int) {FastForward ^=1;}; //FastForward ^=1; }
-void HK_FastForwardKeyDown(int) {FastForward=true;}; //SpeedThrottleEnable(); }
-void HK_FastForwardKeyUp(int) {FastForward=false;}; //SpeedThrottleDisable(); }
+void HK_FastForwardToggle(int) {pcejin.fastForward ^=1;}; //FastForward ^=1; }
+void HK_FastForwardKeyDown(int) {pcejin.fastForward=true;}; //SpeedThrottleEnable(); }
+void HK_FastForwardKeyUp(int) {pcejin.fastForward=false;}; //SpeedThrottleDisable(); }
 void HK_IncreaseSpeed(int) { IncreaseSpeed(); }
 void HK_DecreaseSpeed(int) { DecreaseSpeed(); }
 

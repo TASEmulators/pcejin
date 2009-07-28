@@ -3,6 +3,7 @@
 
 #include "sound.h"
 #include "main.h"
+#include "pcejin.h"
 
 #pragma comment(lib,"dxguid.lib")
 
@@ -239,7 +240,7 @@ void DirectSound::write(u16 * finalWave, int length)
 	LPVOID       lpvPtr2;
 	DWORD        dwBytes2 = 0;
 
-	if( !FastForward ) {//!speedup && synchronize && !theApp.throttle
+	if( !pcejin.fastForward ) {//!speedup && synchronize && !theApp.throttle
 		hr = dsbSecondary->GetStatus(&status);
 		if( status & DSBSTATUS_PLAYING ) {
 			if( !soundPaused ) {

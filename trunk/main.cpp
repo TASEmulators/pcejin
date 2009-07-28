@@ -30,8 +30,6 @@
 #include "replay.h"
 #include "pcejin.h"
 
-bool FastForward;
-
 Pcejin pcejin;
 
 SoundDriver * soundDriver = 0;
@@ -207,21 +205,21 @@ void LoadGame(){
 	ofn.nMaxFile = MAX_PATH;
 	ofn.Flags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
 	if(GetOpenFileName(&ofn)) {
-		pcejin.romloaded = true;
+		pcejin.romLoaded = true;
 		pcejin.started = true;
 		if(strlen(szChoice) > 4 && (!strcasecmp(szChoice + strlen(szChoice) - 4, ".cue") || !strcasecmp(szChoice + strlen(szChoice) - 4, ".toc"))) {
 			char ret[MAX_PATH];
 			GetPrivateProfileString("Main", "Bios", "pce.cdbios PATH NOT SET", ret, MAX_PATH, IniName);
 			if(std::string(ret) == "pce.cdbios PATH NOT SET") {
 				pcejin.started = false;
-				pcejin.romloaded = false;
+				pcejin.romLoaded = false;
 				printf("specify your PCE CD bios");
 				return;
 			}
 		}
 		if(!MDFNI_LoadGame(szChoice)) {
 			pcejin.started = false;
-			pcejin.romloaded = false;
+			pcejin.romLoaded = false;
 		}
 	}
 }
@@ -259,9 +257,9 @@ DWORD checkMenu(UINT idd, bool check)
 }
 
 void LoadIniSettings(){
-	pcejin.aspectratio = GetPrivateProfileInt("Video", "aspectratio", 0, IniName);
-	windowSize = GetPrivateProfileInt("Video", "windowSize", 1, IniName);
-	ScaleScreen(windowSize);
+	pcejin.aspectRatio = GetPrivateProfileInt("Video", "aspectratio", 0, IniName);
+	pcejin.windowSize = GetPrivateProfileInt("Video", "pcejin.windowSize", 1, IniName);
+	ScaleScreen(pcejin.windowSize);
 	Hud.FrameCounterDisplay = GetPrivateProfileBool("Display","FrameCounter", false, IniName);
 	Hud.ShowInputDisplay = GetPrivateProfileBool("Display","Display Input", false, IniName);
 	Hud.ShowLagFrameCounter = GetPrivateProfileBool("Display","Display Lag Counter", false, IniName);
@@ -271,8 +269,8 @@ void LoadIniSettings(){
 
 void SaveIniSettings(){
 
-	WritePrivateProfileInt("Video", "aspectratio", pcejin.aspectratio, IniName);
-	WritePrivateProfileInt("Video", "windowSize", windowSize, IniName);
+	WritePrivateProfileInt("Video", "aspectratio", pcejin.aspectRatio, IniName);
+	WritePrivateProfileInt("Video", "pcejin.windowSize", pcejin.windowSize, IniName);
 	if(soundDriver->currentVolume == -10000)
 		WritePrivateProfileInt("Main", "SoundVolume", 0, IniName);
 
@@ -369,16 +367,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_ENTERMENULOOP:
 		soundDriver->pause();
-		EnableMenuItem(GetMenu(hWnd), IDM_RECORD_MOVIE, MF_BYCOMMAND | (movieMode == MOVIEMODE_INACTIVE && pcejin.romloaded) ? MF_ENABLED : MF_GRAYED);
-		EnableMenuItem(GetMenu(hWnd), IDM_PLAY_MOVIE, MF_BYCOMMAND | (movieMode == MOVIEMODE_INACTIVE && pcejin.romloaded) ? MF_ENABLED : MF_GRAYED);
+		EnableMenuItem(GetMenu(hWnd), IDM_RECORD_MOVIE, MF_BYCOMMAND | (movieMode == MOVIEMODE_INACTIVE && pcejin.romLoaded) ? MF_ENABLED : MF_GRAYED);
+		EnableMenuItem(GetMenu(hWnd), IDM_PLAY_MOVIE, MF_BYCOMMAND | (movieMode == MOVIEMODE_INACTIVE && pcejin.romLoaded) ? MF_ENABLED : MF_GRAYED);
 		EnableMenuItem(GetMenu(hWnd), IDM_STOPMOVIE, MF_BYCOMMAND | (movieMode != MOVIEMODE_INACTIVE) ? MF_ENABLED : MF_GRAYED);
 
 		//Window Size
-		checkMenu(IDC_WINDOW1X, ((windowSize==1)));
-		checkMenu(IDC_WINDOW2X, ((windowSize==2)));
-		checkMenu(IDC_WINDOW3X, ((windowSize==3)));
-		checkMenu(IDC_WINDOW4X, ((windowSize==4)));
-		checkMenu(IDC_ASPECT, ((pcejin.aspectratio)));
+		checkMenu(IDC_WINDOW1X, ((pcejin.windowSize==1)));
+		checkMenu(IDC_WINDOW2X, ((pcejin.windowSize==2)));
+		checkMenu(IDC_WINDOW3X, ((pcejin.windowSize==3)));
+		checkMenu(IDC_WINDOW4X, ((pcejin.windowSize==4)));
+		checkMenu(IDC_ASPECT, ((pcejin.aspectRatio)));
 		checkMenu(ID_VIEW_FRAMECOUNTER,Hud.FrameCounterDisplay);
 		checkMenu(ID_VIEW_DISPLAYINPUT,Hud.ShowInputDisplay);
 		checkMenu(ID_VIEW_DISPLAYSTATESLOTS,Hud.DisplayStateSlots);
@@ -409,29 +407,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		switch (wmId)
 		{
 		case IDC_WINDOW1X:
-			windowSize=1;
-			ScaleScreen(windowSize);
-			WritePrivateProfileInt("Video","Window Size",windowSize,IniName);
+			pcejin.windowSize=1;
+			ScaleScreen(pcejin.windowSize);
+			WritePrivateProfileInt("Video","Window Size",pcejin.windowSize,IniName);
 			break;
 		case IDC_WINDOW2X:
-			windowSize=2;
-			ScaleScreen(windowSize);
-			WritePrivateProfileInt("Video","Window Size",windowSize,IniName);
+			pcejin.windowSize=2;
+			ScaleScreen(pcejin.windowSize);
+			WritePrivateProfileInt("Video","Window Size",pcejin.windowSize,IniName);
 			break;
 		case IDC_WINDOW3X:
-			windowSize=3;
-			ScaleScreen(windowSize);
-			WritePrivateProfileInt("Video","Window Size",windowSize,IniName);
+			pcejin.windowSize=3;
+			ScaleScreen(pcejin.windowSize);
+			WritePrivateProfileInt("Video","Window Size",pcejin.windowSize,IniName);
 			break;
 		case IDC_WINDOW4X:
-			windowSize=4;
-			ScaleScreen(windowSize);
-			WritePrivateProfileInt("Video","Window Size",windowSize,IniName);
+			pcejin.windowSize=4;
+			ScaleScreen(pcejin.windowSize);
+			WritePrivateProfileInt("Video","Window Size",pcejin.windowSize,IniName);
 			break;
 		case IDC_ASPECT:
-			pcejin.aspectratio ^= 1;
-			ScaleScreen(windowSize);
-			WritePrivateProfileInt("Video","Aspect Ratio",pcejin.aspectratio,IniName);
+			pcejin.aspectRatio ^= 1;
+			ScaleScreen(pcejin.windowSize);
+			WritePrivateProfileInt("Video","Aspect Ratio",pcejin.aspectRatio,IniName);
 			break;
 		case IDM_EXIT:
 			PostQuitMessage(0);
@@ -715,7 +713,7 @@ void emulate(){
 	espec.SoundBufSize = &ssize;
 	espec.soundmultiplier = 1;
 
-	if(FastForward && currFrameCounter%30 && !DRV_AviIsRecording())
+	if(pcejin.fastForward && currFrameCounter%30 && !DRV_AviIsRecording())
 		espec.skip = 1;
 	else
 		espec.skip = 0;

@@ -2,21 +2,23 @@ class Pcejin
 {
 public:
 
-	Pcejin() : started(false), aspectratio(true), romloaded(false), frameAdvance(false), 
+	Pcejin() : started(false), aspectRatio(true), romLoaded(false), frameAdvance(false), 
 		width(256), height(232) {
 	}
 
-	bool aspectratio;
+	bool aspectRatio;
 	bool started;
-	bool romloaded;
+	bool romLoaded;
 
 	int lagFrameFlag;
 	int lagFrameCounter;
-	char InputDisplayString[128];
+	char inputDisplayString[128];
 	int height;
 	int width;
+	int windowSize;
 
 	bool frameAdvance;
+	bool fastForward;
 
 	u8 pads[5];
 
