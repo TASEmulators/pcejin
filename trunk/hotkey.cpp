@@ -1428,13 +1428,13 @@ switch(msg)
 			sprintf(temp,INPUTCONFIG_JPCOMBO,i);
 			SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_ADDSTRING,0,(LPARAM)(LPCTSTR)temp);
 		}
-
+/*
 		for(i=6;i<11;i++)
 		{
 			sprintf(temp,INPUTCONFIG_JPCOMBO INPUTCONFIG_LABEL_CONTROLLER_TURBO_PANEL_MOD,i-5);
 			SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_ADDSTRING,0,(LPARAM)(LPCTSTR)temp);
 		}
-
+*/
 		SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_SETCURSEL,(WPARAM)0,0);
 
 		SendDlgItemMessage(hDlg,IDC_JPTOGGLE,BM_SETCHECK, Joypad[index].Enabled ? (WPARAM)BST_CHECKED : (WPARAM)BST_UNCHECKED, 0);
@@ -1573,7 +1573,7 @@ switch(msg)
 				if(index < 5)
 				{
 					SendDlgItemMessage(hDlg,IDC_JPTOGGLE,BM_SETCHECK, Joypad[index].Enabled ? (WPARAM)BST_CHECKED : (WPARAM)BST_UNCHECKED, 0);
-					EnableWindow(GetDlgItem(hDlg,IDC_JPTOGGLE),TRUE);
+					EnableWindow(GetDlgItem(hDlg,IDC_JPTOGGLE),FALSE);
 				}
 				else
 				{
