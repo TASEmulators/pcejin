@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="blip;compress;zlib;trio;&quot;libcdio-0.81\include\&quot;;&quot;libcdio-0.81/include&quot;;&quot;libcdio-0.81/lib/driver&quot;;.;.\src;.\src\pce;agg\include"
+				AdditionalIncludeDirectories="blip;compress;zlib;trio;&quot;libcdio-0.81\include\&quot;;&quot;libcdio-0.81/include&quot;;&quot;libcdio-0.81/lib/driver&quot;;.;.\src;.\src\pce;agg\include;utils"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;WANT_PCE_EMU;NEED_CDEMU;EXTERNAL_LIBCDIO_CONFIG_H;NO_CODECS;HAVE_DIRECTSOUND"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -99,6 +99,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine=".\utils\SubWCRev.bat"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -120,7 +121,7 @@
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories=".\blip;.\compress;.\zlib;.\trio;.;&quot;.\libcdio-0.81\include\&quot;;&quot;libcdio-0.81/lib/driver&quot;;.\src;.\src\pce;agg\include;directx"
+				AdditionalIncludeDirectories=".\blip;.\compress;.\zlib;.\trio;.;&quot;.\libcdio-0.81\include\&quot;;&quot;libcdio-0.81/lib/driver&quot;;.\src;.\src\pce;agg\include;directx;utils"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;WANT_PCE_EMU;NEED_CDEMU;EXTERNAL_LIBCDIO_CONFIG_H;NO_CODECS;HAVE_DIRECTSOUND"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -205,7 +206,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
-				AdditionalIncludeDirectories=".\blip;.\compress;.\zlib;.\trio;.;&quot;.\libcdio-0.81\include\&quot;;&quot;.\libcdio-0.81\lib\driver&quot;;.\src;.\src\pce;agg\include"
+				AdditionalIncludeDirectories=".\blip;.\compress;.\zlib;.\trio;.;&quot;.\libcdio-0.81\include\&quot;;&quot;.\libcdio-0.81\lib\driver&quot;;.\src;.\src\pce;agg\include;utils"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;WANT_PCE_EMU;NEED_CDEMU;EXTERNAL_LIBCDIO_CONFIG_H;NO_CODECS;HAVE_DIRECTSOUND"
 				StringPooling="true"
 				RuntimeLibrary="0"

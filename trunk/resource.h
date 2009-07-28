@@ -149,6 +149,7 @@
 #define IDC_EDIT_SRAMFILENAME 612
 #define IDD_RECORDMOVIE 613
 #define IDC_2_PLAYER 614
+#define IDC_TXT_VERSION 615
 #define IDC_LABEL_HK1                   60001
 #define IDC_LABEL_HK2                   60002
 #define IDC_LABEL_HK3                   60003

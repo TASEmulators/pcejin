@@ -29,6 +29,7 @@
 
 #include "replay.h"
 #include "pcejin.h"
+#include "svnrev.h"
 
 Pcejin pcejin;
 
@@ -861,6 +862,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_INITDIALOG:
+		SetDlgItemText(hDlg, IDC_TXT_VERSION, pcejin.versionName.c_str());
 		return (INT_PTR)TRUE;
 
 	case WM_COMMAND:

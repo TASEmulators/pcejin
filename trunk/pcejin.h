@@ -1,9 +1,17 @@
+#include <string>
+#include "utils\svnrev.h"
+
 class Pcejin
 {
 public:
 
-	Pcejin() : started(false), aspectRatio(true), romLoaded(false), frameAdvance(false), 
-		width(256), height(232) {
+	Pcejin() : started(false), 
+		aspectRatio(true), 
+		romLoaded(false), 
+		frameAdvance(false), 
+		width(256), 
+		height(232), 
+		versionName(std::string("pcejin svn") + std::string(SVN_REV_STR)) {
 	}
 
 	bool aspectRatio;
@@ -16,6 +24,8 @@ public:
 	int height;
 	int width;
 	int windowSize;
+
+	std::string versionName;
 
 	bool frameAdvance;
 	bool fastForward;
