@@ -216,4 +216,6 @@ void FCEUMOV_AddInputState();
 void SaveStateMovie(char* filename);
 void LoadStateMovie(char* filename);
 
+void FCEUI_MoviePlayFromBeginning(void);
+
 #endif

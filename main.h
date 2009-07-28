@@ -54,3 +54,4 @@ bool GetPrivateProfileBool(const char* appname, const char* keyname, bool defval
 
 void S9xUpdateJoypadButtons ();
 bool soundInit();
+void PlayMovie(HWND hWnd);

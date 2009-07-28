@@ -56,6 +56,7 @@ struct SCustomKeys
 */
 SCustomKey FastForwardToggle, IncreaseSpeed, DecreaseSpeed;
 	SCustomKey RecordAVI, StopAVI;
+	SCustomKey PlayMovieFromBeginning;
 /*
 	SCustomKey ToggleFrameCounter;
 	SCustomKey ToggleFPS;

@@ -3230,9 +3230,10 @@ void HK_ToggleReadOnly(int)
 	ToggleReadOnly();
 }
 
-void HK_PlayMovie(int)   {};//YuiPlayMovie(g_hWnd); };
-void HK_RecordMovie(int) {};//YuiRecordMovie(g_hWnd); };
-void HK_StopMovie(int)   {};//FCEUI_StopMovie(); };
+void HK_PlayMovie(int)   {PlayMovie(g_hWnd);}
+void HK_PlayMovieFromBeginning(int)   {FCEUI_MoviePlayFromBeginning();}
+void HK_RecordMovie(int) {}//RecordMovie(g_hWnd);}
+void HK_StopMovie(int)   {FCEUI_StopMovie();}
 
 void HK_ToggleNBG0(int) {};//ToggleNBG0();}
 void HK_ToggleNBG1(int) {};//ToggleNBG1();}
@@ -3454,6 +3455,12 @@ void InitCustomKeys (SCustomKeys *keys)
 	keys->PlayMovie.name = L"Play Movie";
 	keys->PlayMovie.page = HOTKEY_PAGE_MOVIE;
 	keys->PlayMovie.key = NULL;
+
+	keys->PlayMovieFromBeginning.handleKeyDown = HK_PlayMovieFromBeginning;
+	keys->PlayMovieFromBeginning.code = "PlayMovieFromBeginning";
+	keys->PlayMovieFromBeginning.name = L"Play From Beginning";
+	keys->PlayMovieFromBeginning.page = HOTKEY_PAGE_MOVIE;
+	keys->PlayMovieFromBeginning.key = NULL;
 
 	keys->RecordMovie.handleKeyDown = HK_RecordMovie;
 	keys->RecordMovie.code = "RecordMovie";
