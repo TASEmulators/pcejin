@@ -391,8 +391,6 @@ bool DRV_AviBegin(const char* fname)
 //		osd->addLine("AVI recording started.");
 	}
 
-	FastForward = true;
-
 	strncpy(saved_cur_avi_fnameandext,fname,MAX_PATH);
 	strncpy(saved_avi_fname,fname,MAX_PATH);
 	char* dot = strrchr(saved_avi_fname, '.');
@@ -465,8 +463,6 @@ void DRV_AviEnd()
 {
 	if(!avi_file)
 		return;
-
-	FastForward = false;
 
 	// Don't display if we're just starting another segment
 	if(avi_file->tBytes <= 2097152000) {

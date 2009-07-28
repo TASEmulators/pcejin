@@ -22,6 +22,4 @@ extern LPDIRECTDRAW7			lpdd7;
 
 int CreateDDrawBuffers();
 
-extern int windowSize;
-
 void ScaleScreen(float factor);

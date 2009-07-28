@@ -28,7 +28,6 @@ extern void PCEINPUT_SetInput(int port, const char *type, void *ptr);
 extern SoundDriver *newDirectSound();
 extern void input_process();
 extern SoundDriver * soundDriver;
-extern bool FastForward;
 
 void IncreaseSpeed();
 void DecreaseSpeed();
