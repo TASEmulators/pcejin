@@ -305,7 +305,7 @@ int MovieData::dump(std::ostream *os, bool binary)
 }
 
 //yuck... another custom text parser.
-static bool LoadFM2(MovieData& movieData, std::istream* fp, int size, bool stopAfterHeader)
+bool LoadFM2(MovieData& movieData, std::istream* fp, int size, bool stopAfterHeader)
 {
 	//TODO - start with something different. like 'desmume movie version 1"
 	std::ios::pos_type curr = fp->tellg();
@@ -536,7 +536,7 @@ static void openRecordingMovie(const char* fname)
 
 //begin recording a new movie
 //TODO - BUG - the record-from-another-savestate doesnt work.
- void FCEUI_SaveMovie(const char *fname, std::wstring author)
+ void FCEUI_SaveMovie(const char *fname, std::wstring author, int controllers)
 {
 	//if(!FCEU_IsValidUI(FCEUI_RECORDMOVIE))
 	//	return;
@@ -563,7 +563,7 @@ static void openRecordingMovie(const char* fname)
 	lagFrameFlag = 0;
 	PCE_Power();
 //	_HACK_DONT_STOPMOVIE = false;
-	currMovieData.ports = 2;
+	currMovieData.ports = controllers;
 
 	//todo ?
 	//poweron(true);
