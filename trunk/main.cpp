@@ -690,7 +690,7 @@ extern u32 joypads [8];
 
 void emulate(){
 
-	if(!pcejin.started)
+	if(!pcejin.started  || !pcejin.romLoaded)
 		return;
 
 	pcejin.isLagFrame = true;
