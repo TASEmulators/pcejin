@@ -3223,8 +3223,8 @@ extern void PCE_Power(void);
 void HK_Reset(int) {PCE_Power();}
 void HK_HardReset(int) {PCE_Power();}
 
-void HK_RecordAVI(int) {};//RecordAvi(g_hWnd);}
-void HK_StopAVI(int) {};//StopAvi();}
+void HK_RecordAVI(int) {RecordAvi();}
+void HK_StopAVI(int) {StopAvi();}
 
 //void HK_ToggleFrame(int) {frameCounterDisplay ^= true;}
 //void HK_ToggleFPS(int) {FpsDisplay ^= true;}
