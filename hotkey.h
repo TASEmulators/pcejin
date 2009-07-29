@@ -67,7 +67,7 @@ SCustomKey FastForwardToggle, IncreaseSpeed, DecreaseSpeed;
 	SCustomKey Screenshot;
 
 	SCustomKey FastForward;
-	SCustomKey ToggleNBG0, ToggleNBG1, ToggleNBG2, ToggleNBG3, ToggleRBG0, ToggleVDP1;
+	SCustomKey ToggleNBG0, ToggleNBG1, ToggleNBG2, ToggleNBG3;
 
 	SCustomKey ToggleFullScreen;
 	SCustomKey PlayMovie;
