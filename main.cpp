@@ -741,7 +741,7 @@ void emulate(){
 		pcejin.lagFrameCounter++;
 
 
-	if(pcejin.slow)
+	if(pcejin.slow  && !pcejin.fastForward)
 		while(SpeedThrottle())
 		{
 		}
