@@ -11,7 +11,8 @@ public:
 		frameAdvance(false), 
 		width(256), 
 		height(232), 
-		versionName(std::string("pcejin svn") + std::string(SVN_REV_STR)) {
+		versionName(std::string("pcejin svn") + std::string(SVN_REV_STR)),
+		slow(false) {
 	}
 
 	bool aspectRatio;
@@ -29,6 +30,7 @@ public:
 
 	bool frameAdvance;
 	bool fastForward;
+	bool slow;
 
 	u8 pads[5];
 

@@ -50,3 +50,8 @@ void PlayMovie(HWND hWnd);
 
 void RecordAvi();
 void StopAvi();
+
+void IncreaseSpeed();
+void DecreaseSpeed();
+void InitSpeedThrottle();
+int SpeedThrottle();

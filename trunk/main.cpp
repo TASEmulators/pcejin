@@ -102,6 +102,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	soundInit();
 
 	LoadIniSettings();
+	InitSpeedThrottle();
 
 	DirectDrawInit();
 
@@ -738,6 +739,12 @@ void emulate(){
 
 	if (pcejin.isLagFrame)
 		pcejin.lagFrameCounter++;
+
+
+	if(pcejin.slow)
+		while(SpeedThrottle())
+		{
+		}
 }
 
 bool first;
@@ -771,11 +778,6 @@ void FrameAdvance(bool state)
 			// emu_paused = 1;
 		}
 	}
-}
-
-void IncreaseSpeed(){
-}
-void DecreaseSpeed(){
 }
 
 LRESULT CALLBACK BiosSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
