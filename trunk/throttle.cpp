@@ -13,7 +13,7 @@ void isSlow() {
 	if(desiredfps < 3932160)
 		pcejin.slow = true;
 	else
-		pcejin.slow = true;
+		pcejin.slow = false;
 }
 
 void IncreaseSpeed(void) {
