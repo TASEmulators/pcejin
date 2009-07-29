@@ -3352,13 +3352,6 @@ void InitCustomKeys (SCustomKeys *keys)
 	keys->OpenROM.key = 'O';
 	keys->OpenROM.modifiers = CUSTKEY_CTRL_MASK;*/
 
-	keys->Reset.handleKeyDown = HK_Reset;
-	keys->Reset.code = "Reset";
-	keys->Reset.name = L"Reset";
-	keys->Reset.page = HOTKEY_PAGE_MAIN;
-	keys->Reset.key = 'R';
-	keys->Reset.modifiers = CUSTKEY_CTRL_MASK;
-
 	keys->HardReset.handleKeyDown = HK_HardReset;
 	keys->HardReset.code = "HardReset";
 	keys->HardReset.name = L"Hard Reset";

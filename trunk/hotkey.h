@@ -76,7 +76,6 @@ SCustomKey FastForwardToggle, IncreaseSpeed, DecreaseSpeed;
 	SCustomKey ToggleReadOnly;
 
 	SCustomKey ToggleOSD;
-	SCustomKey Reset;
 	SCustomKey HardReset;
 	SCustomKey Pause;
 	SCustomKey FrameAdvance;
