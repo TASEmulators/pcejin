@@ -923,6 +923,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\throttle.cpp"
+			>
+		</File>
+		<File
 			RelativePath=".\types.h"
 			>
 		</File>
