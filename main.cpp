@@ -89,6 +89,11 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	if( !RegisterClassEx(&winClass) )
 		return E_FAIL;
 
+	GetINIPath();
+
+	pcejin.aspectRatio = GetPrivateProfileInt("Video", "aspectratio", 0, IniName);
+	pcejin.windowSize = GetPrivateProfileInt("Video", "pcejin.windowSize", 1, IniName);
+	
 	g_hWnd = CreateWindowEx( NULL, "MY_WINDOWS_CLASS",
 		"pcejin",
 		WS_OVERLAPPEDWINDOW | WS_VISIBLE,
@@ -97,7 +102,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	if( g_hWnd == NULL )
 		return E_FAIL;
 
-	GetINIPath();
+	ScaleScreen(pcejin.windowSize);
 
 	soundInit();
 
@@ -259,9 +264,6 @@ DWORD checkMenu(UINT idd, bool check)
 }
 
 void LoadIniSettings(){
-	pcejin.aspectRatio = GetPrivateProfileInt("Video", "aspectratio", 0, IniName);
-	pcejin.windowSize = GetPrivateProfileInt("Video", "pcejin.windowSize", 1, IniName);
-	ScaleScreen(pcejin.windowSize);
 	Hud.FrameCounterDisplay = GetPrivateProfileBool("Display","FrameCounter", false, IniName);
 	Hud.ShowInputDisplay = GetPrivateProfileBool("Display","Display Input", false, IniName);
 	Hud.ShowLagFrameCounter = GetPrivateProfileBool("Display","Display Lag Counter", false, IniName);
