@@ -40,10 +40,10 @@ public:
 		if(romLoaded) {
 			started ^=1;
 
-		if(started && !soundDriver->userMute)
-			soundDriver->unMute();
+		if(started)
+			soundDriver->resume();
 		else
-			soundDriver->mute();
+			soundDriver->pause();
 		}
 	}
 };
