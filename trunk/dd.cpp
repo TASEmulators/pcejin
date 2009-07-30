@@ -148,7 +148,7 @@ void UpdateWndRects(HWND hwnd)
 	int wndWidth, wndHeight;
 	int defHeight = (pcejin.height);//; + video.screengap);
 	float ratio;
-	int oneScreenHeight, gapHeight;
+	int oneScreenHeight;
 
 	GetClientRect(g_hWnd, &rc);
 
@@ -296,8 +296,6 @@ void render() {
 	pcejin.height = MDFNGameInfo->DisplayRect.h;
 
 	uint32 *src = (uint32*)convert_buffer;
-
-	char temp[256];
 
 	SetInputDisplayCharacters(pcejin.pads);
 

@@ -156,10 +156,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
 HANDLE hConsole;
 void OpenConsole()
 {
-	COORD csize;
 	CONSOLE_SCREEN_BUFFER_INFO csbiInfo;
-	SMALL_RECT srect;
-	char buf[256];
 
 	if (hConsole) return;
 	AllocConsole();
@@ -809,7 +806,6 @@ LRESULT CALLBACK BiosSettingsDlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM
 	{
 	case WM_INITDIALOG:
 		{
-			HWND cur;
 
 			char ret[MAX_PATH];
 			GetPrivateProfileString("Main", "Bios", "pce.cdbios PATH NOT SET", ret, MAX_PATH, IniName);
