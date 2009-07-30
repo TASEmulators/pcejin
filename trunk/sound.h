@@ -44,9 +44,14 @@ public:
 
 	virtual void setThrottle(unsigned short throttle) { };
 
-	virtual void volume(signed int volume) = 0;
+	bool userMute;
 
-	int currentVolume;
+	virtual void mute() = 0;
+
+	virtual void unMute() = 0;
+
+	virtual void doUserMute() = 0;
+
 };
 
 #endif // __VBA_SOUND_DRIVER_H__

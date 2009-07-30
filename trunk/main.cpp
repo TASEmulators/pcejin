@@ -266,15 +266,17 @@ void LoadIniSettings(){
 	Hud.ShowInputDisplay = GetPrivateProfileBool("Display","Display Input", false, IniName);
 	Hud.ShowLagFrameCounter = GetPrivateProfileBool("Display","Display Lag Counter", false, IniName);
 	Hud.DisplayStateSlots = GetPrivateProfileBool("Display","Display State Slots", false, IniName);
-	soundDriver->volume(GetPrivateProfileInt("Main", "SoundVolume", 100, IniName));
+	soundDriver->userMute = (GetPrivateProfileBool("Main", "Muted", false, IniName));
+	if(soundDriver->userMute)
+		soundDriver->mute();
+
 }
 
 void SaveIniSettings(){
 
 	WritePrivateProfileInt("Video", "aspectratio", pcejin.aspectRatio, IniName);
 	WritePrivateProfileInt("Video", "pcejin.windowSize", pcejin.windowSize, IniName);
-	if(soundDriver->currentVolume == -10000)
-		WritePrivateProfileInt("Main", "SoundVolume", 0, IniName);
+	WritePrivateProfileInt("Main", "Muted", soundDriver->userMute, IniName);
 
 }
 
@@ -383,7 +385,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		checkMenu(ID_VIEW_DISPLAYINPUT,Hud.ShowInputDisplay);
 		checkMenu(ID_VIEW_DISPLAYSTATESLOTS,Hud.DisplayStateSlots);
 		checkMenu(ID_VIEW_DISPLAYLAG,Hud.ShowLagFrameCounter);
-		checkMenu(IDM_MUTE,soundDriver->currentVolume == -10000);
+		checkMenu(IDM_MUTE,soundDriver->userMute);
 		break;
 	case WM_EXITMENULOOP:
 		soundDriver->resume();
@@ -472,6 +474,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			DialogBox(g_hInstance, MAKEINTRESOURCE(IDD_BIOS), hWnd, (DLGPROC) BiosSettingsDlgProc);
 			// DialogBox(g_hInstance, MAKEINTRESOURCE(IDD_KEYCUSTOM), hWnd, BiosSettingsDlgProc);
 			soundDriver->resume();
+			break;
 		case ID_VIEW_FRAMECOUNTER:
 			Hud.FrameCounterDisplay ^= true;
 			WritePrivateProfileBool("Display", "FrameCounter", Hud.FrameCounterDisplay, IniName);
@@ -495,10 +498,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			osd->clear();
 			return 0;
 		case IDM_MUTE:
-			if(soundDriver->currentVolume == -10000)
-				soundDriver->volume(100);
-			else
-				soundDriver->volume(0);
+			soundDriver->doUserMute();
 			break;
 		case IDM_STOPMOVIE:
 			FCEUI_StopMovie();
@@ -584,8 +584,9 @@ void initialize(){
 
 	MDFNGameInfo = &EmulatedPCE;
 
-//	MDFNI_LoadGame("m:\\leg.pce");
+//	MDFNI_LoadGame("m:\\pce roms\\leg.pce");
 //	pcejin.started = true;
+//	pcejin.romLoaded = true;
 	initespec();
 	initsound();
 }
