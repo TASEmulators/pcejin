@@ -371,6 +371,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			HandleKeyUp(wParam, lParam, modifiers);
 		}
 		break;
+	case WM_SIZE:
+		switch(wParam)
+		{
+		case SIZE_MINIMIZED:
+			break;
+		case SIZE_MAXIMIZED:
+			pcejin.maximized = true;
+			break;
+		case SIZE_RESTORED:
+			pcejin.maximized = false;
+			break;
+		default:
+			break;
+		}
+		return 0;
 	case WM_ENTERMENULOOP:
 		soundDriver->pause();
 		EnableMenuItem(GetMenu(hWnd), IDM_RECORD_MOVIE, MF_BYCOMMAND | (movieMode == MOVIEMODE_INACTIVE && pcejin.romLoaded) ? MF_ENABLED : MF_GRAYED);

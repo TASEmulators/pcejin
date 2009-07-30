@@ -288,7 +288,8 @@ void render() {
 		pcejin.width = MDFNGameInfo->DisplayRect.w;
 		pcejin.height = MDFNGameInfo->DisplayRect.h;
 		CreateDDrawBuffers();
-		ScaleScreen(pcejin.windowSize);
+		if(!pcejin.maximized)
+			ScaleScreen(pcejin.windowSize);
 	}
 
 	pcejin.width = MDFNGameInfo->DisplayRect.w;
