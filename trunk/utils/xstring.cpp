@@ -3,9 +3,40 @@
 #include "xstring.h"
 #include <string>
 
+//a vc-style substring operation (very kind and lenient)
+std::string strsub(const std::string& str, int pos, int len) {
+	int strlen = str.size();
+	
+	if(strlen==0) return str; //empty strings always return empty strings
+	if(pos>=strlen) return str; //if you start past the end of the string, return the entire string. this is unusual, but there you have it
+
+	//clipping
+	if(pos<0) {
+		len += pos;
+		pos = 0;
+	}
+
+	if (pos+len>=strlen)
+		len=strlen-pos+1;
+	
+	//return str.str().substr(pos,len);
+	return str.substr(pos,len);
+}
+
+std::string strmid(const std::string& str, int pos, int len) { return strsub(str,pos,len); }
+std::string strleft(const std::string& str, int len) { return strsub(str,0,len); }
+std::string strright(const std::string& str, int len) { return len ? strsub(str,str.size()-len,len) : ""; }
+std::string toupper(const std::string& str)
+{
+	std::string ret = str;
+	for(u32 i=0;i<str.size();i++)
+		ret[i] = toupper(ret[i]);
+	return ret;
+}
+
 ///Upper case routine. Returns number of characters modified
 int str_ucase(char *str) {
-	unsigned int i=0,j=0; //mbg merge 7/17/06 changed to unsigned int
+	u32 i=0,j=0;
 
 	while (i < strlen(str)) {
 		if ((str[i] >= 'a') && (str[i] <= 'z')) {
@@ -20,7 +51,7 @@ int str_ucase(char *str) {
 
 ///Lower case routine. Returns number of characters modified
 int str_lcase(char *str) {
-	unsigned int i=0,j=0; //mbg merge 7/17/06 changed to unsigned int
+	u32 i=0,j=0;
 
 	while (i < strlen(str)) {
 		if ((str[i] >= 'A') && (str[i] <= 'Z')) {
@@ -38,7 +69,7 @@ int str_lcase(char *str) {
 ///Removes whitespace from left side of string, depending on the flags set (See STRIP_x definitions in xstring.h)
 ///Returns number of characters removed
 int str_ltrim(char *str, int flags) {
-	unsigned int i=0; //mbg merge 7/17/06 changed to unsigned int
+	u32 i=0;
 
 	while (str[0]) {
 		if ((str[0] != ' ') || (str[0] != '\t') || (str[0] != '\r') || (str[0] != '\n')) break;
@@ -69,7 +100,7 @@ int str_ltrim(char *str, int flags) {
 ///Removes whitespace from right side of string, depending on the flags set (See STRIP_x definitions in xstring.h)
 ///Returns number of characters removed
 int str_rtrim(char *str, int flags) {
-	unsigned int i=0; //mbg merge 7/17/06 changed to unsigned int
+	u32 i=0;
 
 	while (strlen(str)) {
 		if ((str[strlen(str)-1] != ' ') ||
@@ -103,7 +134,7 @@ int str_rtrim(char *str, int flags) {
 ///Removes whitespace depending on the flags set (See STRIP_x definitions in xstring.h)
 ///Returns number of characters removed, or -1 on error
 int str_strip(char *str, int flags) {
-	unsigned int i=0,j=0; //mbg merge 7/17/06 changed to unsigned int
+	u32 i=0,j=0;
 	char *astr,chr;
 
 	if (!strlen(str)) return -1;
@@ -130,7 +161,7 @@ int str_strip(char *str, int flags) {
 ///Replaces all instances of 'search' with 'replace'
 ///Returns number of characters modified
 int chr_replace(char *str, char search, char replace) {
-	unsigned int i=0,j=0; //mbg merge 7/17/06 changed to unsigned int
+	u32 i=0,j=0;
 
 	while (i < strlen(str)) {
 		if (str[i] == search) {
@@ -148,7 +179,7 @@ int chr_replace(char *str, char search, char replace) {
 ///Replaces all instances of 'search' with 'replace'
 ///Returns number of sub-strings modified, or -1 on error
 int str_replace(char *str, char *search, char *replace) {
-	unsigned int i=0,j=0; //mbg merge 7/17/06 changed to unsigned int
+	u32 i=0,j=0;
 	int searchlen,replacelen;
 	char *astr;
 
@@ -191,6 +222,13 @@ static const struct Base64Table
 private:
 	unsigned char data[256];
 } Base64Table;
+
+std::string u32ToHexString(u32 val)
+{
+	char temp[16];
+	sprintf(temp,"%08X",val);
+	return temp;
+}
 
 ///Converts the provided data to a string in a standard, user-friendly, round-trippable format
 std::string BytesToString(const void* data, int len)
@@ -436,7 +474,7 @@ void splitpath(const char* path, char* drv, char* dir, char* name, char* ext)
 
 static char TempArray[11];
 
-/*uint16 FastStrToU16(char* s, bool& valid)
+uint16 FastStrToU16(char* s, bool& valid)
 {
 	int i;
 	uint16 v=0;
@@ -554,7 +592,7 @@ std::string mass_replace(const std::string &source, const std::string &victim, c
 	answer.replace(j, victim.length(), replacement);
 	return answer;
 }
-
+#if 0
 //http://www.codeproject.com/KB/string/UtfConverter.aspx
 #include "ConvertUTF.h"
 namespace UtfConverter
@@ -582,7 +620,7 @@ namespace UtfConverter
         }
         else if (sizeof(wchar_t) == 4)
         {
-            wchar_t* widestringnative = new wchar_t[widesize];
+            wchar_t* widestringnative = new wchar_t[widesize+1];
             const UTF8* sourcestart = reinterpret_cast<const UTF8*>(utf8string.c_str());
             const UTF8* sourceend = sourcestart + widesize;
             UTF32* targetstart = reinterpret_cast<UTF32*>(widestringnative);
@@ -669,7 +707,7 @@ std::string wcstombs(std::wstring str)
 {
 	return UtfConverter::ToUtf8(str);
 }
-
+#endif
 
 //TODO - dont we already have another  function that can do this
 std::string getExtension(const char* input) {
@@ -686,4 +724,3 @@ std::string getExtension(const char* input) {
 	return ext;
 }
 
-*/

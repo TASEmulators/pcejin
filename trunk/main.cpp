@@ -30,6 +30,7 @@
 #include "replay.h"
 #include "pcejin.h"
 #include "svnrev.h"
+#include "xstring.h"
 
 Pcejin pcejin;
 
@@ -331,15 +332,19 @@ void PlayMovie(HWND hWnd){
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
 	ofn.hwndOwner = hWnd;
-	ofn.lpstrFilter = "Movie File (*.mc2)\0*.mc2\0All files(*.*)\0*.*\0\0";
+	ofn.lpstrFilter = "Movie File (*.mc2, *.mcm)\0*.mc2;*.mcm\0All files(*.*)\0*.*\0\0";
 	ofn.lpstrFile = (LPSTR)szChoice;
 	ofn.lpstrTitle = "Play a movie";
 	ofn.lpstrDefExt = "mc2";
 	ofn.nMaxFile = MAX_PATH;
 	ofn.Flags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
-	if(GetOpenFileName(&ofn))
-		FCEUI_LoadMovie(szChoice, 1, 0, 0);
-	// Replay_LoadMovie();
+	if(GetOpenFileName(&ofn)) {
+
+		if(toupper(strright(szChoice,4)) == ".MC2")
+			FCEUI_LoadMovie(szChoice, 1, 0, 0);
+		else if(toupper(strright(szChoice,4)) == ".MCM")
+			LoadMCM(szChoice, true);
+	}
 	
 	soundDriver->resume();
 
@@ -894,4 +899,108 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	return (INT_PTR)FALSE;
+}
+
+#define MCM_SIGNATURE "MDFNMOVI"
+#define MCM_HDR_SIZE 0x100
+#define MCM_FRAME_SIZE 0x0B
+
+static void read_mcm(const char* path,
+                     unsigned char** body, unsigned long* size)
+{
+    FILE* in;
+    unsigned long filesize;
+    unsigned char hdr[MCM_HDR_SIZE];
+
+    if(!(in = fopen(path, "rb"))) printf("Can't open file");
+
+    fseek(in, 0, SEEK_END);
+    filesize = ftell(in);
+    fseek(in, 0, SEEK_SET);
+    if(filesize <= MCM_HDR_SIZE) printf("Not MCM file (filesize <= %d)", MCM_HDR_SIZE);
+    if((filesize-MCM_HDR_SIZE) % MCM_FRAME_SIZE) printf("Broken MCM file?");
+
+    fread(hdr, 1, MCM_HDR_SIZE, in);
+
+    if(0 != memcmp(hdr, MCM_SIGNATURE, 8)) printf("Not MCM file (signature not found)");
+
+    *size = filesize - MCM_HDR_SIZE;
+	if(!(*body = (unsigned char*)malloc(*size))) {printf("malloc() failed"); return;};
+
+    fread(*body, 1, *size, in);
+
+    fclose(in);
+}
+//this doesn't convert commands, one controller only, and loses the rerecord count
+static void dump_frames(const char* path, std::string mc2, const unsigned char* body, unsigned long size)
+{
+    const unsigned char* p;
+    unsigned char pad;
+    char pad_str[9];
+    unsigned long frame_count;
+    unsigned long i;
+
+	freopen( mc2.c_str(), "w", stdout );
+
+    p = body;
+    pad_str[8] = '\0';
+    frame_count = size / MCM_FRAME_SIZE;
+
+	printf("%s\n", "version 1");
+	printf("%s\n", "emuVersion 9");
+	printf("%s\n", "rerecordCount 1");
+
+    for(i = 0; i < frame_count; ++i){
+
+        pad = p[1];
+		pad_str[0] = (pad&0x10) ? 'U' : '.';
+		pad_str[1] = (pad&0x40) ? 'D' : '.';
+		pad_str[2] = (pad&0x80) ? 'L' : '.';
+        pad_str[3] = (pad&0x20) ? 'R' : '.';
+        pad_str[4] = (pad&0x01) ? '1' : '.';
+        pad_str[5] = (pad&0x02) ? '2' : '.';
+        pad_str[6] = (pad&0x08) ? 'N' : '.';
+        pad_str[7] = (pad&0x04) ? 'S' : '.';
+
+		int command = 0;
+		
+		printf("%s%d%s%s%s\n", "|", command, "|", pad_str, "|");
+
+        p += MCM_FRAME_SIZE;
+    }
+}
+
+static void mcmdump(const char* path, std::string mc2)
+{
+    unsigned long size;
+    unsigned char* body;
+
+    read_mcm(path, &body, &size);
+
+    dump_frames(path, mc2, body, size);
+
+    free(body);
+}
+
+std::string noExtension(std::string path) {
+
+	for(int i = int(path.size()) - 1; i >= 0; --i)
+	{
+		if (path[i] == '.') {
+			return path.substr(0, i);
+		}
+	}
+	return path;
+}
+
+std::string LoadMCM(const char* path, bool load) {
+
+	std::string mc2;
+	mc2 = noExtension(std::string(path));
+	mc2 += ".mc2";
+	mcmdump(path, mc2);
+	if(load)
+		FCEUI_LoadMovie(mc2.c_str(), 1, 0, 0);
+
+	return mc2;
 }

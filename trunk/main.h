@@ -55,3 +55,4 @@ void IncreaseSpeed();
 void DecreaseSpeed();
 void InitSpeedThrottle();
 int SpeedThrottle();
+std::string LoadMCM(const char* path, bool load);
