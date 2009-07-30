@@ -19,6 +19,7 @@ public:
 	bool aspectRatio;
 	bool started;
 	bool romLoaded;
+	bool maximized;
 
 	bool isLagFrame;
 	int lagFrameCounter;
