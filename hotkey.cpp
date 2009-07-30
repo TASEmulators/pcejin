@@ -3172,20 +3172,14 @@ MDFNI_SaveSnapshot();
 
 void HK_StateSaveSlot(int num)
 {
-	char str[64];
 	CurrentState = num;
 	MDFNSS_Save(NULL, NULL, (uint32 *)VTBuffer[VTBackBuffer], (MDFN_Rect *)VTLineWidths[VTBackBuffer]);
-//	sprintf(str, "State %d saved.", num);	
-//	DisplayMessage(str);
 }
 
 void HK_StateLoadSlot(int num)
 {
-	char str[64];
 	CurrentState = num;
 	MDFNSS_Load(NULL, NULL);
-//	sprintf(str, "State %d loaded.", num);	
-//	DisplayMessage(str);
 }
 
 void HK_StateSetSlot(int num)
@@ -3198,20 +3192,12 @@ void HK_StateSetSlot(int num)
 
 void HK_StateQuickSaveSlot(int)
 {
-	char str[64];
 	MDFNSS_Save(NULL, NULL, (uint32 *)VTBuffer[VTBackBuffer], (MDFN_Rect *)VTLineWidths[VTBackBuffer]);
-//	SaveState(SaveStateSlot);
-//	sprintf(str, "State %d saved.", CurrentState);	
-//	DisplayMessage(str);
 }
 
 void HK_StateQuickLoadSlot(int)
 {
-	char str[64];
 	MDFNSS_Load(NULL, NULL);
-//	LoadState(SaveStateSlot);
-//	sprintf(str, "State %d loaded.", CurrentState);	
-//	DisplayMessage(str);
 }
 
 void HK_AutoHoldClearKeyDown(int) {
