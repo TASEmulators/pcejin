@@ -10,13 +10,8 @@
 #include <iostream>
 #include <cstdio>
 
-#ifdef _MSC_VER
-#include "unixstuff.h"
-#include "inttypes.h"
-#include "prefix.h"
-#endif
+#include "../types.h"
 
-//#include "types.h"
 
 //definitions for str_strip() flags
 #define STRIP_SP	0x01 // space
@@ -33,8 +28,15 @@ int str_strip(char *str, int flags);
 int chr_replace(char *str, char search, char replace);
 int str_replace(char *str, char *search, char *replace);
 
+std::string strsub(const std::string& str, int pos, int len);
+std::string strmid(const std::string& str, int pos, int len);
+std::string strleft(const std::string& str, int len);
+std::string strright(const std::string& str, int len);
+std::string toupper(const std::string& str);
+
 int HexStringToBytesLength(const std::string& str);
 int Base64StringToBytesLength(const std::string& str);
+std::string u32ToHexString(u32 val);
 std::string BytesToString(const void* data, int len);
 bool StringToBytes(const std::string& str, void* data, int len);
 
@@ -42,18 +44,18 @@ std::vector<std::string> tokenize_str(const std::string & str,const std::string 
 void splitpath(const char* path, char* drv, char* dir, char* name, char* ext);
 
 uint16 FastStrToU16(char* s, bool& valid);
-char *U16ToDecStr(uint16_t a);
-char *U32ToDecStr(uint32_t a);
-char *U32ToDecStr(char* buf, uint32_t a);
-char *U8ToDecStr(uint8_t a);
-char *U8ToHexStr(uint8_t a);
-char *U16ToHexStr(uint16_t a);
+char *U16ToDecStr(uint16 a);
+char *U32ToDecStr(uint32 a);
+char *U32ToDecStr(char* buf, uint32 a);
+char *U8ToDecStr(uint8 a);
+char *U8ToHexStr(uint8 a);
+char *U16ToHexStr(uint16 a);
 
 std::string stditoa(int n);
 
 std::string readNullTerminatedAscii(std::istream* is);
 
-//extracts a decimal u from an istream
+//extracts a decimal uint from an istream
 template<typename T> T templateIntegerDecFromIstream(std::istream* is)
 {
 	unsigned int ret = 0;
@@ -80,8 +82,8 @@ template<typename T> T templateIntegerDecFromIstream(std::istream* is)
 	return ret;
 }
 
-inline uint32 u32DecFromIstream(std::istream* is) { return templateIntegerDecFromIstream<uint32>(is); }
-inline uint64 u64DecFromIstream(std::istream* is) { return templateIntegerDecFromIstream<uint64>(is); }
+inline u32 u32DecFromIstream(std::istream* is) { return templateIntegerDecFromIstream<u32>(is); }
+inline u64 u64DecFromIstream(std::istream* is) { return templateIntegerDecFromIstream<u64>(is); }
 
 //puts an optionally 0-padded decimal integer of type T into the ostream (0-padding is quicker)
 template<typename T, int DIGITS, bool PAD> void putdec(std::ostream* os, T dec)
