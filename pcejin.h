@@ -1,5 +1,6 @@
 #include <string>
 #include "utils\svnrev.h"
+#include "main.h"
 
 class Pcejin
 {
@@ -34,6 +35,17 @@ public:
 
 	u8 pads[5];
 
+	virtual void pause() {
+
+		if(romLoaded) {
+			started ^=1;
+
+		if(started && !soundDriver->userMute)
+			soundDriver->unMute();
+		else
+			soundDriver->mute();
+		}
+	}
 };
 
 extern Pcejin pcejin;

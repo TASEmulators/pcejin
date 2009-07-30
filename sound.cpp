@@ -34,7 +34,9 @@ public:
 	void reset();  // stop and reset the secondary sound buffer
 	void resume(); // resume the secondary sound buffer
 	void write(u16 * finalWave, int length);  // write the emulated sound to the secondary sound buffer
-	void volume(signed int volume);
+	void mute();
+	void unMute();
+	void doUserMute();
 };
 
 
@@ -316,9 +318,26 @@ SoundDriver *newDirectSound()
 	return new DirectSound();
 }
 
-void DirectSound::volume(signed int volume) {
+void DirectSound::mute()
+{
+	IDirectSoundBuffer8_SetVolume (dsbSecondary, DSBVOLUME_MIN);
+	
+}
 
-	if (!dsbSecondary) return ;
-	currentVolume = (((LONG)volume) - 100) * 100;
-		IDirectSoundBuffer8_SetVolume (dsbSecondary, currentVolume);
+void DirectSound::unMute() {
+
+	IDirectSoundBuffer8_SetVolume (dsbSecondary, DSBVOLUME_MAX);
+		
+}
+
+void DirectSound::doUserMute() {
+
+	if(soundDriver->userMute) {
+		soundDriver->unMute();
+		soundDriver->userMute = false;
+	}
+	else {
+		soundDriver->mute();
+		soundDriver->userMute = true;
+	}
 }

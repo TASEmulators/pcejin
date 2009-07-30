@@ -3312,7 +3312,7 @@ void FrameAdvance(bool state);
 void HK_FrameAdvanceKeyDown(int) { FrameAdvance(true); }
 void HK_FrameAdvanceKeyUp(int) { FrameAdvance(false); }
 
-void HK_Pause(int) {pcejin.started ^=1; if(pcejin.started) soundDriver->resume(); else soundDriver->pause();};// TogglePause(); }
+void HK_Pause(int) {pcejin.pause();}
 
 void HK_FastForwardToggle(int) {pcejin.fastForward ^=1;}; //FastForward ^=1; }
 void HK_FastForwardKeyDown(int) {pcejin.fastForward=true;}; //SpeedThrottleEnable(); }
