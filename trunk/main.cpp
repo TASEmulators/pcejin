@@ -142,6 +142,8 @@ int WINAPI WinMain( HINSTANCE hInstance,
 		else {
 			emulate();
 		}
+		if(!pcejin.started)
+			Sleep(1);
 	}
 
 	// shutDown();
@@ -432,27 +434,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		case IDC_WINDOW1X:
 			pcejin.windowSize=1;
 			ScaleScreen(pcejin.windowSize);
-			WritePrivateProfileInt("Video","Window Size",pcejin.windowSize,IniName);
 			break;
 		case IDC_WINDOW2X:
 			pcejin.windowSize=2;
 			ScaleScreen(pcejin.windowSize);
-			WritePrivateProfileInt("Video","Window Size",pcejin.windowSize,IniName);
 			break;
 		case IDC_WINDOW3X:
 			pcejin.windowSize=3;
 			ScaleScreen(pcejin.windowSize);
-			WritePrivateProfileInt("Video","Window Size",pcejin.windowSize,IniName);
 			break;
 		case IDC_WINDOW4X:
 			pcejin.windowSize=4;
 			ScaleScreen(pcejin.windowSize);
-			WritePrivateProfileInt("Video","Window Size",pcejin.windowSize,IniName);
 			break;
 		case IDC_ASPECT:
 			pcejin.aspectRatio ^= 1;
 			ScaleScreen(pcejin.windowSize);
-			WritePrivateProfileInt("Video","Aspect Ratio",pcejin.aspectRatio,IniName);
 			break;
 		case IDM_EXIT:
 			PostQuitMessage(0);
