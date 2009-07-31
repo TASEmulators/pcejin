@@ -47,6 +47,11 @@ public:
 			soundDriver->pause();
 		}
 	}
+
+	virtual void tempUnPause() {
+		if(started)
+			soundDriver->resume();
+	}
 };
 
 extern Pcejin pcejin;
