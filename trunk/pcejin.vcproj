@@ -903,6 +903,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\recentroms.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\recentroms.h"
+			>
+		</File>
+		<File
 			RelativePath=".\replay.cpp"
 			>
 		</File>

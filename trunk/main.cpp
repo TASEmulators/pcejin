@@ -23,6 +23,7 @@
 #include "sound.h"
 #include "aviout.h"
 #include "video.h"
+#include "recentroms.h"
 
 #include "aggdraw.h"
 #include "GPU_osd.h"
