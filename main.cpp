@@ -274,10 +274,10 @@ void LoadIniSettings(){
 
 
 	//RamWatch Settings
-	GetPrivateProfileBool("RamWatch", "AutoRWLoad", 0, IniName);
-	GetPrivateProfileBool("RamWatch", "SaveWindowPos", 0, IniName);
-	GetPrivateProfileInt("RamWatch", "WindowX", 0, IniName);
-	GetPrivateProfileInt("RamWatch", "WindowY", 0, IniName);
+	AutoRWLoad = GetPrivateProfileBool("RamWatch", "AutoRWLoad", 0, IniName);
+	RWSaveWindowPos = GetPrivateProfileBool("RamWatch", "SaveWindowPos", 0, IniName);
+	ramw_x = GetPrivateProfileInt("RamWatch", "WindowX", 0, IniName);
+	ramw_y = GetPrivateProfileInt("RamWatch", "WindowY", 0, IniName);
 	
 	for(int i = 0; i < MAX_RECENT_WATCHES; i++)
 	{
