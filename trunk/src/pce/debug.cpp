@@ -18,7 +18,7 @@
 #include "pce.h"
 #include <string.h>
 #include <trio/trio.h>
-#include <iconv.h>
+//#include <iconv.h>
 
 #include "huc6280.h"
 #include "debug.h"
@@ -185,7 +185,7 @@ void PCEDBG_IRQ(int level)
 
 uint32 PCEDBG_GetVector(int level)
 {
-  
+  return 0;
 
 }
 
@@ -359,10 +359,10 @@ static void WriteHandler(HuC6280 *X, uint32 A, uint8 V)
 }
 
 static void RedoDH(void)
-{
+{/*
  HuC6280_Debug((BreakPointsPC.size() || BreakPointsOp.size() || CPUHook || PCE_LoggingOn) ? CPUHandler : NULL,
 	(BreakPointsRead.size() || BreakPointsAux0Read.size()) ? ReadHandler : NULL, 
-	(BreakPointsWrite.size() || BreakPointsAux0Write.size()) ? WriteHandler : 0);
+	(BreakPointsWrite.size() || BreakPointsAux0Write.size()) ? WriteHandler : 0);*/
 }
 
 void PCEDBG_AddBreakPoint(int type, unsigned int A1, unsigned int A2, bool logical)
@@ -437,7 +437,7 @@ void PCEDBG_DoLog(const char *type, const char *format, ...)
   va_end(ap);
  }
 }
-
+#if 0
 static iconv_t sjis_ict = (iconv_t)-1;
 
 void PCEDBG_SetLogFunc(void (*func)(const char *, const char *))
@@ -494,7 +494,7 @@ char *PCEDBG_ShiftJIS_to_UTF8(const uint16 sjc)
 
  return(ret);
 }
-
+#endif
 uint32 PCEDBG_GetRegister(const std::string &name, std::string *special)
 {
  if(name == "PC")

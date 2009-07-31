@@ -8,6 +8,7 @@
 #include "aggdraw.h"
 #include "GPU_osd.h"
 #include "pcejin.h"
+#include "lua-engine.h"
 
 DDSURFACEDESC2			ddsd;
 LPDIRECTDRAW			lpdd = NULL;
@@ -329,6 +330,8 @@ void render() {
 		}
 		break;
 	}
+
+	CallRegisteredLuaFunctions(LUACALL_AFTEREMULATIONGUI);
 
 	osd->update();
 	DrawHUD();

@@ -32,6 +32,7 @@
 #include "pcejin.h"
 #include "svnrev.h"
 #include "xstring.h"
+#include "lua-engine.h"
 
 Pcejin pcejin;
 
@@ -42,6 +43,8 @@ EmulateSpecStruct espec;
 uint8 convert_buffer[1024*768*3];
 
 LRESULT CALLBACK WndProc( HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam );
+LRESULT CALLBACK LuaScriptProc(HWND, UINT, WPARAM, LPARAM);
+std::vector<HWND> LuaScriptHWnds;
 BOOL Register( HINSTANCE hInst );
 HWND Create( int nCmdShow, int w, int h );
 
@@ -553,6 +556,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			WritePrivateProfileBool("Display", "Display Lag Counter", Hud.ShowLagFrameCounter, IniName);
 			osd->clear();
 			return 0;
+		case IDC_NEW_LUA_SCRIPT:
+			if(LuaScriptHWnds.size() < 16)
+			{
+				CreateDialog(g_hInstance, MAKEINTRESOURCE(IDD_LUA), g_hWnd, (DLGPROC) LuaScriptProc);
+			}
+			break;
 		case IDM_MUTE:
 			soundDriver->doUserMute();
 			break;
@@ -774,6 +783,8 @@ void emulate(){
 		espec.skip = 1;
 	else
 		espec.skip = 0;
+
+	CallRegisteredLuaFunctions(LUACALL_BEFOREEMULATION);
 
 	MDFNGameInfo->Emulate(&espec);
 
