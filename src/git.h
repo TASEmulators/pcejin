@@ -36,8 +36,6 @@ typedef enum
 //#include "state.h"
 //#include "settings-common.h"
 
-#ifdef WANT_DEBUGGER
-
 enum
 {
  BPOINT_READ = 1,
@@ -49,6 +47,8 @@ enum
  BPOINT_AUX_WRITE,
  BPOINT_OP	// Opcode
 };
+
+#ifdef WANT_DEBUGGER
 
 typedef struct
 {
