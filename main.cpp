@@ -479,6 +479,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			ScaleScreen(pcejin.windowSize);
 			break;
 		case IDM_EXIT:
+			SaveIniSettings();
 			PostQuitMessage(0);
 			break;
 		case IDM_RESET:
@@ -495,7 +496,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			pcejin.tempUnPause();
 			return 0;
 		case IDM_PLAY_MOVIE:
-			soundDriver->pause()
+			soundDriver->pause();
 			Replay_LoadMovie();
 			pcejin.tempUnPause();
 			return 0;
