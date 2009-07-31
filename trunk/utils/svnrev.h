@@ -1,2 +1,2 @@
-#define SVN_REV 30
-#define SVN_REV_STR "30"
+#define SVN_REV 45
+#define SVN_REV_STR "45"
