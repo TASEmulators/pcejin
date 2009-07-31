@@ -227,7 +227,14 @@ void LoadGame(){
 		if(!MDFNI_LoadGame(szChoice)) {
 			pcejin.started = false;
 			pcejin.romLoaded = false;
+			
 		}
+		if (AutoRWLoad)
+			{
+				//Open Ram Watch if its auto-load setting is checked
+				OpenRWRecentFile(0);
+				RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
+			}
 	}
 }
 
