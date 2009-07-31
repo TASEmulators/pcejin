@@ -317,7 +317,8 @@ void RecordMovie(HWND hWnd){
 	//if(GetSaveFileName(&ofn))
 	// UpdateRecordDialogPath(hwndDlg,szChoice);
 
-	soundDriver->resume();
+	pcejin.tempUnPause();
+
 }
 
 void PlayMovie(HWND hWnd){
@@ -345,7 +346,7 @@ void PlayMovie(HWND hWnd){
 			LoadMCM(szChoice, true);
 	}
 	
-	soundDriver->resume();
+	pcejin.tempUnPause();
 
 }
 
@@ -409,7 +410,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		checkMenu(IDM_MUTE,soundDriver->userMute);
 		break;
 	case WM_EXITMENULOOP:
-		soundDriver->resume();
+		pcejin.tempUnPause();
 		break;
 
 	case WM_CLOSE:
@@ -460,18 +461,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		case IDM_OPEN_ROM:
 			soundDriver->pause();
 			LoadGame();
-			soundDriver->resume();
+			pcejin.tempUnPause();
 			break;
 		case IDM_RECORD_MOVIE:
+			soundDriver->pause();
 			MovieRecordTo();
+			pcejin.tempUnPause();
 			return 0;
 		case IDM_PLAY_MOVIE:
+			soundDriver->pause()
 			Replay_LoadMovie();
+			pcejin.tempUnPause();
 			return 0;
 		case IDM_INPUT_CONFIG:
 			soundDriver->pause();
 			DialogBox(g_hInstance, MAKEINTRESOURCE(IDD_INPUTCONFIG), hWnd, DlgInputConfig);
-			soundDriver->resume();
+			pcejin.tempUnPause();
 			// RunInputConfig();
 			break;
 		case IDM_HOTKEY_CONFIG:
@@ -479,7 +484,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 				soundDriver->pause();
 
 				DialogBox(g_hInstance, MAKEINTRESOURCE(IDD_KEYCUSTOM), hWnd, DlgHotkeyConfig);
-				soundDriver->resume();
+				pcejin.tempUnPause();
 
 			}
 			break;
@@ -489,7 +494,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 
 			DialogBox(g_hInstance, MAKEINTRESOURCE(IDD_BIOS), hWnd, (DLGPROC) BiosSettingsDlgProc);
 			// DialogBox(g_hInstance, MAKEINTRESOURCE(IDD_KEYCUSTOM), hWnd, BiosSettingsDlgProc);
-			soundDriver->resume();
+			pcejin.tempUnPause();
 			break;
 		case ID_VIEW_FRAMECOUNTER:
 			Hud.FrameCounterDisplay ^= true;
@@ -542,12 +547,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			soundDriver->pause();
 
 			DialogBox(winClass.hInstance, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-			soundDriver->resume();
+			pcejin.tempUnPause();
 			break;
 		case IDM_FILE_RECORDAVI:
 			soundDriver->pause();
 			RecordAvi();
-			soundDriver->resume();
+			pcejin.tempUnPause();
 			break;
 		case IDM_FILE_STOPAVI:
 			StopAvi();
