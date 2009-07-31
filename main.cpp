@@ -272,6 +272,19 @@ void LoadIniSettings(){
 	if(soundDriver->userMute)
 		soundDriver->mute();
 
+
+	//RamWatch Settings
+	GetPrivateProfileBool("RamWatch", "AutoRWLoad", 0, IniName);
+	GetPrivateProfileBool("RamWatch", "SaveWindowPos", 0, IniName);
+	GetPrivateProfileInt("RamWatch", "WindowX", 0, IniName);
+	GetPrivateProfileInt("RamWatch", "WindowY", 0, IniName);
+	
+	for(int i = 0; i < MAX_RECENT_WATCHES; i++)
+	{
+		char str[256];
+		sprintf(str, "Recent Watch %d", i+1);
+		GetPrivateProfileString("Watches", str, "", &rw_recent_files[i][0], 1024, IniName);
+	}
 }
 
 void SaveIniSettings(){
@@ -279,6 +292,19 @@ void SaveIniSettings(){
 	WritePrivateProfileInt("Video", "aspectratio", pcejin.aspectRatio, IniName);
 	WritePrivateProfileInt("Video", "pcejin.windowSize", pcejin.windowSize, IniName);
 	WritePrivateProfileInt("Main", "Muted", soundDriver->userMute, IniName);
+
+	//RamWatch Settings
+	WritePrivateProfileBool("RamWatch", "AutoRWLoad", AutoRWLoad, IniName);
+	WritePrivateProfileBool("RamWatch", "SaveWindowPos", RWSaveWindowPos, IniName);
+	WritePrivateProfileInt("RamWatch", "WindowX", ramw_x, IniName);
+	WritePrivateProfileInt("RamWatch", "WindowY", ramw_y, IniName);
+	
+	for(int i = 0; i < MAX_RECENT_WATCHES; i++)
+		{
+			char str[256];
+			sprintf(str, "Recent Watch %d", i+1);
+			WritePrivateProfileString("Watches", str, &rw_recent_files[i][0], IniName);	
+		}
 
 }
 
