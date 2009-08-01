@@ -159,6 +159,7 @@
 #define IDC_NOTIFY_SUBSERVIENT 706
 #define IDD_LUA 707
 #define IDC_NEW_LUA_SCRIPT 708
+#define IDM_CONVERT_MCM 709
 #define IDC_LABEL_HK1                   60001
 #define IDC_LABEL_HK2                   60002
 #define IDC_LABEL_HK3                   60003

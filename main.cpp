@@ -388,6 +388,36 @@ void PlayMovie(HWND hWnd){
 
 }
 
+void ConvertMCM(HWND hWnd){
+	char szChoice[MAX_PATH]={0};
+
+	OPENFILENAME ofn;
+
+	soundDriver->pause();
+
+	// browse button
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = hWnd;
+	ofn.lpstrFilter = "Mednafen Movie File (*.mcm)\0*.mcm\0All files(*.*)\0*.*\0\0";
+	ofn.lpstrFile = (LPSTR)szChoice;
+	ofn.lpstrTitle = "Select a movie to convert";
+	ofn.lpstrDefExt = "mcm";
+	ofn.nMaxFile = MAX_PATH;
+	ofn.Flags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
+	if(GetOpenFileName(&ofn)) {
+		LoadMCM(szChoice, false);
+		if(pcejin.romLoaded) {
+			osd->addLine("Check that directory");
+			osd->addLine("for an .mc2 file");
+		}
+		else
+			MessageBox(hWnd, "Check that directory for an .mc2 file", "Conversion", NULL);
+	}
+
+	pcejin.tempUnPause();
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
 	int wmId, wmEvent;
@@ -562,6 +592,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			{
 				CreateDialog(g_hInstance, MAKEINTRESOURCE(IDD_LUA), g_hWnd, (DLGPROC) LuaScriptProc);
 			}
+			break;
+		case IDM_CONVERT_MCM:
+			ConvertMCM(hWnd);
+
 			break;
 		case IDM_MUTE:
 			soundDriver->doUserMute();

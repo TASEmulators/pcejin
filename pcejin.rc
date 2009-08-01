@@ -83,6 +83,8 @@ BEGIN
     BEGIN
         MENUITEM "Ram Watch...",                ID_RAM_WATCH
 		MENUITEM "Ram Search...",                ID_RAM_SEARCH
+		MENUITEM SEPARATOR
+		MENUITEM "Convert MCM" IDM_CONVERT_MCM
     END
     POPUP "&Help"
     BEGIN
