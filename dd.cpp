@@ -284,6 +284,9 @@ static void convert16(const uint8* buffer, EmulateSpecStruct *espec){
 }
 
 void render() {
+
+	if(!pcejin.romLoaded || espec.skip)
+		return;
  
 	if(pcejin.width != MDFNGameInfo->DisplayRect.w) {
 		pcejin.width = MDFNGameInfo->DisplayRect.w;

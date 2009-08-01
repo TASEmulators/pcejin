@@ -145,6 +145,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
 		}
 		else {
 			emulate();
+			render();
 		}
 		if(!pcejin.started)
 			Sleep(1);
@@ -790,9 +791,6 @@ void emulate(){
 
 	Update_RAM_Search();
 	Update_RAM_Watch();
-
-	if(!espec.skip)
-		render();
 
 	soundDriver->write((u16*)*espec.SoundBuf, *espec.SoundBufSize);
 
