@@ -585,8 +585,6 @@ void MDFNI_DisplayState()
 
 		gzclose(fp);
 	}
-
-	render();
 }  
 
 int MDFNSS_Load(const char *fname, const char *suffix)

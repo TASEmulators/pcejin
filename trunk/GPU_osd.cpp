@@ -219,7 +219,7 @@ static void DrawStateSlots(){
 
 	if(CurrentState != previousslot) fadecounter = 256;
 	previousslot = CurrentState;
-	fadecounter = fadecounter - 6;
+	fadecounter = fadecounter - 2;
 
 	if(fadecounter < 1) fadecounter = 0;
 }

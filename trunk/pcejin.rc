@@ -49,7 +49,7 @@ BEGIN
 	MENUITEM "Record AVI",                IDM_FILE_RECORDAVI
 	MENUITEM "Stop AVI",                IDM_FILE_STOPAVI
 	MENUITEM SEPARATOR
-        MENUITEM "New Lua Script Window...",    IDC_NEW_LUA_SCRIPT
+        MENUITEM "Lua...",    IDC_NEW_LUA_SCRIPT
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                IDM_EXIT
     END
