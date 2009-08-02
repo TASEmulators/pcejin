@@ -2,6 +2,7 @@
 #include "types.h"
 #include "aviout.h"
 #include "main.h"
+#include "pcejin.h"
 
 
 #include <assert.h>
@@ -16,7 +17,6 @@ static void EMU_PrintMessage(const char* msg) {
 //	LOG(msg);
 }
 
-int screenwidth = 256;int screenheight =  232;//extern PALETTEENTRY *color_palette;
 //extern WAVEFORMATEX wf;
 //extern int soundo;
 
@@ -349,9 +349,9 @@ bool DRV_AviBegin(const char* fname)
 	bi.biSize = 0x28;    
 	bi.biPlanes = 1;
 	bi.biBitCount = 24;
-	bi.biWidth = screenwidth;
-	bi.biHeight = screenheight;
-	bi.biSizeImage = 3 * screenwidth * screenheight;
+	bi.biWidth = pcejin.width;
+	bi.biHeight = pcejin.height;
+	bi.biSizeImage = 3 * pcejin.width * pcejin.height;
 
 	WAVEFORMATEX wf;
 	wf.cbSize = sizeof(WAVEFORMATEX);
