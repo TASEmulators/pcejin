@@ -34,6 +34,8 @@
 #include "xstring.h"
 #include "lua-engine.h"
 
+#include "shellapi.h"
+
 Pcejin pcejin;
 
 SoundDriver * soundDriver = 0;
@@ -120,6 +122,8 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	InitCustomKeys(&CustomKeys);
 	LoadHotkeyConfig();
 	LoadInputConfig();
+
+	DragAcceptFiles(g_hWnd, true);
 
 	extern void Agg_init();
 	Agg_init();
@@ -457,6 +461,40 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			break;
 		default:
 			break;
+		}
+		return 0;
+	case WM_DROPFILES:
+		{
+			char filename[MAX_PATH] = "";
+			DragQueryFile((HDROP)wParam,0,filename,MAX_PATH);
+			DragFinish((HDROP)wParam);
+			
+			std::string fileDropped = filename;
+
+			if (!(fileDropped.find(".mc2") == std::string::npos) && (fileDropped.find(".mc2") == fileDropped.length()-4))
+			{
+				if (pcejin.romLoaded && !(fileDropped.find(".mc2") == std::string::npos))	
+					FCEUI_LoadMovie(fileDropped.c_str(), 1, false, false);		 
+			}
+			
+			else if (!(fileDropped.find(".nc") == std::string::npos))
+			{
+				if (fileDropped.find(".nc") == fileDropped.length()-4)
+				{
+					if ((fileDropped[fileDropped.length()-1] >= '0' && fileDropped[fileDropped.length()-1] <= '9'))
+					{
+						MDFNSS_Load(filename, NULL);
+						Update_RAM_Watch();			
+						Update_RAM_Search();		
+					}
+				}
+			}
+			
+			else if(MDFNI_LoadGame(filename))
+			{
+				pcejin.romLoaded = true;
+				pcejin.started = true;
+			}
 		}
 		return 0;
 	case WM_ENTERMENULOOP:

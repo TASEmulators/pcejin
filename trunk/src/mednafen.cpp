@@ -6,6 +6,8 @@
 #include "md5.h"
 #include "windows.h"
 #include "GPU_osd.h"
+#include "pcejin.h"
+#include "main.h"
 
 MDFNS FSettings;
 
@@ -324,8 +326,10 @@ void MDFN_DispMessage(char const *format, ...)
 	trio_vasprintf(&msg, (char *)format,ap);
 	va_end(ap);
 
-	// MDFND_DispMessage((UTF8*)msg);
 	osd->addLine("%s", msg);
+
+	if(!pcejin.romLoaded)
+		MessageBox(g_hWnd, msg, "Message", NULL);
 
 	puts(msg);
 }
