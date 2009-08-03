@@ -1496,7 +1496,7 @@ DEFINE_LUA_FUNCTION(gens_redraw, "")
 DEFINE_LUA_FUNCTION(memory_readbyte, "address")
 {
 	int address = luaL_checkinteger(L,1);
-	unsigned char value = (unsigned char)(PCEDBG_MemPeek(address, 1, true, true) & 0xFF);
+	unsigned char value = (unsigned char)(PCEDBG_MemPeek(address, 1, true, false) & 0xFF);
 	lua_settop(L,0);
 	lua_pushinteger(L, value);
 	return 1; // we return the number of return values
@@ -1504,7 +1504,7 @@ DEFINE_LUA_FUNCTION(memory_readbyte, "address")
 DEFINE_LUA_FUNCTION(memory_readbytesigned, "address")
 {
 	int address = luaL_checkinteger(L,1);
-	signed char value = (signed char)(PCEDBG_MemPeek(address, 1, true, true) & 0xFF);
+	signed char value = (signed char)(PCEDBG_MemPeek(address, 1, true, false) & 0xFF);
 	lua_settop(L,0);
 	lua_pushinteger(L, value);
 	return 1;
@@ -1512,7 +1512,7 @@ DEFINE_LUA_FUNCTION(memory_readbytesigned, "address")
 DEFINE_LUA_FUNCTION(memory_readword, "address")
 {
 	int address = luaL_checkinteger(L,1);
-	unsigned short value = (unsigned short)(PCEDBG_MemPeek(address, 1, true, true) & 0xFFFF);
+	unsigned short value = (unsigned short)(PCEDBG_MemPeek(address, 1, true, false) & 0xFFFF);
 	lua_settop(L,0);
 	lua_pushinteger(L, value);
 	return 1;
@@ -1520,7 +1520,7 @@ DEFINE_LUA_FUNCTION(memory_readword, "address")
 DEFINE_LUA_FUNCTION(memory_readwordsigned, "address")
 {
 	int address = luaL_checkinteger(L,1);
-	signed short value = (signed short)(PCEDBG_MemPeek(address, 1, true, true) & 0xFFFF);
+	signed short value = (signed short)(PCEDBG_MemPeek(address, 1, true, false) & 0xFFFF);
 	lua_settop(L,0);
 	lua_pushinteger(L, value);
 	return 1;
@@ -1528,7 +1528,7 @@ DEFINE_LUA_FUNCTION(memory_readwordsigned, "address")
 DEFINE_LUA_FUNCTION(memory_readdword, "address")
 {
 	int address = luaL_checkinteger(L,1);
-	unsigned long value = (unsigned long)(PCEDBG_MemPeek(address, 1, true, true));
+	unsigned long value = (unsigned long)(PCEDBG_MemPeek(address, 1, true, false));
 	lua_settop(L,0);
 	lua_pushinteger(L, value);
 	return 1;
@@ -1536,7 +1536,7 @@ DEFINE_LUA_FUNCTION(memory_readdword, "address")
 DEFINE_LUA_FUNCTION(memory_readdwordsigned, "address")
 {
 	int address = luaL_checkinteger(L,1);
-	signed long value = (signed long)(PCEDBG_MemPeek(address, 1, true, true));
+	signed long value = (signed long)(PCEDBG_MemPeek(address, 1, true, false));
 	lua_settop(L,0);
 	lua_pushinteger(L, value);
 	return 1;
@@ -1583,7 +1583,7 @@ DEFINE_LUA_FUNCTION(memory_readbyterange, "address,length")
 	{
 //		if(IsHardwareAddressValid(a))
 //		{
-			unsigned char value = (unsigned char)(PCEDBG_MemPeek(address, 1, true, true) & 0xFF);
+			unsigned char value = (unsigned char)(PCEDBG_MemPeek(address, 1, true, false) & 0xFF);
 			lua_pushinteger(L, value);
 			lua_rawseti(L, -2, n);
 //		}
