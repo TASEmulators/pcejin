@@ -249,7 +249,7 @@ void DrawHUD()
 		if (movieMode == MOVIEMODE_PLAY)
 			osd->addFixed(Hud.FrameCounter.x, Hud.FrameCounter.y, "%d/%d",currFrameCounter,currMovieData.records.size());
 		else if(movieMode == MOVIEMODE_RECORD) 
-			osd->addFixed(Hud.FrameCounter.x, Hud.FrameCounter.y, "%d",currFrameCounter);
+			osd->addFixed(Hud.FrameCounter.x, Hud.FrameCounter.y, "%d  %s",currFrameCounter, "Rec");
 		else
 			osd->addFixed(Hud.FrameCounter.x, Hud.FrameCounter.y, "%d (no movie)",currFrameCounter);
 	}
