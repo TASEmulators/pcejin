@@ -1512,7 +1512,7 @@ DEFINE_LUA_FUNCTION(memory_readbytesigned, "address")
 DEFINE_LUA_FUNCTION(memory_readword, "address")
 {
 	int address = luaL_checkinteger(L,1);
-	unsigned short value = (unsigned short)(PCEDBG_MemPeek(address, 1, true, false) & 0xFFFF);
+	unsigned short value = (unsigned short)(PCEDBG_MemPeek(address, 2, true, false) & 0xFFFF);
 	lua_settop(L,0);
 	lua_pushinteger(L, value);
 	return 1;
@@ -1520,7 +1520,7 @@ DEFINE_LUA_FUNCTION(memory_readword, "address")
 DEFINE_LUA_FUNCTION(memory_readwordsigned, "address")
 {
 	int address = luaL_checkinteger(L,1);
-	signed short value = (signed short)(PCEDBG_MemPeek(address, 1, true, false) & 0xFFFF);
+	signed short value = (signed short)(PCEDBG_MemPeek(address, 2, true, false) & 0xFFFF);
 	lua_settop(L,0);
 	lua_pushinteger(L, value);
 	return 1;
@@ -1528,7 +1528,7 @@ DEFINE_LUA_FUNCTION(memory_readwordsigned, "address")
 DEFINE_LUA_FUNCTION(memory_readdword, "address")
 {
 	int address = luaL_checkinteger(L,1);
-	unsigned long value = (unsigned long)(PCEDBG_MemPeek(address, 1, true, false));
+	unsigned long value = (unsigned long)(PCEDBG_MemPeek(address, 2, true, false));
 	lua_settop(L,0);
 	lua_pushinteger(L, value);
 	return 1;
@@ -1536,7 +1536,7 @@ DEFINE_LUA_FUNCTION(memory_readdword, "address")
 DEFINE_LUA_FUNCTION(memory_readdwordsigned, "address")
 {
 	int address = luaL_checkinteger(L,1);
-	signed long value = (signed long)(PCEDBG_MemPeek(address, 1, true, false));
+	signed long value = (signed long)(PCEDBG_MemPeek(address, 2, true, false));
 	lua_settop(L,0);
 	lua_pushinteger(L, value);
 	return 1;
@@ -3380,6 +3380,21 @@ static const struct luaL_reg agggeneralattributes [] =
 	{NULL, NULL}
 };
 
+static int setFont(lua_State *L) {
+
+	const char *choice;
+	choice = luaL_checkstring(L,1);
+
+	aggDraw.target->setFont(choice);
+	return 0;
+}
+
+static const struct luaL_reg aggcustom [] =
+{
+	{"setFont", setFont},
+	{NULL, NULL}
+};
+
 
 // gui.text(int x, int y, string msg)
 //
@@ -3747,8 +3762,8 @@ void registerLibs(lua_State* L)
 
 	luaL_register(L, "agg", aggbasicshapes);
 	luaL_register(L, "agg", agggeneralattributes);
+	luaL_register(L, "agg", aggcustom);
 	
-
 	lua_settop(L, 0); // clean the stack, because each call to luaL_register leaves a table on top
 	
 	// register a few utility functions outside of libraries (in the global namespace)
