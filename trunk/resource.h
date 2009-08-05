@@ -2,17 +2,10 @@
 // Microsoft Developer Studio generated include file.
 // Used by d3d_texture.rc
 //
-#define IDC_MYICON                      2
-#define IDD_DIRECTX_DIALOG              102
 #define IDD_ABOUTBOX                    103
 #define IDS_APP_TITLE                   103
 #define IDM_ABOUT                       104
 #define IDM_EXIT                        105
-#define IDS_HELLO                       106
-#define IDI_DIRECTX_ICON                107
-#define IDC_DIRECTX_MENU                108
-#define IDC_DIRECTX_ACCELERATOR         109
-#define IDC_DIRECTX                     110
 #define IDR_MAINFRAME                   128
 #define IDC_CV 129
 #define IDC_WATCHLIST 200
