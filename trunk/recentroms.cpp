@@ -21,10 +21,6 @@ const unsigned int baseid = IDM_RECENT_RESERVED1;			//Base identifier for the re
 static HMENU recentromsmenu;				//Handle to the recent ROMs submenu
 //--------------------------------------
 
-
-//adelikat: TODO: Add this menu item to the resource file and delete this.  I tried to edit the resource file but ran into some odd problems.
-#define ID_FILE_RECENTROM 65502
-
 //adelikat: blah blah hacky
 extern char IniName[MAX_PATH];
 extern HWND g_hWnd;
@@ -35,7 +31,7 @@ void UpdateRecentRomsMenu()
 	//The array must be in the proper order ahead of time
 
 	//UpdateRecentRoms will always call this
-	//This will be always called by GetRecentRoms on DesMume startup
+	//This will be always called by GetRecentRoms on PCEjin startup
 
 
 	//----------------------------------------------------------------------
