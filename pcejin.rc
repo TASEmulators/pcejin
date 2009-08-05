@@ -42,6 +42,8 @@ BEGIN
     BEGIN
 	MENUITEM "Open Rom",                IDM_OPEN_ROM
 	MENUITEM SEPARATOR
+	MENUITEM "Recent" ID_FILE_RECENTROM
+	MENUITEM SEPARATOR
 	MENUITEM "Play Movie",                IDM_PLAY_MOVIE
 	MENUITEM "Record Movie",                IDM_RECORD_MOVIE
 	MENUITEM "Stop Movie",                IDM_STOPMOVIE
