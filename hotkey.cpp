@@ -430,22 +430,30 @@ void LoadInputConfig()
 	//read from configuration file
 	Joypad[0].Enabled = true;
 	Joypad[1].Enabled = true;
-#define DO(X) ReadControl(#X, "Controller1", Joypad[0] . X);
-	DO(Left); DO(Right); DO(Up); DO(Down);
-	DO(Left_Up); DO(Left_Down); DO(Right_Up); DO(Right_Down);
-	DO(Run); DO(Select); 
-	DO(Lid); DO(Debug);
-	DO(I); DO(II); DO(X); DO(Y);
-	DO(L); DO(R);
-#undef DO
-#define DO(X) ReadControl(#X, "Controller2", Joypad[1] . X);
-	DO(Left); DO(Right); DO(Up); DO(Down);
-	DO(Left_Up); DO(Left_Down); DO(Right_Up); DO(Right_Down);
-	DO(Run); DO(Select); 
-	DO(Lid); DO(Debug);
-	DO(I); DO(II); DO(X); DO(Y);
-	DO(L); DO(R);
-#undef DO
+
+	char temp[50];
+	for(int i = 0; i < 10; i++) {
+		snprintf(temp, 40, "Controller%d", i);
+
+		ReadControl("Left",temp,Joypad[i].Left);
+		ReadControl("Right",temp,Joypad[i].Right);
+		ReadControl("Up",temp,Joypad[i].Up);
+		ReadControl("Down",temp,Joypad[i].Down);
+		ReadControl("Left_Up",temp,Joypad[i].Left_Up);
+		ReadControl("Left_Down",temp,Joypad[i].Left_Down);
+		ReadControl("Right_Up",temp,Joypad[i].Right_Up);
+		ReadControl("Right_Down",temp,Joypad[i].Right_Down);
+		ReadControl("Run",temp,Joypad[i].Run);
+		ReadControl("Select",temp,Joypad[i].Select);
+		ReadControl("Lid",temp,Joypad[i].Lid);
+		ReadControl("Debug",temp,Joypad[i].Debug);
+		ReadControl("I",temp,Joypad[i].I);
+		ReadControl("II",temp,Joypad[i].II);
+		ReadControl("X",temp,Joypad[i].X);
+		ReadControl("Y",temp,Joypad[i].Y);
+		ReadControl("L",temp,Joypad[i].L);
+		ReadControl("R",temp,Joypad[i].R);
+	}
 }
 
 static void WriteControl(char* name, char* controller, WORD val)
@@ -455,22 +463,29 @@ static void WriteControl(char* name, char* controller, WORD val)
 
 static void SaveInputConfig()
 {
-#define DO(X) WriteControl(#X,"Controller1",Joypad[0] . X);
-	DO(Left); DO(Right); DO(Up); DO(Down);
-	DO(Left_Up); DO(Left_Down); DO(Right_Up); DO(Right_Down);
-	DO(Run); DO(Select); 
-	DO(Lid); DO(Debug);
-	DO(I); DO(II); DO(X); DO(Y);
-	DO(L); DO(R);
-#undef DO
-#define DO(X) WriteControl(#X,"Controller2",Joypad[1] . X);
-	DO(Left); DO(Right); DO(Up); DO(Down);
-	DO(Left_Up); DO(Left_Down); DO(Right_Up); DO(Right_Down);
-	DO(Run); DO(Select); 
-	DO(Lid); DO(Debug);
-	DO(I); DO(II); DO(X); DO(Y);
-	DO(L); DO(R);
-#undef DO
+	char temp[50];
+	for(int i = 0; i < 10; i++) {
+		snprintf(temp, 40, "Controller%d", i);
+
+		WriteControl("Left",temp,Joypad[i].Left);
+		WriteControl("Right",temp,Joypad[i].Right);
+		WriteControl("Up",temp,Joypad[i].Up);
+		WriteControl("Down",temp,Joypad[i].Down);
+		WriteControl("Left_Up",temp,Joypad[i].Left_Up);
+		WriteControl("Left_Down",temp,Joypad[i].Left_Down);
+		WriteControl("Right_Up",temp,Joypad[i].Right_Up);
+		WriteControl("Right_Down",temp,Joypad[i].Right_Down);
+		WriteControl("Run",temp,Joypad[i].Run);
+		WriteControl("Select",temp,Joypad[i].Select);
+		WriteControl("Lid",temp,Joypad[i].Lid);
+		WriteControl("Debug",temp,Joypad[i].Debug);
+		WriteControl("I",temp,Joypad[i].I);
+		WriteControl("II",temp,Joypad[i].II);
+		WriteControl("X",temp,Joypad[i].X);
+		WriteControl("Y",temp,Joypad[i].Y);
+		WriteControl("L",temp,Joypad[i].L);
+		WriteControl("R",temp,Joypad[i].R);
+	}
 }
 
 BOOL di_init()
@@ -1428,13 +1443,13 @@ switch(msg)
 			sprintf(temp,INPUTCONFIG_JPCOMBO,i);
 			SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_ADDSTRING,0,(LPARAM)(LPCTSTR)temp);
 		}
-/*
+
 		for(i=6;i<11;i++)
 		{
 			sprintf(temp,INPUTCONFIG_JPCOMBO INPUTCONFIG_LABEL_CONTROLLER_TURBO_PANEL_MOD,i-5);
 			SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_ADDSTRING,0,(LPARAM)(LPCTSTR)temp);
 		}
-*/
+
 		SendDlgItemMessage(hDlg,IDC_JPCOMBO,CB_SETCURSEL,(WPARAM)0,0);
 
 		SendDlgItemMessage(hDlg,IDC_JPTOGGLE,BM_SETCHECK, Joypad[index].Enabled ? (WPARAM)BST_CHECKED : (WPARAM)BST_UNCHECKED, 0);
@@ -1573,7 +1588,7 @@ switch(msg)
 				if(index < 5)
 				{
 					SendDlgItemMessage(hDlg,IDC_JPTOGGLE,BM_SETCHECK, Joypad[index].Enabled ? (WPARAM)BST_CHECKED : (WPARAM)BST_UNCHECKED, 0);
-					EnableWindow(GetDlgItem(hDlg,IDC_JPTOGGLE),FALSE);
+					EnableWindow(GetDlgItem(hDlg,IDC_JPTOGGLE),TRUE);
 				}
 				else
 				{
@@ -1608,7 +1623,7 @@ bool S9xGetState (WORD KeyIdent)
     {
         int j = (KeyIdent >> 8) & 15;
 
-		//S9xUpdateJoyState();
+//		S9xUpdateJoyState();
 
         switch (KeyIdent & 0xff)
         {
@@ -1632,11 +1647,11 @@ bool S9xGetState (WORD KeyIdent)
             case 46:return !Joystick [j].UDown;
             case 47:return !Joystick [j].VUp;
             case 48:return !Joystick [j].VDown;
-
+            
             default:
                 if ((KeyIdent & 0xff) > 40)
                     return true; // not pressed
-
+                
                 return !Joystick [j].Button [(KeyIdent & 0xff) - 8];
         }
     }
@@ -1684,12 +1699,12 @@ void S9xWinScanJoypads ()
 				PadState |= ToggleJoypadStorage[J].R||TurboToggleJoypadStorage[J].R				    ? R_MASK : 0;
 			}
 			// auto-hold AND regular key/joystick presses
-			if(S9xGetState(Joypad[J+8].Left))
+			if(S9xGetState(Joypad[J+5].Left))//if the autohold modifier isn't held
 			{
-				PadState ^= (!S9xGetState(Joypad[J].R)||!S9xGetState(Joypad[J+8].R))      ?  R_MASK : 0;
-				PadState ^= (!S9xGetState(Joypad[J].L)||!S9xGetState(Joypad[J+8].L))      ?  L_MASK : 0;
-				PadState ^= (!S9xGetState(Joypad[J].X)||!S9xGetState(Joypad[J+8].X))      ?  X_MASK : 0;
-				PadState ^= (!S9xGetState(Joypad[J].I)||!S9xGetState(Joypad[J+8].I))      ? I_MASK : 0;
+				PadState ^= (!S9xGetState(Joypad[J].R)||!S9xGetState(Joypad[J+5].R))      ?  R_MASK : 0;
+				PadState ^= (!S9xGetState(Joypad[J].L)||!S9xGetState(Joypad[J+5].L))      ?  L_MASK : 0;
+				PadState ^= (!S9xGetState(Joypad[J].X)||!S9xGetState(Joypad[J+5].X))      ?  X_MASK : 0;
+				PadState ^= (!S9xGetState(Joypad[J].I)||!S9xGetState(Joypad[J+5].I))      ? I_MASK : 0;
 				PadState ^= (!S9xGetState(Joypad[J].Right))  ?   RIGHT_MASK : 0;
 				PadState ^= (!S9xGetState(Joypad[J].Right_Up))  ? RIGHT_MASK + UP_MASK : 0;
 				PadState ^= (!S9xGetState(Joypad[J].Right_Down)) ? RIGHT_MASK + DOWN_MASK : 0;
@@ -1698,14 +1713,14 @@ void S9xWinScanJoypads ()
 				PadState ^= (!S9xGetState(Joypad[J].Left_Down)) ?  LEFT_MASK + DOWN_MASK : 0;
 				PadState ^= (!S9xGetState(Joypad[J].Down))   ?   DOWN_MASK : 0;
 				PadState ^= (!S9xGetState(Joypad[J].Up))     ?   UP_MASK : 0;
-				PadState ^= (!S9xGetState(Joypad[J].Run)||!S9xGetState(Joypad[J+8].Run))  ?  RUN_MASK : 0;
-				PadState ^= (!S9xGetState(Joypad[J].Select)||!S9xGetState(Joypad[J+8].Select)) ?  SELECT_MASK : 0;
-				PadState ^= (!S9xGetState(Joypad[J].Y)||!S9xGetState(Joypad[J+8].Y))      ?  Y_MASK : 0;
-				PadState ^= (!S9xGetState(Joypad[J].II)||!S9xGetState(Joypad[J+8].II))      ? II_MASK : 0;
-				PadState ^= (!S9xGetState(Joypad[J].Lid)||!S9xGetState(Joypad[J+8].Lid))      ?  LID_MASK : 0;
-				PadState ^= (!S9xGetState(Joypad[J].Debug)||!S9xGetState(Joypad[J+8].Debug))      ? DEBUG_MASK : 0;
+				PadState ^= (!S9xGetState(Joypad[J].Run)||!S9xGetState(Joypad[J+5].Run))  ?  RUN_MASK : 0;
+				PadState ^= (!S9xGetState(Joypad[J].Select)||!S9xGetState(Joypad[J+5].Select)) ?  SELECT_MASK : 0;
+				PadState ^= (!S9xGetState(Joypad[J].Y)||!S9xGetState(Joypad[J+5].Y))      ?  Y_MASK : 0;
+				PadState ^= (!S9xGetState(Joypad[J].II)||!S9xGetState(Joypad[J+5].II))      ? II_MASK : 0;
+				PadState ^= (!S9xGetState(Joypad[J].Lid)||!S9xGetState(Joypad[J+5].Lid))      ?  LID_MASK : 0;
+				PadState ^= (!S9xGetState(Joypad[J].Debug)||!S9xGetState(Joypad[J+5].Debug))      ? DEBUG_MASK : 0;
 			}
-
+/*
 			bool turbofy = !S9xGetState(Joypad[J+8].Up); // All Mod for turbo
 
 			u32 TurboMask = 0;
@@ -1741,7 +1756,7 @@ void S9xWinScanJoypads ()
 			if(TurboToggleJoypadStorage[J].Lid  ) PadState^=(joypads[J]&LID_MASK);
 			if(TurboToggleJoypadStorage[J].Debug ) PadState^=(joypads[J]&DEBUG_MASK);
 			//end turbo case...
-
+*/
 
 			// enforce left+right/up+down disallowance here to
 			// avoid recording unused l+r/u+d that will cause desyncs
@@ -2039,112 +2054,11 @@ void DisplayMessage(char* str) {
 #define NUM_HOTKEY_CONTROLS 20
 
 #define COUNT(a) (sizeof (a) / sizeof (a[0]))
-/*
-const int IDC_LABEL_HK_Table[NUM_HOTKEY_CONTROLS] = {
-	IDC_LABEL_HK1 , IDC_LABEL_HK2 , IDC_LABEL_HK3 , IDC_LABEL_HK4 , IDC_LABEL_HK5 ,
-	IDC_LABEL_HK6 , IDC_LABEL_HK7 , IDC_LABEL_HK8 , IDC_LABEL_HK9 , IDC_LABEL_HK10,
-	IDC_LABEL_HK11, IDC_LABEL_HK12, IDC_LABEL_HK13, IDC_LABEL_HK14, IDC_LABEL_HK15,
-	IDC_LABEL_HK16, IDC_LABEL_HK17, IDC_LABEL_HK18, IDC_LABEL_HK19, IDC_LABEL_HK20,
-};
-const int IDC_HOTKEY_Table[NUM_HOTKEY_CONTROLS] = {
-	IDC_HOTKEY1 , IDC_HOTKEY2 , IDC_HOTKEY3 , IDC_HOTKEY4 , IDC_HOTKEY5 ,
-	IDC_HOTKEY6 , IDC_HOTKEY7 , IDC_HOTKEY8 , IDC_HOTKEY9 , IDC_HOTKEY10,
-	IDC_HOTKEY11, IDC_HOTKEY12, IDC_HOTKEY13, IDC_HOTKEY14, IDC_HOTKEY15,
-	IDC_HOTKEY16, IDC_HOTKEY17, IDC_HOTKEY18, IDC_HOTKEY19, IDC_HOTKEY20,
-};
-*/
-/*
-typedef struct
-{
-    COLORREF crForeGnd;    // Foreground text colour
-    COLORREF crBackGnd;    // Background text colour
-    HFONT    hFont;        // The font
-    HWND     hwnd;         // The control's window handle
-} InputCust;*/
-//InputCust * GetInputCustom(HWND hwnd);
-
-//static TCHAR szClassName[] = _T("InputCustom");
-
-/////////////
-
-//DWORD hKeyInputTimer;
 
 int KeyInDelayInCount=10;
 
 static int lastTime = timeGetTime();
 int repeattime;
-
-/////////////
-
-
-
-//bool S9xGetState (WORD KeyIdent)
-//{
-//	if(KeyIdent == 0 || KeyIdent == VK_ESCAPE) // if it's the 'disabled' key, it's never pressed
-//		return true;
-//
-//	//TODO - option for background game keys
-//	if(g_hWnd != GetForegroundWindow())
-//		return true;
-//
-//    if (KeyIdent & 0x8000) // if it's a joystick 'key':
-//    {
-//        int j = (KeyIdent >> 8) & 15;
-//
-//		//S9xUpdateJoyState();
-//
-//        switch (KeyIdent & 0xff)
-//        {
-///*            case 0: return !Joystick [j].Left;  //TODO maybe
-//            case 1: return !Joystick [j].Right;
-//            case 2: return !Joystick [j].Up;
-//            case 3: return !Joystick [j].Down;
-//            case 4: return !Joystick [j].PovLeft;
-//            case 5: return !Joystick [j].PovRight;
-//            case 6: return !Joystick [j].PovUp;
-//            case 7: return !Joystick [j].PovDown;
-//			case 49:return !Joystick [j].PovDnLeft;
-//			case 50:return !Joystick [j].PovDnRight;
-//			case 51:return !Joystick [j].PovUpLeft;
-//			case 52:return !Joystick [j].PovUpRight;
-//            case 41:return !Joystick [j].ZUp;
-//            case 42:return !Joystick [j].ZDown;
-//            case 43:return !Joystick [j].RUp;
-//            case 44:return !Joystick [j].RDown;
-//            case 45:return !Joystick [j].UUp;
-//            case 46:return !Joystick [j].UDown;
-//            case 47:return !Joystick [j].VUp;
-//            case 48:return !Joystick [j].VDown;*/
-//
-//            default:
-//                if ((KeyIdent & 0xff) > 40)
-//                    return true; // not pressed
-//
-////                return !Joystick [j].Button [(KeyIdent & 0xff) - 8]; //TODO maybe
-//        }
-//    }
-//
-//	// the pause key is special, need this to catch all presses of it
-//	// Both GetKeyState and GetAsyncKeyState cannot catch it anyway,
-//	// so this should be handled in WM_KEYDOWN message.
-//	if(KeyIdent == VK_PAUSE)
-//	{
-//		return true; // not pressed
-////		if(GetAsyncKeyState(VK_PAUSE)) // not &'ing this with 0x8000 is intentional and necessary
-////			return false;
-//	}
-//
-//	SHORT gks = GetKeyState (KeyIdent);
-//    return ((gks & 0x80) == 0);
-//}
-
-
-/////////////
-
-//int KeyInDelayInCount=30;
-
-//static int lastTime = timeGetTime();
-//int repeattime;
 
 VOID CALLBACK KeyInputTimer( UINT idEvent, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2)
 {
@@ -2266,8 +2180,100 @@ int HandleKeyUp(WPARAM wParam, LPARAM lParam, int modifiers)
 
 int HandleKeyMessage(WPARAM wParam, LPARAM lParam, int modifiers)
 {
-	//some crap from snes9x I dont understand with toggles and macros...
-
+	// update toggles
+	for (int J = 0; J < 5; J++)
+	{
+		extern bool S9xGetState (WORD KeyIdent);
+		if(Joypad[J].Enabled && (!S9xGetState(Joypad[J+5].Left))) // enabled and Togglify
+		{
+			SJoypad & p = ToggleJoypadStorage[J];
+			if(wParam == Joypad[J].L) p.L = !p.L;
+			if(wParam == Joypad[J].R) p.R = !p.R;
+			if(wParam == Joypad[J].I) p.I = !p.I;
+			if(wParam == Joypad[J].II) p.II = !p.II;
+			if(wParam == Joypad[J].Y) p.Y = !p.Y;
+			if(wParam == Joypad[J].X) p.X = !p.X;
+			if(wParam == Joypad[J].Run) p.Run = !p.Run;
+			if(wParam == Joypad[J].Select) p.Select = !p.Select;
+			if(wParam == Joypad[J].Left) p.Left = !p.Left;
+			if(wParam == Joypad[J].Right) p.Right = !p.Right;
+			if(wParam == Joypad[J].Up) p.Up = !p.Up;
+			if(wParam == Joypad[J].Down) p.Down = !p.Down;
+///					if(wParam == Joypad[J].Left_Down) p.Left_Down = !p.Left_Down;
+///					if(wParam == Joypad[J].Left_Up) p.Left_Up = !p.Left_Up;
+///					if(wParam == Joypad[J].Right_Down) p.Right_Down = !p.Right_Down;
+///					if(wParam == Joypad[J].Right_Up) p.Right_Up = !p.Right_Up;
+/*			if(!Settings.UpAndDown)
+			{
+				if(p.Left && p.Right)
+					p.Left = p.Right = false;
+				if(p.Up && p.Down)
+					p.Up = p.Down = false;
+			}*/
+		}
+/*		if(Joypad[J].Enabled && (!S9xGetState(Joypad[J+5].Down))) // enabled and turbo-togglify (TurboTog)
+		{
+			SJoypad & p = TurboToggleJoypadStorage[J];
+			if(wParam == Joypad[J].L) p.L = !p.L;
+			if(wParam == Joypad[J].R) p.R = !p.R;
+			if(wParam == Joypad[J].A) p.A = !p.A;
+			if(wParam == Joypad[J].B) p.B = !p.B;
+			if(wParam == Joypad[J].Y) p.Y = !p.Y;
+			if(wParam == Joypad[J].X) p.X = !p.X;
+			if(wParam == Joypad[J].Start) p.Start = !p.Start;
+			if(wParam == Joypad[J].Select) p.Select = !p.Select;
+			if(wParam == Joypad[J].Left) p.Left = !p.Left;
+			if(wParam == Joypad[J].Right) p.Right = !p.Right;
+			if(wParam == Joypad[J].Up) p.Up = !p.Up;
+			if(wParam == Joypad[J].Down) p.Down = !p.Down;
+///					if(wParam == Joypad[J].Left_Down) p.Left_Down = !p.Left_Down;
+///					if(wParam == Joypad[J].Left_Up) p.Left_Up = !p.Left_Up;
+///					if(wParam == Joypad[J].Right_Down) p.Right_Down = !p.Right_Down;
+///					if(wParam == Joypad[J].Right_Up) p.Right_Up = !p.Right_Up;
+/*					if(!Settings.UpAndDown)
+			{
+				if(p.Left && p.Right && )
+					p.Left = p.Right = false;
+				if(p.Up && p.Down)
+					p.Up = p.Down = false;
+			}*/
+//		}
+		if(wParam == Joypad[J+5].Right) // clear all
+		{
+			{
+				SJoypad & p = ToggleJoypadStorage[J];
+				p.L = false;
+				p.R = false;
+				p.I = false;
+				p.II = false;
+				p.Y = false;
+				p.X = false;
+				p.Run = false;
+				p.Select = false;
+				p.Left = false;
+				p.Right = false;
+				p.Up = false;
+				p.Down = false;
+			}
+			{
+				SJoypad & p = TurboToggleJoypadStorage[J];
+				p.L = false;
+				p.R = false;
+				p.I = false;
+				p.II = false;
+				p.Y = false;
+				p.X = false;
+				p.Run = false;
+				p.Select = false;
+				p.Left = false;
+				p.Right = false;
+				p.Up = false;
+				p.Down = false;
+			}
+			//MacroDisableAll();
+//			MacroChangeState(J, false);
+		}
+	}
 	bool hitHotKey = false;
 
 	if(!(wParam == 0 || wParam == VK_ESCAPE)) // if it's the 'disabled' key, it's never pressed as a hotkey
@@ -2284,7 +2290,7 @@ int HandleKeyMessage(WPARAM wParam, LPARAM lParam, int modifiers)
 		// don't pull down menu if alt is a hotkey or the menu isn't there, unless no game is running
 		//if(!Settings.StopEmulation && ((wParam == VK_MENU || wParam == VK_F10) && (hitHotKey || GetMenu (GUI.hWnd) == NULL) && !GetAsyncKeyState(VK_F4)))
 		/*if(((wParam == VK_MENU || wParam == VK_F10) && (hitHotKey || GetMenu (MainWindow->getHWnd()) == NULL) && !GetAsyncKeyState(VK_F4)))
-			return 0;*/
+		return 0;*/
 		return 1;
 	}
 
@@ -2941,18 +2947,6 @@ void LoadHotkeyConfig()
 	}
 }
 
-///////////////////
-
-/*
-void WritePrivateProfileInt(char* appname, char* keyname, int val, char* file)
-{
-	char temp[256] = "";
-	sprintf(temp, "%d", val);
-	WritePrivateProfileStringA(appname, keyname, temp, file);
-}
-*/
-
-///////////////
 
 static void SaveHotkeyConfig()//TODO
 {
