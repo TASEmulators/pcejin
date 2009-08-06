@@ -86,7 +86,7 @@ void UpdateRecentRomsMenu()
 		string tmp = RecentRoms[x];
 		LPSTR tmp2 = (LPSTR)tmp.c_str();
 
-		//PathCompactPath(dc, tmp2, 500);
+		PathCompactPath(dc, tmp2, 500);
 		//adelikat: TODO: why is this function call causing an unresolved external?
 
 		moo.cbSize = sizeof(moo);
