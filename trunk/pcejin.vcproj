@@ -144,7 +144,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vfw32.lib directx\dxerr8.lib directx\dsound.lib directx\dinput8.lib directx\ddraw.lib directx\dxguid.lib Winmm.lib zlib-2008-x32.lib agg-2.5.lib lua-5.1.4-x86.lib"
+				AdditionalDependencies="vfw32.lib directx\dxerr8.lib directx\dsound.lib directx\dinput8.lib directx\ddraw.lib directx\dxguid.lib Winmm.lib zlib-2008-x32.lib agg-2.5.lib lua-5.1.4-x86.lib shlwapi.lib"
 				LinkIncremental="0"
 				AdditionalLibraryDirectories="zlib;agg;lua"
 				GenerateDebugInformation="true"
