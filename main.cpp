@@ -751,6 +751,9 @@ void initinput(){
 
 	PCEINPUT_SetInput(0, "gamepad", &pcejin.pads[0]);
 	PCEINPUT_SetInput(1, "gamepad", &pcejin.pads[1]);
+	PCEINPUT_SetInput(2, "gamepad", &pcejin.pads[2]);
+	PCEINPUT_SetInput(3, "gamepad", &pcejin.pads[3]);
+	PCEINPUT_SetInput(4, "gamepad", &pcejin.pads[4]);
 }
 
 const char* Buttons[8] = {"I ", "II ", "S", "Run ", "U", "R", "D", "L"};
