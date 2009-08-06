@@ -18,7 +18,7 @@ vector<string> RecentRoms;					//The list of recent ROM filenames
 const unsigned int MAX_RECENT_ROMS = 10;	//To change the recent rom max, simply change this number
 const unsigned int clearid = IDM_RECENT_RESERVED0;			// ID for the Clear recent ROMs item
 const unsigned int baseid = IDM_RECENT_RESERVED1;			//Base identifier for the recent ROMs items
-static HMENU recentromsmenu;				//Handle to the recent ROMs submenu
+HMENU recentromsmenu;				//Handle to the recent ROMs submenu
 //--------------------------------------
 
 //adelikat: blah blah hacky
@@ -87,7 +87,6 @@ void UpdateRecentRomsMenu()
 		LPSTR tmp2 = (LPSTR)tmp.c_str();
 
 		PathCompactPath(dc, tmp2, 500);
-		//adelikat: TODO: why is this function call causing an unresolved external?
 
 		moo.cbSize = sizeof(moo);
 		moo.fMask = MIIM_DATA | MIIM_ID | MIIM_TYPE;

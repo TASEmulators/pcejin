@@ -36,6 +36,8 @@
 
 #include "shellapi.h"
 
+#include "recentroms.h"
+
 Pcejin pcejin;
 
 SoundDriver * soundDriver = 0;
@@ -239,11 +241,13 @@ void LoadGame(){
 			
 		}
 		if (AutoRWLoad)
-			{
-				//Open Ram Watch if its auto-load setting is checked
-				OpenRWRecentFile(0);
-				RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
-			}
+		{
+			//Open Ram Watch if its auto-load setting is checked
+			OpenRWRecentFile(0);
+			RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
+		}
+
+		UpdateRecentRoms(szChoice);
 	}
 }
 
@@ -427,6 +431,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 	int wmId, wmEvent;
 	switch(Message)
 	{
+	case WM_INITMENU:
+		recentromsmenu = LoadMenu(g_hInstance, "RECENTROMS");
+		break;
 	case WM_KEYDOWN:
 		if(wParam != VK_PAUSE)
 			break;
