@@ -1921,7 +1921,7 @@ DEFINE_LUA_FUNCTION(state_load, "location[,option]")
 //joypad lib
 
 static const char *button_mappings[] = {
-"debug","r","l","x","y","a","b","start","select","up","down","left","right"
+"I","II","Select","Run","Up","Right","Down","Left"
 };
 
 // table joypad.read(int which = 1)
@@ -1929,13 +1929,13 @@ static const char *button_mappings[] = {
 //  Reads the joypads as inputted by the user.
 static int joy_get(lua_State *L) {
 
-	uint16 buttons = pcejin.pads[0];
-	
 	lua_newtable(L);
+
+	int which = luaL_checkinteger(L,1)-1;
 	
 	int i;
-	for (i = 0; i < 16; i++) {
-		if (buttons & (1<<i)) {
+	for (i = 0; i < 8; i++) {
+		if (pcejin.pads[which] & (1<<i)) {
 			lua_pushinteger(L,1);
 			lua_setfield(L, -2, button_mappings[i]);
 		}
