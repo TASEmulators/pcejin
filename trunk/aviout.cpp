@@ -55,7 +55,7 @@ static struct AVIFile
 	
 	long				tBytes, ByteBuffer;
 
-	uint8					audio_buffer[44800*2*2]; // 1 second buffer
+	u8					audio_buffer[44100*2*2]; // 1 second buffer
 	int					audio_buffer_pos;
 } *avi_file = NULL;
 
@@ -355,10 +355,10 @@ bool DRV_AviBegin(const char* fname)
 
 	WAVEFORMATEX wf;
 	wf.cbSize = sizeof(WAVEFORMATEX);
-	wf.nAvgBytesPerSec = FSettings.SndRate * 4;
+	wf.nAvgBytesPerSec = 44100 * 4;
 	wf.nBlockAlign = 4;
 	wf.nChannels = 2;
-	wf.nSamplesPerSec = FSettings.SndRate;
+	wf.nSamplesPerSec = 44100;
 	wf.wBitsPerSample = 16;
 	wf.wFormatTag = WAVE_FORMAT_PCM;
 	
