@@ -210,4 +210,129 @@ Object Damage
 684C LDA $6985,Y  ; damage table, 0x0C4985 in rom
 684F STA $1C
 
+----------------------------------------------
+Preliminary collision info, may be inaccurate
+----------------------------------------------
+
+The game copies the info for a given object (objInfo table)
+to $61-A0 to take advantage of zero page while updating the values. (A000)
+
+Once it is finished, it writes the new values back to the correct
+places in the table. (A143)
+
+Important zero page temporary values:
+6C fine y pos
+6D coarse y pos
+6F fine x pos
+70 coarse x pos
+
+Your health is decremented at 8AA1
+
+Steps leading to losing health from a hit in the back:
+
+8900*
+8950
+895A* 
+8963
+8984* -seems like a different path is taken from this spot than for a hit from front
+898C  -different
+8996*
+89BA*
+89E4* 
+89F2
+89FA
+8A03
+8A42
+8A4D
+8A58
+8A8C
+8A92
+8AA1 player health decremented
+
+8900 CLC
+8901 LDA $3431    ;fine x pos
+8904 ADC $8A7C,X  ;add a value from the rom to it
+8907 STA $12
+8909 LDA $3449    ;coarse x pos
+890C ADC $8A7D,X  ;add a value from the rom to it
+890F STA $13
+8911 CLC
+8912 LDA $3431    ;fine x pos
+8915 ADC $8A7E,X  ;add a value from the rom to it
+8918 STA $14      ;seems to be hitbox related
+891A LDA $3449    ;coarse x pos
+891D ADC $8A7F,X  ;add a value from the rom to it
+8920 STA $15
+8922 CLC
+8923 LDA $33E9    ;fine y pos
+8926 ADC $8A80,X  ;add a value from the rom to it
+8929 STA $16
+892B LDA $3401    ;coarse y pos
+892E ADC $8A81,X  ;add a value from the rom to it
+8931 STA $17
+8933 CLC
+8934 LDA $33E9    ;fine y pos
+8937 ADC $8A82,X  ;add a value from the rom to it
+893A STA $18
+893C LDA $3401    ;coarse y pos
+893F ADC $8A83,X  ;add a value from the rom to it
+8942 STA $19
+8944 LDA $61
+8946 CMP #$20
+
+895A ASL
+895B TAX
+895C LDA $62      ;12F9
+895E BIT #$10     ;seems to check the object status
+8960 BEQ $8963
+
+8984 STZ $2A
+8986 LDA ($1c)    ;seems to affect collision with powerups
+8988 BPL $898C
+898A DEC $2A
+898C STZ $2B      
+898E LDY #$01
+
+8996 LDA $62
+8998 BIT #$01
+899A BNE $89BA
+
+899C CLC
+899D LDA $6F      ;fine x pos
+899F ADC ($1C)
+89A1 STA $22
+89A3 LDA $70      ;coarse x pos
+89A5 ADC $2A
+89A7 STA $23
+89A9 LDY #$01
+89AB CLC
+89AC LDA $6F      ;fine x pos
+89AE ADC ($1C),Y
+89B0 STA $24
+89B2 LDA $70      ;coarse x pos
+89B4 ADC $2B
+89B6 STA $25
+
+89BA SEC
+89BB LDA $6F      ;fine x pos
+89BD SBC ($1c) 
+89BF STA $24      ;seems to be hud drawing related
+89C1 LDA $70      ;coarse x pos
+89C3 SBC $2A
+89C5 STA $25
+89C7 LDY #$01
+89C9 SEC
+89CA LDA $6F
+89CC SBC ($1C),Y
+89CE STA $22
+89D0 LDA $70      ;coarse x pos
+89D2 SBC $2B
+89D4 STA $23
+89D6 SEC
+89D7 LDA $12      ;fine x + rom value (see 8904)
+89D9 SBC $24 
+89DB LDA $13      ;coarse x + rom value
+89DD SBC $25 
+89DF BMI $89E4
+
 ]]

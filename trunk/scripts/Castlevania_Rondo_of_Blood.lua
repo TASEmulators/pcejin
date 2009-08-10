@@ -154,7 +154,7 @@ gui.register( function ()
 	drawObjInfo()
 	
 	--invincibility cheat
---	memory.writebyte(0x13B0, 0)
+--	memory.writebyte(0x1F13B0, 0)
 	
 	agg.setFont("verdana18_bold")
 end)
