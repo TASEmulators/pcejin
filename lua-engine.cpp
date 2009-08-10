@@ -1542,11 +1542,35 @@ DEFINE_LUA_FUNCTION(memory_readdwordsigned, "address")
 	return 1;
 }
 
+extern uint8 BaseRAM[32768];
+extern writefunc PCEWrite[0x100];
+
+void memWrite(int Address, int Length, unsigned char* Buffer) {
+
+	while(Length--)
+	{
+		Address &= 0x1FFFFF;
+
+		uint8 wmpr = Address >> 13;
+
+		PCEWrite[wmpr](Address, *Buffer);
+
+		Address++;
+		Buffer++;
+	}
+}
+
 DEFINE_LUA_FUNCTION(memory_writebyte, "address,value")
 {
-	int address = luaL_checkinteger(L,1);
+	int Address = luaL_checkinteger(L,1);
 	unsigned char value = (unsigned char)(luaL_checkinteger(L,2) & 0xFF);
-//	_MMU_write08<ARMCPU_ARM9>(address, value);
+
+	unsigned char* Buffer = &value;
+
+	int Length=1;
+
+	memWrite(Address, Length, Buffer);
+
 	return 0;
 }
 DEFINE_LUA_FUNCTION(memory_writeword, "address,value")
