@@ -22,9 +22,6 @@
 //#define SEGACD_2M_RAM_SIZE 256*1024
 //#define SEGACD_RAM_SIZE (SEGACD_RAM_PRG_SIZE + SEGACD_2M_RAM_SIZE)
 
-
-//#define MAX_RAM_SIZE (0x112000)
-//#define MAX_RAM_SIZE (0xD2000)
 #define MAX_RAM_SIZE (0x400000)
 
 extern char rs_type_size;
