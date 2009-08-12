@@ -81,16 +81,13 @@ static BOOL s_prevValuesNeedUpdate = true; // if true, the "prev" values should 
 static unsigned int s_maxItemIndex = 0; // max currently valid item index, the listbox sometimes tries to update things past the end of the list so we need to know this to ignore those attempts
 
 extern uint8 BaseRAM[32768];
-static const MemoryRegion s_prgRegion    = {  0x0000, 0x8000, (unsigned char*)BaseRAM,     false};//ARM9Mem.MAIN_MEM//should be 0x01F0000
+extern uint8 *CDRAM; //262144;
+extern uint8 *ACRAM; //0x200000
+static const MemoryRegion s_prgRegion    = {  0x1F0000, 0x8000, (unsigned char*)BaseRAM,     false};//ARM9Mem.MAIN_MEM//should be 0x01F0000
 
-/*
-static const MemoryRegion s_prgRegion    = {  0x020000, SEGACD_RAM_PRG_SIZE, (unsigned char*)Ram_Prg,     true};
-static const MemoryRegion s_word1MRegion = {  0x200000, SEGACD_1M_RAM_SIZE,  (unsigned char*)Ram_Word_1M, true};
-static const MemoryRegion s_word2MRegion = {  0x200000, SEGACD_2M_RAM_SIZE,  (unsigned char*)Ram_Word_2M, true};
-static const MemoryRegion s_z80Region    = {  0xA00000, Z80_RAM_SIZE,        (unsigned char*)Ram_Z80,     true};
-static const MemoryRegion s_68kRegion    = {  0xFF0000, _68K_RAM_SIZE,       (unsigned char*)Ram_68k,     true};
-static const MemoryRegion s_32xRegion    = {0x06000000, _32X_RAM_SIZE,       (unsigned char*)_32X_Ram,    false};
-*/
+static MemoryRegion CDRAMRegion;
+static MemoryRegion ACRAMRegion;
+
 // list of contiguous uneliminated memory regions
 typedef std::list<MemoryRegion> MemoryList;
 static MemoryList s_activeMemoryRegions;
@@ -108,6 +105,17 @@ void InitRamSearch()
 	{
 		buffers = new Buffers;
 		memset(buffers,0,sizeof(Buffers));
+
+		CDRAMRegion.byteSwapped=false;
+		CDRAMRegion.hardwareAddress=0xD0000;
+		CDRAMRegion.size=262144;
+		CDRAMRegion.softwareAddress=CDRAM;
+
+		ACRAMRegion.byteSwapped=false;
+		ACRAMRegion.hardwareAddress=0x200000;
+		ACRAMRegion.size=0x200000;
+		ACRAMRegion.softwareAddress=ACRAM;
+
 	}
 }
 
@@ -118,6 +126,12 @@ void ResetMemoryRegions()
 	s_activeMemoryRegions.clear();
 		
 	s_activeMemoryRegions.push_back(s_prgRegion);
+
+	if(CDRAM)
+		s_activeMemoryRegions.push_back(CDRAMRegion);
+
+//	if(ACRAM)
+//		s_activeMemoryRegions.push_back(ACRAMRegion);
 	
 	/*if(Genesis_Started || _32X_Started || SegaCD_Started)
 	{
