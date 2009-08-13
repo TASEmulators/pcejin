@@ -1756,7 +1756,7 @@ DEFINE_LUA_FUNCTION(memory_setregister, "cpu_dot_registername_string,value")
 	return 0;
 }
 
-/*
+
 DEFINE_LUA_FUNCTION(state_create, "[location]")
 {
 	if(lua_isnumber(L,1))
@@ -1767,11 +1767,11 @@ DEFINE_LUA_FUNCTION(state_create, "[location]")
 		return 1;
 	}
 
-	int len = GENESIS_STATE_LENGTH;
-	if (SegaCD_Started) len += SEGACD_LENGTH_EX;
-	if (_32X_Started) len += G32X_LENGTH_EX;
-	if (!((Genesis_Started)||(SegaCD_Started)||(_32X_Started)))
-		len += std::max(SEGACD_LENGTH_EX, G32X_LENGTH_EX);
+	int len = 0x200000;//GENESIS_STATE_LENGTH;
+//	if (SegaCD_Started) len += SEGACD_LENGTH_EX;
+//	if (_32X_Started) len += G32X_LENGTH_EX;
+//	if (!((Genesis_Started)||(SegaCD_Started)||(_32X_Started)))
+//		len += std::max(SEGACD_LENGTH_EX, G32X_LENGTH_EX);
 
 	// allocate the in-memory/anonymous savestate
 	unsigned char* stateBuffer = (unsigned char*)lua_newuserdata(L, len + 16); // 16 is for performance alignment reasons
@@ -1791,15 +1791,15 @@ DEFINE_LUA_FUNCTION(state_save, "location[,option]")
 	const char* option = (lua_type(L,2) == LUA_TSTRING) ? lua_tostring(L,2) : NULL;
 	if(option)
 	{
-		if(!stricmp(option, "quiet")) // I'm not sure if saving can generate warning messages, but we might as well support suppressing them should they turn out to exist
-			g_disableStatestateWarnings = true;
-		else if(!stricmp(option, "scriptdataonly"))
-			g_onlyCallSavestateCallbacks = true;
+//		if(!stricmp(option, "quiet")) // I'm not sure if saving can generate warning messages, but we might as well support suppressing them should they turn out to exist
+//			g_disableStatestateWarnings = true;
+//		else if(!stricmp(option, "scriptdataonly"))
+//			g_onlyCallSavestateCallbacks = true;
 	}
-	struct Scope { ~Scope(){ g_disableStatestateWarnings = false; g_onlyCallSavestateCallbacks = false; } } scope; // needs to run even if the following code throws an exception... maybe I should have put this in a "finally" block instead, but this project seems to have something against using the "try" statement
+//	struct Scope { ~Scope(){ g_disableStatestateWarnings = false; g_onlyCallSavestateCallbacks = false; } } scope; // needs to run even if the following code throws an exception... maybe I should have put this in a "finally" block instead, but this project seems to have something against using the "try" statement
 
-	if(!g_onlyCallSavestateCallbacks && FailVerifyAtFrameBoundary(L, "savestate.save", 2,2))
-		return 0;
+//	if(!g_onlyCallSavestateCallbacks && FailVerifyAtFrameBoundary(L, "savestate.save", 2,2))
+//		return 0;
 
 	int type = lua_type(L,1);
 	switch(type)
@@ -1807,11 +1807,12 @@ DEFINE_LUA_FUNCTION(state_save, "location[,option]")
 		case LUA_TNUMBER: // numbered save file
 		default:
 		{
-			int stateNumber = luaL_checkinteger(L,1);
-			Set_Current_State(stateNumber, false,false);
-			char Name [1024] = {0};
-			Get_State_File_Name(Name);
-			Save_State(Name);
+			CurrentState = luaL_checkinteger(L,1);
+			MDFNSS_Save(NULL, NULL, (uint32 *)VTBuffer[VTBackBuffer], (MDFN_Rect *)VTLineWidths[VTBackBuffer]);
+		//	Set_Current_State(stateNumber, false,false);
+		//	char Name [1024] = {0};
+		//	Get_State_File_Name(Name);
+		//	Save_State(Name);
 		}	return 0;
 		case LUA_TUSERDATA: // in-memory save slot
 		{
@@ -1819,7 +1820,7 @@ DEFINE_LUA_FUNCTION(state_save, "location[,option]")
 			if(stateBuffer)
 			{
 				stateBuffer += ((16 - (int)stateBuffer) & 15); // for performance alignment reasons
-				Save_State_To_Buffer(stateBuffer);
+//				Save_State_To_Buffer(stateBuffer);
 			}
 		}	return 0;
 	}
@@ -1836,17 +1837,17 @@ DEFINE_LUA_FUNCTION(state_load, "location[,option]")
 	const char* option = (lua_type(L,2) == LUA_TSTRING) ? lua_tostring(L,2) : NULL;
 	if(option)
 	{
-		if(!stricmp(option, "quiet"))
-			g_disableStatestateWarnings = true;
-		else if(!stricmp(option, "scriptdataonly"))
-			g_onlyCallSavestateCallbacks = true;
+//		if(!stricmp(option, "quiet"))
+//			g_disableStatestateWarnings = true;
+//		else if(!stricmp(option, "scriptdataonly"))
+//			g_onlyCallSavestateCallbacks = true;
 	}
-	struct Scope { ~Scope(){ g_disableStatestateWarnings = false; g_onlyCallSavestateCallbacks = false; } } scope; // needs to run even if the following code throws an exception... maybe I should have put this in a "finally" block instead, but this project seems to have something against using the "try" statement
+//	struct Scope { ~Scope(){ g_disableStatestateWarnings = false; g_onlyCallSavestateCallbacks = false; } } scope; // needs to run even if the following code throws an exception... maybe I should have put this in a "finally" block instead, but this project seems to have something against using the "try" statement
 
-	if(!g_onlyCallSavestateCallbacks && FailVerifyAtFrameBoundary(L, "savestate.load", 2,2))
-		return 0;
+//	if(!g_onlyCallSavestateCallbacks && FailVerifyAtFrameBoundary(L, "savestate.load", 2,2))
+//		return 0;
 
-	g_disableStatestateWarnings = lua_toboolean(L,2) != 0;
+//	g_disableStatestateWarnings = lua_toboolean(L,2) != 0;
 
 	int type = lua_type(L,1);
 	switch(type)
@@ -1855,13 +1856,14 @@ DEFINE_LUA_FUNCTION(state_load, "location[,option]")
 		default:
 		{
 			LuaContextInfo& info = GetCurrentInfo();
-			if(info.rerecordCountingDisabled)
-				SkipNextRerecordIncrement = true;
-			int stateNumber = luaL_checkinteger(L,1);
-			Set_Current_State(stateNumber, false,!g_disableStatestateWarnings);
-			char Name [1024] = {0};
-			Get_State_File_Name(Name);
-			Load_State(Name);
+//			if(info.rerecordCountingDisabled)
+//				SkipNextRerecordIncrement = true;
+			CurrentState = luaL_checkinteger(L,1);
+			MDFNSS_Load(NULL, NULL);
+//			Set_Current_State(stateNumber, false,!g_disableStatestateWarnings);
+//			char Name [1024] = {0};
+//			Get_State_File_Name(Name);
+//			Load_State(Name);
 		}	return 0;
 		case LUA_TUSERDATA: // in-memory save slot
 		{
@@ -1869,15 +1871,15 @@ DEFINE_LUA_FUNCTION(state_load, "location[,option]")
 			if(stateBuffer)
 			{
 				stateBuffer += ((16 - (int)stateBuffer) & 15); // for performance alignment reasons
-				if(stateBuffer[0])
-					Load_State_From_Buffer(stateBuffer);
-				else // the first byte of a valid savestate is never 0
-					luaL_error(L, "attempted to load an anonymous savestate before saving it");
+//				if(stateBuffer[0])
+//					Load_State_From_Buffer(stateBuffer);
+//				else // the first byte of a valid savestate is never 0
+//					luaL_error(L, "attempted to load an anonymous savestate before saving it");
 			}
 		}	return 0;
 	}
 }
-*/
+
 // savestate.loadscriptdata(location)
 // returns the user data associated with the given savestate
 // without actually loading the rest of that savestate or calling any callbacks.
@@ -3532,8 +3534,8 @@ static const struct luaL_reg guilib [] =
 static const struct luaL_reg statelib [] =
 {
 //	{"create", state_create},
-//	{"save", state_save},
-//	{"load", state_load},
+	{"save", state_save},
+	{"load", state_load},
 //	{"loadscriptdata", state_loadscriptdata},
 //	{"savescriptdata", state_savescriptdata},
 	{"registersave", state_registersave},
