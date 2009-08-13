@@ -2055,14 +2055,33 @@ int joy_getArgControllerNum(lua_State* L, int& index)
 
 	return controllerNumber;
 }
+*/
 
+static const struct ButtonDesc
+{
+	unsigned short controllerNum;
+	unsigned short bit;
+	const char* name;
+}
+
+s_buttonDescs [] =
+{
+	{1, 0, "I"},
+	{1, 1, "II"},
+	{1, 2, "Select"},
+	{1, 3, "Run"},
+	{1, 4, "Up"},
+	{1, 5, "Right"},
+	{1, 6, "Down"},
+	{1, 7, "Left"},
+};
 
 // joypad.set(controllerNum = 1, inputTable)
 // controllerNum can be 1, 2, '1B', or '1C'
 DEFINE_LUA_FUNCTION(joy_set, "[controller=1,]inputtable")
 {
 	int index = 1;
-	int controllerNumber = joy_getArgControllerNum(L, index);
+	int controllerNumber = 1;//joy_getArgControllerNum(L, index);
 
 	luaL_checktype(L, index, LUA_TTABLE);
 
@@ -2088,12 +2107,13 @@ DEFINE_LUA_FUNCTION(joy_set, "[controller=1,]inputtable")
 			lua_pop(L,1);
 		}
 	}
+	pcejin.pads[0]=mask;
 
-	SetNextInputCondensed(input, mask);
+//	SetNextInputCondensed(input, mask);
 
 	return 0;
 }
-
+/*
 // joypad.get(controllerNum = 1)
 // controllerNum can be 1, 2, '1B', or '1C'
 int joy_get_internal(lua_State* L, bool reportUp, bool reportDown)
@@ -3589,10 +3609,10 @@ static const struct luaL_reg joylib [] =
 //	{"peek", joy_peek},
 //	{"peekdown", joy_peekdown},
 //	{"peekup", joy_peekup},
-//	{"set", joy_set},
+	{"set", joy_set},
 	// alternative names
 	{"read", joy_get},
-//	{"write", joy_set},
+	{"write", joy_set},
 //	{"readdown", joy_getdown},
 //	{"readup", joy_getup},
 	{NULL, NULL}
