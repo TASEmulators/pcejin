@@ -24,6 +24,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine=".\utils\SubWCRev.bat"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -40,11 +41,11 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="blip;compress;zlib;trio;&quot;libcdio-0.81\include\&quot;;&quot;libcdio-0.81/include&quot;;&quot;libcdio-0.81/lib/driver&quot;;.;.\src;.\src\pce;agg\include;utils"
+				AdditionalIncludeDirectories="blip;compress;zlib;trio;.;&quot;libcdio-0.81\include\&quot;;&quot;libcdio-0.81\lib\driver&quot;;src;src\pce;agg\include;directx;utils;lua"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;WANT_PCE_EMU;NEED_CDEMU;EXTERNAL_LIBCDIO_CONFIG_H;NO_CODECS;HAVE_DIRECTSOUND"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="0"
 				Detect64BitPortabilityProblems="false"
@@ -61,10 +62,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="directx\dxerr8.lib directx\dsound.lib directx\dinput8.lib directx\ddraw.lib vfw32.lib Winmm.lib zlib-2008-x32.lib agg-2.5.lib"
+				AdditionalDependencies="vfw32.lib directx\dxerr8.lib directx\dsound.lib directx\dinput8.lib directx\ddraw.lib directx\dxguid.lib Winmm.lib zlib-2008-x32.lib agg-2.5.lib lua-5.1.4-x86.lib shlwapi.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_debug.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="zlib;agg"
+				AdditionalLibraryDirectories="zlib;agg;lua"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -121,7 +122,7 @@
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories=".\blip;.\compress;.\zlib;.\trio;.;&quot;.\libcdio-0.81\include\&quot;;&quot;libcdio-0.81/lib/driver&quot;;.\src;.\src\pce;agg\include;directx;utils;lua"
+				AdditionalIncludeDirectories="blip;compress;zlib;trio;.;&quot;libcdio-0.81\include\&quot;;&quot;libcdio-0.81\lib\driver&quot;;src;src\pce;agg\include;directx;utils;lua"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;WANT_PCE_EMU;NEED_CDEMU;EXTERNAL_LIBCDIO_CONFIG_H;NO_CODECS;HAVE_DIRECTSOUND"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -186,6 +187,7 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				CommandLine=".\utils\SubWCRev.bat"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -206,7 +208,7 @@
 				FavorSizeOrSpeed="1"
 				OmitFramePointers="true"
 				EnableFiberSafeOptimizations="true"
-				AdditionalIncludeDirectories=".\blip;.\compress;.\zlib;.\trio;.;&quot;.\libcdio-0.81\include\&quot;;&quot;.\libcdio-0.81\lib\driver&quot;;.\src;.\src\pce;agg\include;utils;lua"
+				AdditionalIncludeDirectories="blip;compress;zlib;trio;.;&quot;libcdio-0.81\include\&quot;;&quot;libcdio-0.81\lib\driver&quot;;src;src\pce;agg\include;directx;utils;lua"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;WANT_PCE_EMU;NEED_CDEMU;EXTERNAL_LIBCDIO_CONFIG_H;NO_CODECS;HAVE_DIRECTSOUND"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -228,10 +230,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vfw32.lib directx\dxerr8.lib directx\dsound.lib directx\dinput8.lib directx\ddraw.lib Winmm.lib zlib-2008-x32.lib agg-2.5.lib lua-5.1.4-x86.lib"
+				AdditionalDependencies="vfw32.lib directx\dxerr8.lib directx\dsound.lib directx\dinput8.lib directx\ddraw.lib directx\dxguid.lib Winmm.lib zlib-2008-x32.lib agg-2.5.lib lua-5.1.4-x86.lib shlwapi.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_releaseFastBuild.exe"
 				LinkIncremental="0"
-				AdditionalLibraryDirectories=".\zlib;agg;lua"
+				AdditionalLibraryDirectories="zlib;agg;lua"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
