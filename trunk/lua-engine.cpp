@@ -1149,7 +1149,7 @@ DEFINE_LUA_FUNCTION(bit_tobit, "x") { BRET(barg(L, 1)) }
 DEFINE_LUA_FUNCTION(bit_bnot, "x") { BRET(~barg(L, 1)) }
 
 #define BIT_OP(func, opr) \
-  DEFINE_LUA_FUNCTION(func, "x, n") { int i; UBits b = barg(L, 1); \
+  DEFINE_LUA_FUNCTION(func, "x1 [,x2...]") { int i; UBits b = barg(L, 1); \
     for (i = lua_gettop(L); i > 1; i--) b opr barg(L, i); BRET(b) }
 BIT_OP(bit_band, &=)
 BIT_OP(bit_bor, |=)
@@ -1161,7 +1161,7 @@ BIT_OP(bit_bxor, ^=)
 #define brol(b, n)  ((b << n) | (b >> (32-n)))
 #define bror(b, n)  ((b << (32-n)) | (b >> n))
 #define BIT_SH(func, fn) \
-  static int func(lua_State *L) { \
+  DEFINE_LUA_FUNCTION(func, "x, n") { \
     UBits b = barg(L, 1); UBits n = barg(L, 2) & 31; BRET(fn(b, n)) }
 BIT_SH(bit_lshift, bshl)
 BIT_SH(bit_rshift, bshr)
