@@ -477,13 +477,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			DragFinish((HDROP)wParam);
 			
 			std::string fileDropped = filename;
-
+			//-------------------------------------------------------
+			//Check if Movie file
+			//-------------------------------------------------------
 			if (!(fileDropped.find(".mc2") == std::string::npos) && (fileDropped.find(".mc2") == fileDropped.length()-4))
 			{
 				if (pcejin.romLoaded && !(fileDropped.find(".mc2") == std::string::npos))	
 					FCEUI_LoadMovie(fileDropped.c_str(), 1, false, false);		 
 			}
 			
+			//-------------------------------------------------------
+			//Check if Savestate file
+			//-------------------------------------------------------
 			else if (!(fileDropped.find(".nc") == std::string::npos))
 			{
 				if (fileDropped.find(".nc") == fileDropped.length()-4)
@@ -496,6 +501,42 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 					}
 				}
 			}
+			
+			//-------------------------------------------------------
+			//Check if Lua script file
+			//-------------------------------------------------------
+			else if (!(fileDropped.find(".lua") == std::string::npos) && (fileDropped.find(".lua") == fileDropped.length()-4))	 //ROM is already loaded and .dsm in filename
+			{
+				if(LuaScriptHWnds.size() < 16)
+				{
+					char temp [1024];
+					strcpy(temp, fileDropped.c_str());
+					HWND IsScriptFileOpen(const char* Path);
+					if(!IsScriptFileOpen(temp))
+					{
+						HWND hDlg = CreateDialog(g_hInstance, MAKEINTRESOURCE(IDD_LUA), hWnd, (DLGPROC) LuaScriptProc);
+						SendDlgItemMessage(hDlg,IDC_EDIT_LUAPATH,WM_SETTEXT,0,(LPARAM)temp);
+					}
+				}
+			}
+			
+			//-------------------------------------------------------
+			//Check if watchlist file
+			//-------------------------------------------------------
+			else if (!(fileDropped.find(".wch") == std::string::npos) && (fileDropped.find(".wch") == fileDropped.length()-4))	 //ROM is already loaded and .dsm in filename
+			{
+				if(!RamWatchHWnd)
+				{
+					RamWatchHWnd = CreateDialog(g_hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), hWnd, (DLGPROC) RamWatchProc);
+				}
+				else
+					SetForegroundWindow(RamWatchHWnd);
+				Load_Watches(true, fileDropped.c_str());
+			}
+			
+			//-------------------------------------------------------
+			//Else load it as a ROM
+			//-------------------------------------------------------
 			
 			else if(MDFNI_LoadGame(filename))
 			{
