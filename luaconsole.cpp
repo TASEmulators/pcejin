@@ -584,6 +584,7 @@ LRESULT CALLBACK LuaScriptProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 					char LogicalName[1024], PhysicalName[1024];
 //					bool exists = ObtainFile(Str_Tmp, LogicalName, PhysicalName, "luaview", s_nonLuaExtensions, sizeof(s_nonLuaExtensions)/sizeof(*s_nonLuaExtensions));
 					snprintf(LogicalName, MAX_PATH, "%s", Str_Tmp);
+					strcpy(PhysicalName, Str_Tmp);
 					bool exists = true;
 					bool created = false;
 					if(!exists)
@@ -606,7 +607,9 @@ LRESULT CALLBACK LuaScriptProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 					{
 						// tell the OS to open the file with its associated editor,
 						// without blocking on it or leaving a command window open.
-						ShellExecute(NULL, "open", PhysicalName, NULL, NULL, SW_SHOWNORMAL);
+						if((int)ShellExecute(NULL, "edit", PhysicalName, NULL, NULL, SW_SHOWNORMAL) == SE_ERR_NOASSOC)
+							if((int)ShellExecute(NULL, "open", PhysicalName, NULL, NULL, SW_SHOWNORMAL) == SE_ERR_NOASSOC)
+								ShellExecute(NULL, NULL, "notepad", PhysicalName, NULL, SW_SHOWNORMAL);
 					}
 					if(created)
 					{
