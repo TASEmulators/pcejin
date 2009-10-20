@@ -1,5 +1,6 @@
 #define STRICT
 #define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 
 #include <windows.h>
 #include <windowsx.h>
@@ -68,7 +69,8 @@ void OpenConsole();
 void LoadIniSettings();
 void SaveIniSettings();
 DWORD hKeyInputTimer;
-
+int KeyInDelayMSec = 0;
+int KeyInRepeatMSec = 16;
 
 WNDCLASSEX winClass;
 int WINAPI WinMain( HINSTANCE hInstance,
@@ -135,7 +137,35 @@ int WINAPI WinMain( HINSTANCE hInstance,
 
 	di_init();
 
-	hKeyInputTimer = timeSetEvent (30, 0, KeyInputTimer, 0, TIME_PERIODIC);
+	DWORD wmTimerRes;
+	TIMECAPS tc;
+	if (timeGetDevCaps(&tc, sizeof(TIMECAPS))== TIMERR_NOERROR)
+	{
+		wmTimerRes = std::min(std::max(tc.wPeriodMin, (UINT)1), tc.wPeriodMax);
+		timeBeginPeriod (wmTimerRes);
+	}
+	else
+	{
+		wmTimerRes = 5;
+		timeBeginPeriod (wmTimerRes);
+	}
+
+	if (KeyInDelayMSec == 0) {
+		DWORD dwKeyboardDelay;
+		SystemParametersInfo(SPI_GETKEYBOARDDELAY, 0, &dwKeyboardDelay, 0);
+		KeyInDelayMSec = 250 * (dwKeyboardDelay + 1);
+	}
+	if (KeyInRepeatMSec == 0) {
+		DWORD dwKeyboardSpeed;
+		SystemParametersInfo(SPI_GETKEYBOARDSPEED, 0, &dwKeyboardSpeed, 0);
+		KeyInRepeatMSec = (int)(1000.0/(((30.0-2.5)/31.0)*dwKeyboardSpeed+2.5));
+	}
+	if (KeyInRepeatMSec < (int)wmTimerRes)
+		KeyInRepeatMSec = (int)wmTimerRes;
+	if (KeyInDelayMSec < KeyInRepeatMSec)
+		KeyInDelayMSec = KeyInRepeatMSec;
+
+	hKeyInputTimer = timeSetEvent (KeyInRepeatMSec, 0, KeyInputTimer, 0, TIME_PERIODIC);
 
 	ShowWindow( g_hWnd, nCmdShow );
 	UpdateWindow( g_hWnd );
@@ -158,6 +188,8 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	}
 
 	// shutDown();
+
+	timeEndPeriod (wmTimerRes);
 
 	UnregisterClass( "MY_WINDOWS_CLASS", winClass.hInstance );
 

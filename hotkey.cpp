@@ -2055,89 +2055,58 @@ void DisplayMessage(char* str) {
 
 #define COUNT(a) (sizeof (a) / sizeof (a[0]))
 
-int KeyInDelayInCount=10;
 
 static int lastTime = timeGetTime();
-int repeattime;
+
+extern int KeyInDelayMSec;
+extern int KeyInRepeatMSec;
 
 VOID CALLBACK KeyInputTimer( UINT idEvent, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2)
 {
-	//
-//	if(timeGetTime() - lastTime > 5)
-//	{
-		bool S9xGetState (WORD KeyIdent);
+	bool S9xGetState (WORD KeyIdent);
 
-		/*		if(GUI.JoystickHotkeys)
-		{
-		static uint32 joyState [256];
+	static DWORD lastTime = timeGetTime();
+	DWORD currentTime = timeGetTime();
 
-		for(int i = 0 ; i < 255 ; i++)
-		{
-		bool active = !S9xGetState(0x8000|i);
+	static struct JoyState {
+		bool wasPressed;
+		DWORD firstPressedTime;
+		DWORD lastPressedTime;
+		WORD repeatCount;
+	} joyState [256];
+	static bool initialized = false;
 
-		if(active)
-		{
-		if(joyState[i] < ULONG_MAX) // 0xffffffffUL
-		joyState[i]++;
-		if(joyState[i] == 1 || joyState[i] >= (unsigned) KeyInDelayInCount)
-		PostMessage(GUI.hWnd, WM_CUSTKEYDOWN, (WPARAM)(0x8000|i),(LPARAM)(NULL));
+	if(!initialized) {
+		for(int i = 0; i < 256; i++) {
+			joyState[i].wasPressed = false;
+			joyState[i].repeatCount = 1;
 		}
-		else
-		{
-		if(joyState[i])
-		{
-		joyState[i] = 0;
-		PostMessage(GUI.hWnd, WM_CUSTKEYUP, (WPARAM)(0x8000|i),(LPARAM)(NULL));
-		}
-		}
-		}
-		}*/
-		//		if((!GUI.InactivePause || !Settings.ForcedPause)
-		//				|| (GUI.BackgroundInput || !(Settings.ForcedPause & (PAUSE_INACTIVE_WINDOW | PAUSE_WINDOW_ICONISED))))
-		//		{
-		static u32 joyState [256];
-		static bool initialized = false;
-		if(!initialized) {
-			memset(joyState,0,sizeof(joyState));
-			initialized = true;
-		}
-		for(int i = 0 ; i < 256 ; i++)
-		{
-			bool active = !S9xGetState(i);
-			if(active)
-			{
-				if(joyState[i] < ULONG_MAX) // 0xffffffffUL
-					joyState[i]++;
-				if(joyState[i] == 1 || joyState[i] == (unsigned) KeyInDelayInCount) {
+		initialized = true;
+	}
 
+	for (int i = 0; i < 256; i++) {
+		bool active = !S9xGetState(i);
 
-					//HEY HEY HEY! this only repeats once. this is what it needs to be like for frame advance.
-					//if anyone wants a different kind of repeat, then the whole setup will need to be redone
-
-					//sort of fix the auto repeating
-					//TODO find something better
-				//	repeattime++;
-				//	if(repeattime % 10 == 0) {
-					//printf("trigger %d\n",i);
-						PostMessage(g_hWnd, WM_CUSTKEYDOWN, (WPARAM)(i),(LPARAM)(NULL));
-						repeattime=0;
-				//	}
-				}
-			}
-			else
-			{
-				if(joyState[i])
-				{
-					joyState[i] = 0;
-					PostMessage(g_hWnd, WM_CUSTKEYUP, (WPARAM)(i),(LPARAM)(NULL));
-				}
+		if (active) {
+			bool keyRepeat = (currentTime - joyState[i].firstPressedTime) >= (DWORD)KeyInDelayMSec;
+			if (!joyState[i].wasPressed || keyRepeat) {
+				if (!joyState[i].wasPressed)
+					joyState[i].firstPressedTime = currentTime;
+				joyState[i].lastPressedTime = currentTime;
+				if (keyRepeat && joyState[i].repeatCount < 0xffff)
+					joyState[i].repeatCount++;
+				PostMessage(g_hWnd, WM_CUSTKEYDOWN, (WPARAM)(i),(LPARAM)(joyState[i].repeatCount | (joyState[i].wasPressed ? 0x40000000 : 0)));
 			}
 		}
-		//	}
-	//	lastTime = timeGetTime();
-//	}
+		else {
+			joyState[i].repeatCount = 1;
+			if (joyState[i].wasPressed)
+				PostMessage(g_hWnd, WM_CUSTKEYUP, (WPARAM)(i),(LPARAM)(joyState[i].repeatCount | (joyState[i].wasPressed ? 0x40000000 : 0)));
+		}
+		joyState[i].wasPressed = active;
+	}
+	lastTime = currentTime;
 }
-
 
 
 /////////////
