@@ -510,9 +510,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			
 			std::string fileDropped = filename;
 			//-------------------------------------------------------
+			//Check if mcm file, if so auto-convert and play
+			//-------------------------------------------------------
+			if (!(fileDropped.find(".mcm") == std::string::npos) && (fileDropped.find(".mcm") == fileDropped.length()-4))
+			{
+				if (pcejin.romLoaded && !(fileDropped.find(".mcm") == std::string::npos))	
+					LoadMCM(fileDropped.c_str(), true);
+			}
+			//-------------------------------------------------------
 			//Check if Movie file
 			//-------------------------------------------------------
-			if (!(fileDropped.find(".mc2") == std::string::npos) && (fileDropped.find(".mc2") == fileDropped.length()-4))
+			else if (!(fileDropped.find(".mc2") == std::string::npos) && (fileDropped.find(".mc2") == fileDropped.length()-4))
 			{
 				if (pcejin.romLoaded && !(fileDropped.find(".mc2") == std::string::npos))	
 					FCEUI_LoadMovie(fileDropped.c_str(), 1, false, false);		 
