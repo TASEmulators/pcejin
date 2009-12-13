@@ -94,6 +94,15 @@ BEGIN
     END
 END
 
+RECENTROMS MENU
+BEGIN
+    POPUP "Recent ROMs"
+    BEGIN
+        MENUITEM "None",                        65501, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "Clear",                       65500, GRAYED
+    END
+END
 
 /////////////////////////////////////////////////////////////////////////////
 //
