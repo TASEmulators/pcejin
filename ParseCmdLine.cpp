@@ -6,6 +6,7 @@
 using namespace std;
 
 bool startPaused;
+int stateToLoad = -1;	//-1 since 0 will be slot 0
 //To add additional commandline options
 //1) add the identifier (-rom, -play, etc) into the argCmds array
 //2) add a variable to store the argument in the list under "Strings that will get parsed"
@@ -142,10 +143,12 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 	}
 	
 	//Loadstate
-	//if (StateToLoad[0])
-	//{
-	//	Load_State((char*)StateToLoad.c_str());
-	//}
+	if (StateToLoad[0])
+	{
+		//Load_State((char*)StateToLoad.c_str()); //adelikat: PCEjin doesn't do loadstate as
+		//adelikat for now let's just load slot 0 no matter what
+		stateToLoad = 0;
+	}
 
 	//Lua Scripts
 	//for(unsigned int i = 0; i < ScriptsToLoad.size(); i++)
