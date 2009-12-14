@@ -1,6 +1,7 @@
 #include "main.h"
 #include "mednafen.h"
 #include "pcejin.h"
+#include "movie.h"
 
 using namespace std;
 
@@ -92,7 +93,18 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 	//Execute commands
 	
 	// anything (rom, movie, cfg, luascript, etc.)
-	//if (FileToLoad[0])
+	//adelikat: for now assume ROM
+	if (FileToLoad[0])
+	{
+		//adelikat: This code is currently in LoadGame, Drag&Drop, Recent ROMs, and here, time for a function
+		pcejin.romLoaded = true;
+		pcejin.started = true;
+		if(!MDFNI_LoadGame(RomToLoad.c_str())) {
+			pcejin.started = false;
+			pcejin.romLoaded = false;
+			
+		}
+	}
 	//{
 	//	GensOpenFile(FileToLoad.c_str());
 	//}
@@ -112,7 +124,7 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 		//adelikat: This code is currently in LoadGame, Drag&Drop, Recent ROMs, and here, time for a function
 		pcejin.romLoaded = true;
 		pcejin.started = true;
-		if(!MDFNI_LoadGame(szChoice)) {
+		if(!MDFNI_LoadGame(RomToLoad.c_str())) {
 			pcejin.started = false;
 			pcejin.romLoaded = false;
 			
@@ -120,7 +132,11 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 	}
 	
 	//Movie
-	//if (MovieToLoad[0]) GensPlayMovie(MovieToLoad.c_str(), 1);
+	if (MovieToLoad[0]) 
+	{
+		if (pcejin.romLoaded)	
+			FCEUI_LoadMovie(MovieToLoad.c_str(), 1, false, false);	
+	}
 
 	//Read+Write
 	//if (ReadWrite[0] && MainMovie.ReadOnly != 2) MainMovie.ReadOnly = 0;
