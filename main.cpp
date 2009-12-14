@@ -977,10 +977,14 @@ void initvideo(){
 extern u32 joypads [8];
 
 void emulate(){
-
+	
 	if(!pcejin.started  || !pcejin.romLoaded)
 		return;
-
+	if (startPaused) 
+	{
+		pcejin.pause();
+		startPaused = false;	//This should never be set true except from ParseCmdLine!
+	}
 	pcejin.isLagFrame = true;
 
 	S9xUpdateJoypadButtons();

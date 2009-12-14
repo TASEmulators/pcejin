@@ -5,8 +5,7 @@
 
 using namespace std;
 
-extern int Paused;
-
+bool startPaused;
 //To add additional commandline options
 //1) add the identifier (-rom, -play, etc) into the argCmds array
 //2) add a variable to store the argument in the list under "Strings that will get parsed"
@@ -160,5 +159,5 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 	//}
 
 	//Paused
-	//if (PauseGame[0]) pcejin.pause(); //This crashes PCEjin, I think it can't handle pausing before the first emulation loop
+	if (PauseGame[0]) startPaused = true; 
 }
