@@ -7,6 +7,8 @@
 
 #include "recentroms.h"
 #include "resource.h"
+#include "mednafen.h"
+#include "pcejin.h"
 
 using namespace std;
 
@@ -215,4 +217,28 @@ void ClearRecentRoms()
 	RecentRoms.clear();
 	SaveRecentRoms();
 	UpdateRecentRomsMenu();
+}
+
+void OpenRecentROM(int listNum)
+{
+	if (listNum > MAX_RECENT_ROMS) return; //Just in case
+	char filename[MAX_PATH];
+	strcpy(filename, RecentRoms[listNum].c_str());
+	
+	pcejin.romLoaded = true;
+	pcejin.started = true;
+	
+	if(!MDFNI_LoadGame(filename)) 
+	{
+		pcejin.started = false;
+		pcejin.romLoaded = false;		
+
+		string str = "Could not open ";
+		str.append(filename);
+		str.append("\n\nRemove from list?");
+		if (MessageBox(g_hWnd, str.c_str(), "File error", MB_YESNO) == IDYES)
+		{
+			RemoveRecentRom(RecentRoms[listNum]);
+		}	
+	}
 }

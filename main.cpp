@@ -54,6 +54,11 @@ std::vector<HWND> LuaScriptHWnds;
 BOOL Register( HINSTANCE hInst );
 HWND Create( int nCmdShow, int w, int h );
 
+//adelikat: Bleh, for now
+extern const unsigned int MAX_RECENT_ROMS = 10;	//To change the recent rom max, simply change this number
+extern const unsigned int clearid = IDM_RECENT_RESERVED0;			// ID for the Clear recent ROMs item
+extern const unsigned int baseid = IDM_RECENT_RESERVED1;			//Base identifier for the recent ROMs items
+
 
 // Prototypes
 std::string RemovePath(std::string filename);
@@ -662,6 +667,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		// HANDLE_MSG(hWnd, WM_PAINT, OnPaint);
 		// HANDLE_MSG(hwnd, WM_COMMAND, OnCommand);
 	case WM_COMMAND:
+		if(wParam >= baseid && wParam <= baseid + MAX_RECENT_ROMS - 1)
+			{
+				int x = wParam - baseid;
+				OpenRecentROM(x);					
+			}
+			else if(wParam == clearid)
+			{
+				/* Clear all the recent ROMs */
+				if(IDOK == MessageBox(g_hWnd, "OK to clear recent ROMs list?","DeSmuME",MB_OKCANCEL))
+					ClearRecentRoms();
+			}
 		wmId = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);
 		// Parse the menu selections:
