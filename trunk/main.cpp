@@ -38,6 +38,7 @@
 #include "shellapi.h"
 
 #include "recentroms.h"
+#include "ParseCmdLine.h"
 
 Pcejin pcejin;
 
@@ -181,7 +182,9 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	UpdateWindow( g_hWnd );
 
 	initialize();
-
+	
+	if (lpCmdLine[0])ParseCmdLine(lpCmdLine, g_hWnd);
+	
 	while( uMsg.message != WM_QUIT )
 	{
 		if( PeekMessage( &uMsg, NULL, 0, 0, PM_REMOVE ) )
@@ -202,7 +205,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	timeEndPeriod (wmTimerRes);
 
 	UnregisterClass( "MY_WINDOWS_CLASS", winClass.hInstance );
-
+	
 	return uMsg.wParam;
 }
 
