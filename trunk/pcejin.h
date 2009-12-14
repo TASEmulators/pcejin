@@ -12,7 +12,7 @@ public:
 		frameAdvance(false), 
 		width(256), 
 		height(232), 
-		versionName(std::string("pcejin svn") + std::string(SVN_REV_STR)),
+		versionName(std::string("PCEjin svn") + std::string(SVN_REV_STR)),
 		slow(false) {
 	}
 

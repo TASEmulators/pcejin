@@ -53,8 +53,9 @@ std::vector<HWND> LuaScriptHWnds;
 BOOL Register( HINSTANCE hInst );
 HWND Create( int nCmdShow, int w, int h );
 
-int WndX = 0;	//Window position
-int WndY = 0;
+
+// Prototypes
+std::string RemovePath(std::string filename);
 
 // Message handlers
 void OnDestroy(HWND hwnd);
@@ -62,6 +63,9 @@ void OnCommand(HWND hWnd, int iID, HWND hwndCtl, UINT uNotifyCode);
 void OnPaint(HWND hwnd);
 
 // Globals
+int WndX = 0;	//Window position
+int WndY = 0;
+
 static char g_szAppName[] = "DDSamp";
 HWND g_hWnd;
 HINSTANCE g_hInstance;
@@ -286,6 +290,13 @@ void LoadGame(){
 		}
 
 		UpdateRecentRoms(szChoice);
+
+		std::string romname = RemovePath(szChoice);
+		std::string temp = pcejin.versionName;
+		temp.append(" ");
+		temp.append(romname);
+		
+		SetWindowText(g_hWnd, temp.c_str());
 	}
 }
 
@@ -595,13 +606,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			{
 				pcejin.romLoaded = true;
 				pcejin.started = true;
+				//TODO: adelikat: This code is copied directly from the LoadGame() function, it should be come a separate function and called in both places
+				////////////////////////////////
 				if (AutoRWLoad)
 				{
 					//Open Ram Watch if its auto-load setting is checked
-					//TODO: adelikat: This code is copied directly from the LoadGame() function, it should be come a separate function and called in both places
 					OpenRWRecentFile(0);
 					RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
 				}
+				UpdateRecentRoms(filename);
+				////////////////////////////////
 			}
 		}
 		return 0;
@@ -1232,4 +1246,23 @@ std::string LoadMCM(const char* path, bool load) {
 		FCEUI_LoadMovie(mc2.c_str(), 1, 0, 0);
 
 	return mc2;
+}
+
+//adelikat: Removes the path from a filename and returns the result
+//C:\ROM\bob.pce becomes bob.pce
+std::string RemovePath(std::string filename)
+{
+	std::string name = "";						//filename with path removed
+	int pos = filename.find_last_of("\\") + 1;	//position of first character of name
+	int length = filename.length() - pos;		//length of name
+	
+	if (length != -1)							//If there was a path
+	{
+		name.append(filename,pos,length);
+		return name;
+	}
+	else										//Else there is no path so return what it gave us
+	{
+		return filename;	
+	}
 }
