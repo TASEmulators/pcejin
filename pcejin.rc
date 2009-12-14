@@ -1,4 +1,4 @@
-//Microsoft Visual C++ generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -13,88 +13,83 @@
 #define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
+
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-LANGUAGE 9, 1
-#pragma code_page(1252)
-
 /////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
+// English (U.S.) resources
 
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-
-//IDI_CV       ICON         "cv.ico"
-//IDI_SMALL               ICON         "small.ico"
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Menu
 //
 
-IDC_CV MENU
+IDC_CV MENU 
 BEGIN
     POPUP "&File"
     BEGIN
-	MENUITEM "Open Rom",                IDM_OPEN_ROM
-	MENUITEM SEPARATOR
-	MENUITEM "Recent" ID_FILE_RECENTROM
-	MENUITEM SEPARATOR
-	MENUITEM "Play Movie",                IDM_PLAY_MOVIE
-	MENUITEM "Record Movie",                IDM_RECORD_MOVIE
-	MENUITEM "Stop Movie",                IDM_STOPMOVIE
-	MENUITEM SEPARATOR
-	MENUITEM "Record AVI",                IDM_FILE_RECORDAVI
-	MENUITEM "Stop AVI",                IDM_FILE_STOPAVI
-	MENUITEM SEPARATOR
-        MENUITEM "Lua...",    IDC_NEW_LUA_SCRIPT
+        MENUITEM "Open Rom",                    IDM_OPEN_ROM
         MENUITEM SEPARATOR
-        MENUITEM "E&xit",                IDM_EXIT
+        MENUITEM "Recent",                      ID_FILE_RECENTROM
+        MENUITEM SEPARATOR
+        MENUITEM "Play Movie",                  IDM_PLAY_MOVIE
+        MENUITEM "Record Movie",                IDM_RECORD_MOVIE
+        MENUITEM "Stop Movie",                  IDM_STOPMOVIE
+        MENUITEM SEPARATOR
+        MENUITEM "Record AVI",                  IDM_FILE_RECORDAVI
+        MENUITEM "Stop AVI",                    IDM_FILE_STOPAVI
+        MENUITEM SEPARATOR
+        MENUITEM "Lua...",                      IDC_NEW_LUA_SCRIPT
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       IDM_EXIT
     END
     POPUP "&Emulation"
     BEGIN
-        MENUITEM "R&eset",                IDM_RESET
-		MENUITEM SEPARATOR
-		MENUITEM "M&ute",                IDM_MUTE
+        MENUITEM "R&eset",                      IDM_RESET
+        MENUITEM SEPARATOR
+        MENUITEM "M&ute",                       IDM_MUTE
     END
-	POPUP "&View"
-	BEGIN
-	    MENUITEM "1x",                          IDC_WINDOW1X
+    POPUP "&View"
+    BEGIN
+        MENUITEM "1x",                          IDC_WINDOW1X
         MENUITEM "2x",                          IDC_WINDOW2X
         MENUITEM "3x",                          IDC_WINDOW3X
         MENUITEM "4x",                          IDC_WINDOW4X
-		MENUITEM SEPARATOR
-		MENUITEM "4/3 Aspect Ratio",            IDC_ASPECT
-	    MENUITEM SEPARATOR
+        MENUITEM SEPARATOR
+        MENUITEM "4/3 Aspect Ratio",            IDC_ASPECT
+        MENUITEM SEPARATOR
         MENUITEM "Display Frame Counter",       ID_VIEW_FRAMECOUNTER
         MENUITEM "Display Input",               ID_VIEW_DISPLAYINPUT
         MENUITEM "Display Lag Counter",         ID_VIEW_DISPLAYLAG
-		MENUITEM "Display State Slots",         ID_VIEW_DISPLAYSTATESLOTS
-	END
+        MENUITEM "Display State Slots",         ID_VIEW_DISPLAYSTATESLOTS
+    END
     POPUP "&Config"
     BEGIN
-		MENUITEM "Hotkey Config",				IDM_HOTKEY_CONFIG
-		MENUITEM "Input Config",	IDM_INPUT_CONFIG
-		MENUITEM "Bios", IDM_BIOS_CONFIG
+        MENUITEM "Hotkey Config",               IDM_HOTKEY_CONFIG
+        MENUITEM "Input Config",                IDM_INPUT_CONFIG
+        MENUITEM "Bios",                        IDM_BIOS_CONFIG
     END
     POPUP "&Tools"
     BEGIN
         MENUITEM "Ram Watch...",                ID_RAM_WATCH
-		MENUITEM "Ram Search...",                ID_RAM_SEARCH
-		MENUITEM SEPARATOR
-		MENUITEM "Convert MCM" IDM_CONVERT_MCM
+        MENUITEM "Ram Search...",               ID_RAM_SEARCH
+        MENUITEM SEPARATOR
+        MENUITEM "Convert MCM",                 IDM_CONVERT_MCM
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "&About ...",           IDM_ABOUT
+        MENUITEM "&About ...",                  IDM_ABOUT
     END
 END
 
-RECENTROMS MENU
+RECENTROMS MENU 
 BEGIN
     POPUP "Recent ROMs"
     BEGIN
@@ -104,15 +99,58 @@ BEGIN
     END
 END
 
+RAMWATCH_MENU MENU 
+BEGIN
+    POPUP "File"
+    BEGIN
+        MENUITEM "&New list\tCtrl N",           RAMMENU_FILE_NEW
+        MENUITEM "&Open...\tCtrl O",            RAMMENU_FILE_OPEN
+        MENUITEM "&Save\tCtrl S",               RAMMENU_FILE_SAVE
+        MENUITEM "Sa&ve As...\tCtrl Shift S",   RAMMENU_FILE_SAVEAS
+        MENUITEM "&Append file...",             RAMMENU_FILE_APPEND
+        MENUITEM "Recent",                      RAMMENU_FILE_RECENT
+        MENUITEM SEPARATOR
+        MENUITEM "Auto-&load",                  RAMMENU_FILE_AUTOLOAD
+        MENUITEM "Save Window Position",        RAMMENU_FILE_SAVEWINDOW
+        MENUITEM SEPARATOR
+        MENUITEM "&Close\tAlt F4",              IDCANCEL
+    END
+    POPUP "Watches"
+    BEGIN
+        MENUITEM "&New Watch\tN",               IDC_C_WATCH
+        MENUITEM "&Edit Watch\tE",              IDC_C_WATCH_EDIT
+        MENUITEM "&Remove Watch\tR",            IDC_C_WATCH_REMOVE
+        MENUITEM "Duplicate Watch\tA",          IDC_C_WATCH_DUPLICATE
+        MENUITEM SEPARATOR
+        MENUITEM "Move Up\tU",                  IDC_C_WATCH_UP
+        MENUITEM "Move Down\tD",                IDC_C_WATCH_DOWN
+    END
+END
+
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Accelerator
 //
 
-IDC_CV ACCELERATORS
+IDC_CV ACCELERATORS 
 BEGIN
     "?",            IDM_ABOUT,              ASCII,  ALT
     "/",            IDM_ABOUT,              ASCII,  ALT
+END
+
+IDR_ACCELERATOR1 ACCELERATORS 
+BEGIN
+    "N",            RAMMENU_FILE_NEW,       VIRTKEY, CONTROL
+    "O",            RAMMENU_FILE_OPEN,      VIRTKEY, CONTROL
+    "S",            RAMMENU_FILE_SAVE,      VIRTKEY, CONTROL
+    "S",            RAMMENU_FILE_SAVEAS,    VIRTKEY, SHIFT, CONTROL
+    "A",            IDC_C_WATCH_DUPLICATE,  VIRTKEY 
+    "E",            IDC_C_WATCH_EDIT,       VIRTKEY 
+    "D",            IDC_C_WATCH_DOWN,       VIRTKEY 
+    "U",            IDC_C_WATCH_UP,         VIRTKEY 
+    "N",            IDC_C_WATCH,            VIRTKEY 
+    "R",            IDC_C_WATCH_REMOVE,     VIRTKEY 
 END
 
 
@@ -156,8 +194,8 @@ BEGIN
     EDITTEXT        IDC_EDIT_AUTHOR,49,36,189,14,ES_AUTOHSCROLL
     LTEXT           "File:",IDC_STATIC,31,22,14,8
     LTEXT           "Author:",IDC_STATIC,21,38,25,8
-    CONTROL         "Start from SRAM",IDC_START_FROM_SRAM,"Button",BS_AUTOCHECKBOX | WS_TABSTOP | WS_DISABLED,12,90,93,10
-	CONTROL         "2 Player",IDC_2_PLAYER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP ,85,90,93,10
+    CONTROL         "Start from SRAM",IDC_START_FROM_SRAM,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,12,90,93,10
+    CONTROL         "2 Player",IDC_2_PLAYER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,85,90,93,10
     EDITTEXT        IDC_EDIT_SRAMFILENAME,48,65,189,12,ES_AUTOHSCROLL
     PUSHBUTTON      "...",IDC_BUTTON_BROWSESRAM,248,65,18,14
     GROUPBOX        "",IDC_STATIC,11,55,269,29
@@ -173,15 +211,15 @@ BEGIN
     CONTROL         "",1130,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,311,214
 END
 
-IDD_ABOUTBOX DIALOGEX 0, 0, 170, 62
+IDD_ABOUTBOX DIALOGEX 0, 0, 170, 126
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "About"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
+    ICON            128,IDC_STATIC,14,14,21,20
     LTEXT           "version",IDC_TXT_VERSION,42,14,114,8,SS_NOPREFIX
     LTEXT           "http://code.google.com/p/pcejin/",IDC_STATIC,42,26,114,8
-    DEFPUSHBUTTON   "OK",IDOK,113,41,50,14,WS_GROUP
+    DEFPUSHBUTTON   "OK",IDOK,113,105,50,14,WS_GROUP
 END
 
 IDD_BIOS DIALOG  0, 0, 241, 111
@@ -191,7 +229,6 @@ FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,130,91,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,185,91,50,14
-//    GROUPBOX        "Bios",IDC_STATIC,5,6,230,75
     LTEXT           "Bios:",IDC_STATIC,15,36,110,8
     EDITTEXT        IDC_BIOSTEXT,15,46,190,14,ES_AUTOHSCROLL
     PUSHBUTTON      "...",IDC_BIOSBROWSE,205,46,20,14
@@ -239,8 +276,7 @@ BEGIN
     RTEXT           "DN RIGHT",IDC_LABEL_DOWNRIGHT,122,120,36,8
     RTEXT           "UP RIGHT",IDC_LABEL_UPRIGHT,122,107,36,8
     RTEXT           "DN LEFT",IDC_LABEL_DOWNLEFT,127,132,31,8
-//    CONTROL         IDB_PAD,IDC_STATIC,"Static",SS_BITMAP,243,39,80,74
-    CONTROL         "Allow Left+Rt/Up+Dn",IDC_ALLOWLEFTRIGHT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP | WS_DISABLED,243,115,80,11
+    CONTROL         "Allow Left+Rt/Up+Dn",IDC_ALLOWLEFTRIGHT,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,243,115,80,11
     GROUPBOX        "Controller",IDC_STATIC,5,1,142,28,0,WS_EX_TRANSPARENT
     GROUPBOX        "Buttons",IDC_STATIC,5,30,234,117,0,WS_EX_TRANSPARENT
 END
@@ -295,6 +331,7 @@ BEGIN
     LTEXT           "Blue means the hotkey is already mapped.\nPink means it conflicts with a game button.\nRed means it's reserved by Windows.\nA hotkey can be disabled using Escape.",IDC_LABEL_BLUE,238,140,136,32
     COMBOBOX        IDC_HKCOMBO,16,141,168,60,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 END
+
 IDD_RAMSEARCH DIALOGEX 0, 0, 287, 292
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION " RAM Search"
@@ -377,34 +414,6 @@ BEGIN
     PUSHBUTTON      "&Cancel",IDCANCEL,120,80,50,14
 END
 
-RAMWATCH_MENU MENU 
-BEGIN
-    POPUP "File"
-    BEGIN
-        MENUITEM "&New list\tCtrl N",           RAMMENU_FILE_NEW
-        MENUITEM "&Open...\tCtrl O",            RAMMENU_FILE_OPEN
-        MENUITEM "&Save\tCtrl S",               RAMMENU_FILE_SAVE
-        MENUITEM "Sa&ve As...\tCtrl Shift S",   RAMMENU_FILE_SAVEAS
-        MENUITEM "&Append file...",             RAMMENU_FILE_APPEND
-        MENUITEM "Recent",                      RAMMENU_FILE_RECENT
-        MENUITEM SEPARATOR
-        MENUITEM "Auto-&load",                  RAMMENU_FILE_AUTOLOAD
-        MENUITEM "Save Window Position",        RAMMENU_FILE_SAVEWINDOW
-        MENUITEM SEPARATOR
-        MENUITEM "&Close\tAlt F4",              IDCANCEL
-    END
-    POPUP "Watches"
-    BEGIN
-        MENUITEM "&New Watch\tN",               IDC_C_WATCH
-        MENUITEM "&Edit Watch\tE",              IDC_C_WATCH_EDIT
-        MENUITEM "&Remove Watch\tR",            IDC_C_WATCH_REMOVE
-        MENUITEM "Duplicate Watch\tA",          IDC_C_WATCH_DUPLICATE
-        MENUITEM SEPARATOR
-        MENUITEM "Move Up\tU",                  IDC_C_WATCH_UP
-        MENUITEM "Move Down\tD",                IDC_C_WATCH_DOWN
-    END
-END
-
 IDD_LUA DIALOGEX 0, 0, 270, 150
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 CAPTION "Lua Script"
@@ -421,52 +430,39 @@ BEGIN
 END
 
 
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // DESIGNINFO
 //
 
-IDR_ACCELERATOR1 ACCELERATORS 
-BEGIN
-    "N",            RAMMENU_FILE_NEW,       VIRTKEY, CONTROL
-    "O",            RAMMENU_FILE_OPEN,      VIRTKEY, CONTROL
-    "S",            RAMMENU_FILE_SAVE,      VIRTKEY, CONTROL
-    "S",            RAMMENU_FILE_SAVEAS,    VIRTKEY, SHIFT, CONTROL
-    "A",            IDC_C_WATCH_DUPLICATE,  VIRTKEY 
-    "E",            IDC_C_WATCH_EDIT,       VIRTKEY 
-    "D",            IDC_C_WATCH_DOWN,       VIRTKEY 
-    "U",            IDC_C_WATCH_UP,         VIRTKEY 
-    "N",            IDC_C_WATCH,            VIRTKEY 
-    "R",            IDC_C_WATCH_REMOVE,     VIRTKEY 
-END
-
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO
+GUIDELINES DESIGNINFO 
 BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 163
         TOPMARGIN, 7
-        BOTTOMMARGIN, 55
+        BOTTOMMARGIN, 119
     END
 END
 #endif    // APSTUDIO_INVOKED
+
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
 // TEXTINCLUDE
 //
-1 TEXTINCLUDE
+
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE
+2 TEXTINCLUDE 
 BEGIN
-	"#ifndef APSTUDIO_INVOKED\r\n"
+    "#ifndef APSTUDIO_INVOKED\r\n"
     "#include ""targetver.h""\r\n"
     "#endif\r\n"
     "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
@@ -475,7 +471,7 @@ BEGIN
     "\0"
 END
 
-3 TEXTINCLUDE
+3 TEXTINCLUDE 
 BEGIN
     "\r\n"
     "\0"
@@ -483,18 +479,23 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // String Table
 //
 
-STRINGTABLE
+STRINGTABLE 
 BEGIN
-   IDC_CV   "CV"
-   IDS_APP_TITLE       "pcejin"
+    IDC_CV                  "CV"
 END
 
-#endif
+STRINGTABLE 
+BEGIN
+    IDS_APP_TITLE           "pcejin"
+END
+
+#endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -505,5 +506,7 @@ END
 // Generated from the TEXTINCLUDE 3 resource.
 //
 
+
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
+
