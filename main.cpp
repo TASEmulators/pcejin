@@ -595,6 +595,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			{
 				pcejin.romLoaded = true;
 				pcejin.started = true;
+				if (AutoRWLoad)
+				{
+					//Open Ram Watch if its auto-load setting is checked
+					//TODO: adelikat: This code is copied directly from the LoadGame() function, it should be come a separate function and called in both places
+					OpenRWRecentFile(0);
+					RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
+				}
 			}
 		}
 		return 0;
