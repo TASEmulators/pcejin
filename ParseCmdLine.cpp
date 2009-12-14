@@ -141,9 +141,6 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 		if (pcejin.romLoaded)	
 			FCEUI_LoadMovie(MovieToLoad.c_str(), readwrite, false, false);	
 	}
-
-	//Read+Write
-	if (ReadWrite[0]) movie_readonly = 0;
 	
 	//Loadstate
 	//if (StateToLoad[0])
