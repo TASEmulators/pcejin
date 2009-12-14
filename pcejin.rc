@@ -81,11 +81,11 @@ BEGIN
         MENUITEM "Ram Watch...",                ID_RAM_WATCH
         MENUITEM "Ram Search...",               ID_RAM_SEARCH
         MENUITEM SEPARATOR
-        MENUITEM "Convert MCM",                 IDM_CONVERT_MCM
+        MENUITEM "Convert MCM...",              IDM_CONVERT_MCM
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "&About ...",                  IDM_ABOUT
+        MENUITEM "&About",                      IDM_ABOUT
     END
 END
 
@@ -211,15 +211,20 @@ BEGIN
     CONTROL         "",1130,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,311,214
 END
 
-IDD_ABOUTBOX DIALOGEX 0, 0, 170, 126
+IDD_ABOUTBOX DIALOGEX 0, 0, 170, 129
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     ICON            128,IDC_STATIC,14,14,21,20
-    LTEXT           "version",IDC_TXT_VERSION,42,14,114,8,SS_NOPREFIX
-    LTEXT           "http://code.google.com/p/pcejin/",IDC_STATIC,42,26,114,8
-    DEFPUSHBUTTON   "OK",IDOK,113,105,50,14,WS_GROUP
+    LTEXT           "version",IDC_TXT_VERSION,14,67,114,8,SS_NOPREFIX
+    LTEXT           "http://code.google.com/p/pcejin/",IDC_STATIC,14,85,114,8
+    DEFPUSHBUTTON   "OK",IDOK,113,108,50,14,WS_GROUP
+    LTEXT           "For more information visit:",IDC_STATIC,14,76,85,8
+    LTEXT           "PCEjin",IDC_STATIC,36,14,21,8
+    LTEXT           "A PC Engine / Turbografx 16 emulator",IDC_STATIC,36,23,122,8
+    LTEXT           "For Windows",IDC_STATIC,36,32,42,8
+    LTEXT           "Written by Paul_t",IDC_STATIC,36,41,57,8
 END
 
 IDD_BIOS DIALOG  0, 0, 241, 111
@@ -443,7 +448,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 163
         TOPMARGIN, 7
-        BOTTOMMARGIN, 119
+        BOTTOMMARGIN, 122
     END
 END
 #endif    // APSTUDIO_INVOKED
