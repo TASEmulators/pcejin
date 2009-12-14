@@ -905,6 +905,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\ParseCmdLine.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\ParseCmdLine.h"
+			>
+		</File>
+		<File
 			RelativePath=".\pcejin.h"
 			>
 		</File>
