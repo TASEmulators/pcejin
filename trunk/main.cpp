@@ -356,8 +356,6 @@ void LoadIniSettings(){
 		sprintf(str, "Recent Watch %d", i+1);
 		GetPrivateProfileString("Watches", str, "", &rw_recent_files[i][0], 1024, IniName);
 	}
-	GetRecentRoms();
-
 }
 
 void SaveIniSettings(){
@@ -489,6 +487,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_INITMENU:
 		recentromsmenu = LoadMenu(g_hInstance, "RECENTROMS");
+		GetRecentRoms();
 		break;
 	case WM_KEYDOWN:
 		if(wParam != VK_PAUSE)
