@@ -131,15 +131,19 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 		}
 	}
 	
+	//Read+Write
+	int readwrite = 1;
+	if (ReadWrite[0]) readwrite = 0;
+
 	//Movie
 	if (MovieToLoad[0]) 
 	{
 		if (pcejin.romLoaded)	
-			FCEUI_LoadMovie(MovieToLoad.c_str(), 1, false, false);	
+			FCEUI_LoadMovie(MovieToLoad.c_str(), readwrite, false, false);	
 	}
 
 	//Read+Write
-	//if (ReadWrite[0] && MainMovie.ReadOnly != 2) MainMovie.ReadOnly = 0;
+	if (ReadWrite[0]) movie_readonly = 0;
 	
 	//Loadstate
 	//if (StateToLoad[0])
@@ -159,5 +163,5 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 	//}
 
 	//Paused
-	//if (PauseGame[0]) Paused = 1;
+	//if (PauseGame[0]) pcejin.pause(); //This crashes PCEjin, I think it can't handle pausing before the first emulation loop
 }
