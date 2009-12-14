@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
-// Used by d3d_texture.rc
+// Microsoft Visual C++ generated include file.
+// Used by pcejin.rc
 //
 #define IDD_ABOUTBOX                    103
 #define IDS_APP_TITLE                   103
@@ -198,7 +198,6 @@
 #define IDD_KEYCUSTOM                   60078
 #define IDM_HOTKEY_CONFIG               60079
 #define IDC_LABEL_BLUE                  60080
-
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
