@@ -199,7 +199,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
 		}
 		else {
 			emulate();
-			render();
+			render();	
 		}
 		if(!pcejin.started)
 			Sleep(1);
@@ -980,6 +980,7 @@ void emulate(){
 	
 	if(!pcejin.started  || !pcejin.romLoaded)
 		return;
+	
 	if (startPaused) 
 	{
 		pcejin.pause();
@@ -1037,6 +1038,13 @@ void emulate(){
 		while(SpeedThrottle())
 		{
 		}
+
+	//adelikat: For commandline loadstate, I know this is a hacky place to do it, but 1 frame needs to be emulated before loadstates are possible
+	if (stateToLoad != -1)
+	{
+		HK_StateLoadSlot(stateToLoad);
+		stateToLoad = -1;				//Never set this other than from ParseCmdLine
+	}
 }
 
 bool first;
