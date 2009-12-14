@@ -95,7 +95,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	winClass.style = CS_HREDRAW | CS_VREDRAW;
 	winClass.lpfnWndProc = WndProc;
 	winClass.hInstance = hInstance;
-//	winClass.hIcon = LoadIcon(hInstance, (LPCTSTR)IDI_DIRECTX_ICON);
+	winClass.hIcon = LoadIcon(hInstance, "IDB_BITMAP1");
 //	winClass.hIconSm = LoadIcon(hInstance, (LPCTSTR)IDI_DIRECTX_ICON);
 	winClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	winClass.lpszMenuName = MAKEINTRESOURCE(IDC_CV);
