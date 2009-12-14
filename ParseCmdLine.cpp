@@ -1,7 +1,10 @@
+#include <windows.h>
+#include "resource.h"
 #include "main.h"
 #include "mednafen.h"
 #include "pcejin.h"
 #include "movie.h"
+#include "ramwatch.h"
 
 using namespace std;
 
@@ -140,6 +143,12 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 	{
 		if (pcejin.romLoaded)	
 			FCEUI_LoadMovie(MovieToLoad.c_str(), readwrite, false, false);	
+		if (AutoRWLoad)
+		{
+			//Open Ram Watch if its auto-load setting is checked
+			OpenRWRecentFile(0);
+			RamWatchHWnd = CreateDialog(g_hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
+		}
 	}
 	
 	//Loadstate
