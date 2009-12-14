@@ -53,6 +53,9 @@ std::vector<HWND> LuaScriptHWnds;
 BOOL Register( HINSTANCE hInst );
 HWND Create( int nCmdShow, int w, int h );
 
+int WndX = 0;	//Window position
+int WndY = 0;
+
 // Message handlers
 void OnDestroy(HWND hwnd);
 void OnCommand(HWND hWnd, int iID, HWND hwndCtl, UINT uNotifyCode);
@@ -105,10 +108,13 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	pcejin.aspectRatio = GetPrivateProfileInt("Video", "aspectratio", 0, IniName);
 	pcejin.windowSize = GetPrivateProfileInt("Video", "pcejin.windowSize", 1, IniName);
 	
+	WndX = GetPrivateProfileInt("Main", "WndX", 0, IniName);
+	WndY = GetPrivateProfileInt("Main", "WndY", 0, IniName);
+	
 	g_hWnd = CreateWindowEx( NULL, "MY_WINDOWS_CLASS",
 		"pcejin",
 		WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		0, 0, 256, 232, NULL, NULL, hInstance, NULL );
+		WndX, WndY, 256, 232, NULL, NULL, hInstance, NULL );
 
 	if( g_hWnd == NULL )
 		return E_FAIL;
@@ -324,7 +330,6 @@ void LoadIniSettings(){
 	if(soundDriver->userMute)
 		soundDriver->mute();
 
-
 	//RamWatch Settings
 	AutoRWLoad = GetPrivateProfileBool("RamWatch", "AutoRWLoad", 0, IniName);
 	RWSaveWindowPos = GetPrivateProfileBool("RamWatch", "SaveWindowPos", 0, IniName);
@@ -344,6 +349,8 @@ void SaveIniSettings(){
 	WritePrivateProfileInt("Video", "aspectratio", pcejin.aspectRatio, IniName);
 	WritePrivateProfileInt("Video", "pcejin.windowSize", pcejin.windowSize, IniName);
 	WritePrivateProfileInt("Main", "Muted", soundDriver->userMute, IniName);
+	WritePrivateProfileInt("Main", "WndX", WndX, IniName);
+	WritePrivateProfileInt("Main", "WndY", WndY, IniName);
 
 	//RamWatch Settings
 	WritePrivateProfileBool("RamWatch", "AutoRWLoad", AutoRWLoad, IniName);
@@ -501,6 +508,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		default:
 			break;
 		}
+		return 0;
+	case WM_MOVE:
+		RECT rect;
+		GetWindowRect(hWnd,&rect);
+		WndX = rect.left;
+		WndY = rect.top;
 		return 0;
 	case WM_DROPFILES:
 		{
