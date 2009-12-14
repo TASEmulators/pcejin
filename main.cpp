@@ -356,6 +356,8 @@ void LoadIniSettings(){
 		sprintf(str, "Recent Watch %d", i+1);
 		GetPrivateProfileString("Watches", str, "", &rw_recent_files[i][0], 1024, IniName);
 	}
+	GetRecentRoms();
+
 }
 
 void SaveIniSettings(){
@@ -378,6 +380,7 @@ void SaveIniSettings(){
 			sprintf(str, "Recent Watch %d", i+1);
 			WritePrivateProfileString("Watches", str, &rw_recent_files[i][0], IniName);	
 		}
+	SaveRecentRoms();
 
 }
 
