@@ -112,7 +112,11 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 		//adelikat: This code is currently in LoadGame, Drag&Drop, Recent ROMs, and here, time for a function
 		pcejin.romLoaded = true;
 		pcejin.started = true;
-		MDFNI_LoadGame(RomToLoad.c_str());	//adelikat: Why doesn't this load a ROM here?
+		if(!MDFNI_LoadGame(szChoice)) {
+			pcejin.started = false;
+			pcejin.romLoaded = false;
+			
+		}
 	}
 	
 	//Movie
