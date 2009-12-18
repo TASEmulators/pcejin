@@ -849,6 +849,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\Icons\bitmap2.bmp"
+			>
+		</File>
+		<File
 			RelativePath=".\dd.cpp"
 			>
 		</File>
@@ -922,6 +926,14 @@
 		</File>
 		<File
 			RelativePath=".\pcejin.rc"
+			>
+		</File>
+		<File
+			RelativePath=".\Icons\pcejin1.bmp"
+			>
+		</File>
+		<File
+			RelativePath=".\Icons\pcejin1.ico"
 			>
 		</File>
 		<File
