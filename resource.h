@@ -8,7 +8,8 @@
 #define IDM_EXIT                        105
 #define IDR_MAINFRAME                   128
 #define IDC_CV                          129
-#define IDB_BITMAP1                     129
+#define IDI_ICON1                       130
+#define IDB_BITMAP1                     132
 #define IDC_WATCHLIST                   200
 #define IDC_PROMPT_EDIT                 201
 #define IDD_PROMPT                      202
@@ -205,9 +206,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        130
+#define _APS_NEXT_RESOURCE_VALUE        133
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1000
+#define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif
