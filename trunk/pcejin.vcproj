@@ -917,10 +917,6 @@
 			>
 		</File>
 		<File
-			RelativePath=".\PCE.bmp"
-			>
-		</File>
-		<File
 			RelativePath=".\pcejin.h"
 			>
 		</File>

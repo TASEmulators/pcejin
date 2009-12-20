@@ -101,7 +101,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	winClass.lpfnWndProc = WndProc;
 	winClass.hInstance = hInstance;
 	winClass.hIcon = LoadIcon(hInstance, "IDI_ICON1");
-//	winClass.hIconSm = LoadIcon(hInstance, (LPCTSTR)IDI_DIRECTX_ICON);
+	winClass.hIconSm = LoadIcon(hInstance, "IDI_ICON1");
 	winClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	winClass.lpszMenuName = MAKEINTRESOURCE(IDC_CV);
 	winClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
