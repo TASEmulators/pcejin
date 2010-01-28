@@ -992,6 +992,9 @@ void emulate(){
 
 	pcejin.pads[0] = joypads [0];
 	pcejin.pads[1] = joypads [1];
+	pcejin.pads[2] = joypads [2];
+	pcejin.pads[3] = joypads [3];
+	pcejin.pads[4] = joypads [4];
 
 	FCEUMOV_AddInputState();
 

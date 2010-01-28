@@ -218,7 +218,7 @@ static BOOL CALLBACK RecordDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LP
 	cur = GetDlgItem(hwndDlg, IDC_BUTTON_BROWSESRAM);
 	IsDlgButtonChecked(hwndDlg, IDC_START_FROM_SRAM) ? EnableWindow(cur, TRUE) : EnableWindow(cur, FALSE);
 
-	IsDlgButtonChecked(hwndDlg, IDC_2_PLAYER) ? controllers=2 : controllers=1;
+	IsDlgButtonChecked(hwndDlg, IDC_2_PLAYER) ? controllers=5 : controllers=1;
 
 	return false;
 }
