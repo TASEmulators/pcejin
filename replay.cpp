@@ -142,7 +142,7 @@ static BOOL CALLBACK RecordDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LP
 		switch(LOWORD(wParam))
 			{
 			case IDOK: {
-				controllers = (SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_GETTOPINDEX, 0,0)+1);
+				controllers = (SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_GETCURSEL, 0,0)+1);
 				author = GetDlgItemTextW<500>(hwndDlg,IDC_EDIT_AUTHOR);
 				fname = GetDlgItemText<MAX_PATH>(hwndDlg,IDC_EDIT_FILENAME);
 				if (fname.length())
