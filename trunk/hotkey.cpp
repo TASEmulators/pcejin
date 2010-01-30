@@ -430,6 +430,9 @@ void LoadInputConfig()
 	//read from configuration file
 	Joypad[0].Enabled = true;
 	Joypad[1].Enabled = true;
+	Joypad[2].Enabled = true;
+	Joypad[3].Enabled = true;
+	Joypad[4].Enabled = true;
 
 	char temp[50];
 	for(int i = 0; i < 10; i++) {
