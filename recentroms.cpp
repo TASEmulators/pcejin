@@ -100,12 +100,10 @@ void UpdateRecentRomsMenu()
 		//LOG("Inserting: %s\n",tmp.c_str());  //Debug
 		InsertMenuItem(GetSubMenu(recentromsmenu, 0), 0, 1, &moo);
 	}
-
 	ReleaseDC(g_hWnd, dc);
 	//-----------------------------------------------------------------------
 
-	HWND temp = g_hWnd;
-	DrawMenuBar(temp);
+	DrawMenuBar(g_hWnd);
 }
 
 void UpdateRecentRoms(const char* filename)
@@ -144,6 +142,8 @@ void UpdateRecentRoms(const char* filename)
 	//	LOG("Recent ROM: %s\n",RecentRoms[x].c_str());
 
 	UpdateRecentRomsMenu();
+	extern void SaveIniSettings();	//adelikat: Addign this function call to fix recent roms.  Buy WHY does this work?!
+	SaveIniSettings();
 }
 
 void RemoveRecentRom(std::string filename)

@@ -189,7 +189,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	initialize();
 	
 	if (lpCmdLine[0])ParseCmdLine(lpCmdLine, g_hWnd);
-	
+
 	while( uMsg.message != WM_QUIT )
 	{
 		if( PeekMessage( &uMsg, NULL, 0, 0, PM_REMOVE ) )
