@@ -131,9 +131,17 @@ static BOOL CALLBACK RecordDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LP
 
 		return false;
 		case WM_COMMAND:
-			switch(LOWORD(wParam))
+//Dropbox for numbers of players
+	SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "1 Player" );
+	SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "2 Players" );
+	SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "3 Players" );
+	SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "4 Players" );
+	SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "5 Players" );
+		switch(LOWORD(wParam))
 			{
 			case IDOK: {
+	int controllers = SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_GETTOPINDEX, 0,0);
+	controllers++;
 				author = GetDlgItemTextW<500>(hwndDlg,IDC_EDIT_AUTHOR);
 				fname = GetDlgItemText<MAX_PATH>(hwndDlg,IDC_EDIT_FILENAME);
 				if (fname.length())
@@ -218,7 +226,7 @@ static BOOL CALLBACK RecordDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LP
 	cur = GetDlgItem(hwndDlg, IDC_BUTTON_BROWSESRAM);
 	IsDlgButtonChecked(hwndDlg, IDC_START_FROM_SRAM) ? EnableWindow(cur, TRUE) : EnableWindow(cur, FALSE);
 
-	IsDlgButtonChecked(hwndDlg, IDC_2_PLAYER) ? controllers=5 : controllers=1;
+//	IsDlgButtonChecked(hwndDlg, IDC_2_PLAYER) ? controllers=2 : controllers=1;
 
 	return false;
 }
