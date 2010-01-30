@@ -134,6 +134,7 @@ static BOOL CALLBACK RecordDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LP
 		SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "3 Players" );
 		SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "4 Players" );
 		SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "5 Players" );
+		SendDlgItemMessage(hwndDlg, IDC_2_PLAYER, CB_SETCURSEL, 0, 0);
 		return false;
 		case WM_COMMAND:
 		
