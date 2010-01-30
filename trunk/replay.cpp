@@ -128,20 +128,20 @@ static BOOL CALLBACK RecordDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LP
 	{
 	case WM_INITDIALOG:
 //		CheckDlgButton(hwndDlg, IDC_START_FROM_SRAM, ((flag == 1) ? BST_CHECKED : BST_UNCHECKED));
-
+		//Dropbox for numbers of players
+		SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "1 Player" );
+		SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "2 Players" );
+		SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "3 Players" );
+		SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "4 Players" );
+		SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "5 Players" );
 		return false;
 		case WM_COMMAND:
-//Dropbox for numbers of players
-	SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "1 Player" );
-	SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "2 Players" );
-	SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "3 Players" );
-	SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "4 Players" );
-	SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_ADDSTRING, 0,(LPARAM) "5 Players" );
+		
+	
 		switch(LOWORD(wParam))
 			{
 			case IDOK: {
-	int controllers = SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_GETTOPINDEX, 0,0);
-	controllers++;
+				controllers = (SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_GETTOPINDEX, 0,0)+1);
 				author = GetDlgItemTextW<500>(hwndDlg,IDC_EDIT_AUTHOR);
 				fname = GetDlgItemText<MAX_PATH>(hwndDlg,IDC_EDIT_FILENAME);
 				if (fname.length())
