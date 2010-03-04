@@ -12,7 +12,7 @@ Integer keys (also used for Booleans, with a 1 or 0) will have a value that is a
  * emuVersion (required) - the version of the emulator used to produce the movie
  * rerecordCount (optional) - the rerecord count
  * PCECD (bool) (optional) - true if the movie was recording on a CD game
- * ports (*note C) - indicates the number of control inputs (valid ranges are 1-5)
+ * ports (note C) - indicates the number of control inputs (valid ranges are 1-5)
 
 =Inputlog=
 
