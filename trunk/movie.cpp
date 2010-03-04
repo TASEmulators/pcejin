@@ -21,6 +21,7 @@ bool autoMovieBackup = true;
 #define DESMUME_VERSION_NUMERIC 9
 
 //----movie engine main state
+extern bool PCE_IsCD;
 
 EMOVIEMODE movieMode = MOVIEMODE_INACTIVE;
 
@@ -189,6 +190,8 @@ void MovieData::truncateAt(int frame)
 void MovieData::installValue(std::string& key, std::string& val)
 {
 	//todo - use another config system, or drive this from a little data structure. because this is gross
+	if(key == "PCECD")
+		installInt(val,pcecd);
 	if(key == "version")
 		installInt(val,version);
 	else if(key == "emuVersion")
@@ -241,6 +244,7 @@ int MovieData::dump(std::ostream *os, bool binary)
 	*os << "emuVersion " << emuVersion << endl;
 	*os << "rerecordCount " << rerecordCount << endl;
 	*os << "ports " << ports << endl;
+	*os << "PCECD " << PCE_IsCD << endl;
 /*	*os << "cdGameName " << cdip->gamename << endl;
 	*os << "cdInfo " << cdip->cdinfo << endl;
 	*os << "cdItemNum " << cdip->itemnum << endl;
