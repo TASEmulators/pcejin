@@ -28,7 +28,7 @@ SI_GAMEPAD
 
  * the field consists of eight characters which constitute a bitfield.
  * any character other than ' ' or '.' means that the button was pressed. By convention, the following mnemonics will be used in a column to remind us of which button corresponds to which column:
- * RLDU12NS (Up,Down,Left,Right,I,II,Run,Select)
+ * UDLR12NS (Up,Down,Left,Right,I,II,Run,Select)
 
 =Emulator Framerate constant=
 
