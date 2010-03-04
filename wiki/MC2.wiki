@@ -8,11 +8,11 @@ Key-value pairs consist of a key identifier, followed by a space separator, foll
 
 Integer keys (also used for Booleans, with a 1 or 0) will have a value that is a simple integer not to exceed 32bits
 
-* version (required) - the version of the movie file format; for now it is always 3
-* emuVersion (required) - the version of the emulator used to produce the movie
-* rerecordCount (optional) - the rerecord count
-* PCECD (bool) (optional) - true if the movie was recording on a CD game
-* ports (*note C) - indicates the number of control inputs (valid ranges are 1-5)
+ * version (required) - the version of the movie file format; for now it is always 1
+ * emuVersion (required) - the version of the emulator used to produce the movie
+ * rerecordCount (optional) - the rerecord count
+ * PCECD (bool) (optional) - true if the movie was recording on a CD game
+ * ports (*note C) - indicates the number of control inputs (valid ranges are 1-5)
 
 =Inputlog=
 
@@ -21,15 +21,15 @@ c 	port0 	port1 	port2
 
 Field c is a variable length decimal integer which is a bitfield corresponding to miscellaneous input states which are valid at the start of the frame. Current values for this are
 
-* MOVIECMD_RESET = 1
+ * MOVIECMD_RESET = 1
 
 The format of port0, port1, port2 depends on which types of devices were attached.
 SI_GAMEPAD
 
-* the field consists of eight characters which constitute a bitfield.
-* any character other than ' ' or '.' means that the button was pressed. By convention, the following mnemonics will be used in a column to remind us of which button corresponds to which column:
-          o RLDUTSBA (Right,Left,Down,Up,sTart,Select,B,A)
+ * the field consists of eight characters which constitute a bitfield.
+ * any character other than ' ' or '.' means that the button was pressed. By convention, the following mnemonics will be used in a column to remind us of which button corresponds to which column:
+ * RLDUTSBA (Right,Left,Down,Up,sTart,Select,B,A)
 
 =Emulator Framerate constant=
 
-* FPS = 7159090.90909090 / 455 / 263;  (approx 59.826 fps)
+ * FPS = 7159090.90909090 / 455 / 263;  (approx 59.826 fps)
