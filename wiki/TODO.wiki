@@ -1,7 +1,5 @@
 -comments are not supported > not written to disk
 
--pcejin title doesnt say anymore current revision ?
-
 -turbo keys: turbo, I, II ect... (auto hold/cancel work)
 
 -resize icon ?
