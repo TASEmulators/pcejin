@@ -296,7 +296,7 @@ void LoadGame(){
 			OpenRWRecentFile(0);
 			RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
 		}
-
+		FCEUI_StopMovie();
 		UpdateRecentRoms(szChoice);
 
 		std::string romname = RemovePath(szChoice);
