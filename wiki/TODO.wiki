@@ -6,8 +6,6 @@
 
 -resize icon ?
 
--loading rom > does not stop the current movie (it should...)
-
 -metadata dialog
 
 -loading new rom > auto hold turbo ?
