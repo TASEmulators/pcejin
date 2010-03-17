@@ -122,7 +122,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	WndY = GetPrivateProfileInt("Main", "WndY", 0, IniName);
 	
 	g_hWnd = CreateWindowEx( NULL, "MY_WINDOWS_CLASS",
-		"pcejin",
+		pcejin.versionName.c_str(),
 		WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		WndX, WndY, 256, 232, NULL, NULL, hInstance, NULL );
 
