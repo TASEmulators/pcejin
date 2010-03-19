@@ -121,7 +121,7 @@ std::string sramfname;
 static BOOL CALLBACK RecordDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	static struct CreateMovieParameters* p = NULL;
-	std::wstring author = L"";
+	std::string author = "";
 	std::string fname;
 	int x;	//temp vairable
 	switch(uMsg)
@@ -143,7 +143,7 @@ static BOOL CALLBACK RecordDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LP
 			{
 			case IDOK: {
 				controllers = (SendDlgItemMessage(hwndDlg, IDC_2_PLAYER,(UINT) CB_GETCURSEL, 0,0)+1);
-				author = GetDlgItemTextW<500>(hwndDlg,IDC_EDIT_AUTHOR);
+				author = GetDlgItemText<500>(hwndDlg,IDC_EDIT_AUTHOR);
 				fname = GetDlgItemText<MAX_PATH>(hwndDlg,IDC_EDIT_FILENAME);
 				if (fname.length())
 				{
