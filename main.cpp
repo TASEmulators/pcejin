@@ -387,7 +387,7 @@ void SaveIniSettings(){
 
 }
 
-std::wstring a = L"a";
+std::string a = "a";
 
 void RecordMovie(HWND hWnd){
 	char szChoice[MAX_PATH]={0};

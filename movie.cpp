@@ -206,8 +206,8 @@ void MovieData::installValue(std::string& key, std::string& val)
 //		StringToBytes(val,&romChecksum,MD5DATA::size);
 //	else if(key == "guid")
 //		guid = Desmume_Guid::fromString(val);
-//	else if(key == "comment")
-//		comments.push_back(mbstowcs(val));
+	else if(key == "comment")
+		comments.push_back(val);
 	else if(key == "binary")
 		installBool(val,binaryFlag);
 	else if(key == "savestate")
@@ -271,8 +271,8 @@ int MovieData::dump(std::ostream *os, bool binary)
 //	*os << "romChecksum " << BytesToString(romChecksum.data,MD5DATA::size) << endl;
 //	*os << "guid " << guid.toString() << endl;
 
-//	for(u32 i=0;i<comments.size();i++)
-//		*os << "comment " << wcstombs(comments[i]) << endl;
+	for(u32 i=0;i<comments.size();i++)
+		*os << "comment " << comments[i] << endl;
 	
 	if(binary)
 		*os << "binary 1" << endl;
@@ -375,7 +375,7 @@ bool LoadFM2(MovieData& movieData, std::istream* fp, int size, bool stopAfterHea
 			if(isnewline) goto commit;
 			value += c;
 			break;
-		case COMMENT:
+//		case COMMENT:
 		default:
 			break;
 		}
@@ -526,7 +526,7 @@ static void openRecordingMovie(const char* fname)
 
 //begin recording a new movie
 //TODO - BUG - the record-from-another-savestate doesnt work.
- void FCEUI_SaveMovie(const char *fname, std::wstring author, int controllers)
+ void FCEUI_SaveMovie(const char *fname, std::string author, int controllers)
 {
 	//if(!FCEU_IsValidUI(FCEUI_RECORDMOVIE))
 	//	return;
@@ -543,7 +543,7 @@ static void openRecordingMovie(const char* fname)
 	currMovieData = MovieData();
 //	currMovieData.guid.newGuid();
 
-	if(author != L"") currMovieData.comments.push_back(L"author " + author);
+	if(author != "") currMovieData.comments.push_back("author " + author);
 	//currMovieData.romChecksum = GameInfo->MD5;
 //	currMovieData.romFilename = cdip->gamename;//GetRomName();
 	
