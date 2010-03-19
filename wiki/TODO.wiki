@@ -1,5 +1,3 @@
--comments are not supported > not written to disk
-
 -turbo keys: turbo, I, II ect... (auto hold/cancel work)
 
 -resize icon ?
