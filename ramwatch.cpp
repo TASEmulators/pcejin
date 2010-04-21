@@ -472,7 +472,7 @@ bool Save_Watches()
 //	Rom_Name = GetRomName();
 	strncpy(Str_Tmp,Rom_Name.c_str(),512);
 	strcat(Str_Tmp,".wch");
-	if(Change_File_S(Str_Tmp, Gens_Path, "Save Watches", "GENs Watchlist\0*.wch\0All Files\0*.*\0\0", "wch", RamWatchHWnd))
+	if(Change_File_S(Str_Tmp, Gens_Path, "Save Watches", "Watchlist\0*.wch\0All Files\0*.*\0\0", "wch", RamWatchHWnd))
 	{
 		FILE *WatchFile = fopen(Str_Tmp,"r+b");
 		if (!WatchFile) WatchFile = fopen(Str_Tmp,"w+b");
