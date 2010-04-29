@@ -42,7 +42,7 @@ void Describe(HWND hwndDlg)
 
 	double tempCount = num_frames / (33513982.0/6/355/263);
 	int num_seconds = (int)tempCount;
-	int fraction = ((int)tempCount - num_seconds) * 100;
+	int fraction = ((int)(tempCount * 100)) % 100;
 	int seconds = num_seconds % 60;
 	int minutes = (num_seconds / 60) % 60;
 	int hours = (num_seconds / 60 / 60) % 60;
