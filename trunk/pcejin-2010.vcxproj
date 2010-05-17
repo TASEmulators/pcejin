@@ -1,0 +1,348 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseFastBuild|Win32">
+      <Configuration>ReleaseFastBuild</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{68D67AC4-A96C-46CD-B5E1-D454CEAE76C8}</ProjectGuid>
+    <RootNamespace>pcejin</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseFastBuild|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseFastBuild|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\__bins\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Debug\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\__bins\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Release\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseFastBuild|Win32'">$(SolutionDir)\__bins\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseFastBuild|Win32'">ReleaseFastBuild\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='ReleaseFastBuild|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='ReleaseFastBuild|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='ReleaseFastBuild|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='ReleaseFastBuild|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PreBuildEvent>
+      <Command>.\utils\SubWCRev.bat</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>blip;compress;zlib;trio;.;libcdio-0.81\include\;libcdio-0.81\lib\driver;src;src\pce;agg\include;directx;utils;lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;WANT_PCE_EMU;NEED_CDEMU;EXTERNAL_LIBCDIO_CONFIG_H;NO_CODECS;HAVE_DIRECTSOUND;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>vfw32.lib;directx\dxerr8.lib;directx\dsound.lib;directx\dinput8.lib;directx\ddraw.lib;directx\dxguid.lib;Winmm.lib;zlib-2008-x32.lib;agg-2.5.lib;lua-5.1.4-x86.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)_debug.exe</OutputFile>
+      <AdditionalLibraryDirectories>zlib;agg;lua;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PreBuildEvent>
+      <Command>.\utils\SubWCRev.bat</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <AdditionalIncludeDirectories>blip;compress;zlib;trio;.;libcdio-0.81\include\;libcdio-0.81\lib\driver;src;src\pce;agg\include;directx;utils;lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;WANT_PCE_EMU;NEED_CDEMU;EXTERNAL_LIBCDIO_CONFIG_H;NO_CODECS;HAVE_DIRECTSOUND;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>vfw32.lib;directx\dxerr8.lib;directx\dsound.lib;directx\dinput8.lib;directx\ddraw.lib;directx\dxguid.lib;Winmm.lib;zlib-2008-x32.lib;agg-2.5.lib;lua-5.1.4-x86.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>zlib;agg;lua;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseFastBuild|Win32'">
+    <PreBuildEvent>
+      <Command>.\utils\SubWCRev.bat</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+      <AdditionalIncludeDirectories>blip;compress;zlib;trio;.;libcdio-0.81\include\;libcdio-0.81\lib\driver;src;src\pce;agg\include;directx;utils;lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;WANT_PCE_EMU;NEED_CDEMU;EXTERNAL_LIBCDIO_CONFIG_H;NO_CODECS;HAVE_DIRECTSOUND;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>vfw32.lib;directx\dxerr8.lib;directx\dsound.lib;directx\dinput8.lib;directx\ddraw.lib;directx\dxguid.lib;Winmm.lib;zlib-2008-x32.lib;agg-2.5.lib;lua-5.1.4-x86.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(ProjectName)_releaseFastBuild.exe</OutputFile>
+      <AdditionalLibraryDirectories>zlib;agg;lua;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="blip\Blip_Buffer.cpp" />
+    <ClCompile Include="cdrom\cdromfile.cpp" />
+    <ClCompile Include="cdrom\cdromif.cpp" />
+    <ClCompile Include="cdrom\crc32.cpp" />
+    <ClCompile Include="cdrom\galois.cpp" />
+    <ClCompile Include="cdrom\l-ec.cpp" />
+    <ClCompile Include="cdrom\recover-raw.cpp" />
+    <ClCompile Include="cdrom\scsicd.cpp" />
+    <ClCompile Include="compress\ioapi.c" />
+    <ClCompile Include="compress\unzip.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\_cdio_generic.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\_cdio_stdio.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\_cdio_stream.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\audio.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\image\bincue.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\cd_types.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\cdio.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\image\cdrdao.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\cdtext.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\device.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\disc.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\ds.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\image_common.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\logging.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\mmc.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\image\nrg.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\read.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\sector.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\track.c" />
+    <ClCompile Include="libcdio-0.81\lib\driver\util.c" />
+    <ClCompile Include="src\endian.cpp" />
+    <ClCompile Include="src\md5.cpp" />
+    <ClCompile Include="src\mednafen.cpp" />
+    <ClCompile Include="src\memory.cpp" />
+    <ClCompile Include="src\png.cpp" />
+    <ClCompile Include="src\settings.cpp" />
+    <ClCompile Include="src\state.cpp" />
+    <ClCompile Include="src\pce\adpcm.cpp" />
+    <ClCompile Include="src\pce\cdrom.cpp" />
+    <ClCompile Include="src\pce\debug.cpp" />
+    <ClCompile Include="src\dis6280.cpp" />
+    <ClCompile Include="src\pce\hes.cpp" />
+    <ClCompile Include="src\pce\huc.cpp" />
+    <ClCompile Include="src\pce\huc6280.cpp" />
+    <ClCompile Include="src\pce\input.cpp" />
+    <ClCompile Include="src\pce\pce.cpp" />
+    <ClCompile Include="src\pce\psg.cpp" />
+    <ClCompile Include="src\pce\tsushin.cpp" />
+    <ClCompile Include="src\pce\vdc.cpp" />
+    <ClCompile Include="trio\trio.c" />
+    <ClCompile Include="trio\trionan.c" />
+    <ClCompile Include="trio\triostr.c" />
+    <ClCompile Include="utils\readwrite.cpp" />
+    <ClCompile Include="utils\xstring.cpp" />
+    <ClCompile Include="aggdraw.cpp" />
+    <ClCompile Include="aviout.cpp" />
+    <ClCompile Include="dd.cpp" />
+    <ClCompile Include="GPU_osd.cpp" />
+    <ClCompile Include="hotkey.cpp" />
+    <ClCompile Include="lua-engine.cpp" />
+    <ClCompile Include="luaconsole.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="movie.cpp" />
+    <ClCompile Include="ParseCmdLine.cpp" />
+    <ClCompile Include="ramsearch.cpp" />
+    <ClCompile Include="ramwatch.cpp" />
+    <ClCompile Include="recentroms.cpp" />
+    <ClCompile Include="replay.cpp" />
+    <ClCompile Include="sound.cpp" />
+    <ClCompile Include="throttle.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="blip\Blip_Buffer.h" />
+    <ClInclude Include="blip\Stereo_Buffer.h" />
+    <ClInclude Include="cdrom\cdromfile.h" />
+    <ClInclude Include="cdrom\cdromif.h" />
+    <ClInclude Include="cdrom\dvdisaster.h" />
+    <ClInclude Include="cdrom\galois-inlines.h" />
+    <ClInclude Include="cdrom\scsicd.h" />
+    <ClInclude Include="compress\ioapi.h" />
+    <ClInclude Include="compress\unzip.h" />
+    <ClInclude Include="libcdio-0.81\lib\driver\_cdio_stdio.h" />
+    <ClInclude Include="libcdio-0.81\lib\driver\_cdio_stream.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\audio.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\bytesex.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\bytesex_asm.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\cd_types.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\cdio.h" />
+    <ClInclude Include="libcdio-0.81\lib\driver\cdio_assert.h" />
+    <ClInclude Include="libcdio-0.81\lib\driver\cdio_private.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\cdtext.h" />
+    <ClInclude Include="libcdio-0.81\lib\driver\cdtext_private.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\device.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\disc.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\ds.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\dvd.h" />
+    <ClInclude Include="libcdio-0.81\lib\driver\generic.h" />
+    <ClInclude Include="libcdio-0.81\lib\driver\image.h" />
+    <ClInclude Include="libcdio-0.81\lib\driver\image_common.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\iso9660.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\logging.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\mmc.h" />
+    <ClInclude Include="libcdio-0.81\lib\driver\mmc_private.h" />
+    <ClInclude Include="libcdio-0.81\lib\driver\image\nrg.h" />
+    <ClInclude Include="libcdio-0.81\lib\driver\portable.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\posix.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\read.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\rock.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\sector.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\track.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\types.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\util.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\version.h" />
+    <ClInclude Include="libcdio-0.81\include\cdio\xa.h" />
+    <ClInclude Include="src\config.h" />
+    <ClInclude Include="src\endian.h" />
+    <ClInclude Include="src\file.h" />
+    <ClInclude Include="src\general.h" />
+    <ClInclude Include="src\git.h" />
+    <ClInclude Include="src\md5.h" />
+    <ClInclude Include="src\mednafen.h" />
+    <ClInclude Include="src\memory.h" />
+    <ClInclude Include="src\mempatcher.h" />
+    <ClInclude Include="src\netplay.h" />
+    <ClInclude Include="src\player.h" />
+    <ClInclude Include="src\settings-common.h" />
+    <ClInclude Include="src\state.h" />
+    <ClInclude Include="src\video.h" />
+    <ClInclude Include="src\pce\adpcm.h" />
+    <ClInclude Include="src\pce\cdrom.h" />
+    <ClInclude Include="src\pce\debug.h" />
+    <ClInclude Include="src\dis6280.h" />
+    <ClInclude Include="src\pce\hes.h" />
+    <ClInclude Include="src\pce\huc.h" />
+    <ClInclude Include="src\pce\huc6280.h" />
+    <ClInclude Include="src\pce\input.h" />
+    <ClInclude Include="src\pce\ops.h" />
+    <ClInclude Include="src\pce\pce.h" />
+    <ClInclude Include="src\pce\psg-loop.h" />
+    <ClInclude Include="src\pce\psg.h" />
+    <ClInclude Include="src\pce\tsushin.h" />
+    <ClInclude Include="src\pce\vdc.h" />
+    <ClInclude Include="trio\trio.h" />
+    <ClInclude Include="trio\triodef.h" />
+    <ClInclude Include="trio\trionan.h" />
+    <ClInclude Include="trio\triop.h" />
+    <ClInclude Include="trio\triostr.h" />
+    <ClInclude Include="utils\readwrite.h" />
+    <ClInclude Include="utils\xstring.h" />
+    <ClInclude Include="agg2d.h" />
+    <ClInclude Include="aggdraw.h" />
+    <ClInclude Include="aviout.h" />
+    <ClInclude Include="dd.h" />
+    <ClInclude Include="GPU_osd.h" />
+    <ClInclude Include="hotkey.h" />
+    <ClInclude Include="inttypes.h" />
+    <ClInclude Include="lua-engine.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="movie.h" />
+    <ClInclude Include="ParseCmdLine.h" />
+    <ClInclude Include="pcejin.h" />
+    <ClInclude Include="prefix.h" />
+    <ClInclude Include="ramsearch.h" />
+    <ClInclude Include="ramwatch.h" />
+    <ClInclude Include="recentroms.h" />
+    <ClInclude Include="replay.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="sound.h" />
+    <ClInclude Include="types.h" />
+    <ClInclude Include="unixstuff.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="agg2d.inl" />
+    <None Include="Icons\bitmap2.bmp" />
+    <None Include="Icons\pcejin1.bmp" />
+    <None Include="Icons\pcejin1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="pcejin.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
