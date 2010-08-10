@@ -38,6 +38,8 @@
 #define IDC_C_ADDCHEAT                  225
 #define IDC_C_WATCH                     226
 #define ID_RAM_WATCH                    227
+#define IDC_C_WATCH_DUPLICATE2          227
+#define IDC_C_WATCH_SEPARATE            227
 #define IDD_RAMWATCH                    228
 #define IDM_RESET                       229
 #define IDC_EDIT_COMPAREVALUE           230
