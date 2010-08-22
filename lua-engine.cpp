@@ -2169,6 +2169,7 @@ s_buttonDescs [] =
 	{0x1C, 22, "C"},
 	{0x1C, 23, "start"},
 };
+*/
 
 int joy_getArgControllerNum(lua_State* L, int& index)
 {
@@ -2197,14 +2198,13 @@ int joy_getArgControllerNum(lua_State* L, int& index)
 		controllerNumber = 1;
 	}
 
-	if(controllerNumber == 0x1A)
-		controllerNumber = 1;
-	if(controllerNumber != 1 && controllerNumber != 2 && controllerNumber != 0x1B && controllerNumber != 0x1C)
-		luaL_error(L, "controller number must be 1, 2, '1B', or '1C'");
+//	if(controllerNumber == 0x1A)
+//		controllerNumber = 1;
+//	if(controllerNumber != 1 && controllerNumber != 2 && controllerNumber != 0x1B && controllerNumber != 0x1C)
+//		luaL_error(L, "controller number must be 1, 2, '1B', or '1C'");
 
 	return controllerNumber;
 }
-*/
 
 static const struct ButtonDesc
 {
@@ -2223,6 +2223,38 @@ s_buttonDescs [] =
 	{1, 5, "Right"},
 	{1, 6, "Down"},
 	{1, 7, "Left"},
+        {2, 0, "I"},
+        {2, 1, "II"},
+        {2, 2, "Select"},
+        {2, 3, "Run"},
+        {2, 4, "Up"},
+        {2, 5, "Right"},
+        {2, 6, "Down"},
+        {2, 7, "Left"},
+        {3, 0, "I"},
+        {3, 1, "II"},
+        {3, 2, "Select"},
+        {3, 3, "Run"},
+        {3, 4, "Up"},
+        {3, 5, "Right"},
+        {3, 6, "Down"},
+        {3, 7, "Left"},
+        {4, 0, "I"},
+        {4, 1, "II"},
+        {4, 2, "Select"},
+        {4, 3, "Run"},
+        {4, 4, "Up"},
+        {4, 5, "Right"},
+        {4, 6, "Down"},
+        {4, 7, "Left"},
+        {5, 0, "I"},
+        {5, 1, "II"},
+        {5, 2, "Select"},
+        {5, 3, "Run"},
+        {5, 4, "Up"},
+        {5, 5, "Right"},
+        {5, 6, "Down"},
+        {5, 7, "Left"},
 };
 
 // joypad.set(controllerNum = 1, inputTable)
@@ -2230,7 +2262,9 @@ s_buttonDescs [] =
 DEFINE_LUA_FUNCTION(joy_set, "[controller=1,]inputtable")
 {
 	int index = 1;
-	int controllerNumber = 1;//joy_getArgControllerNum(L, index);
+	int controllerNumber = joy_getArgControllerNum(L, index);
+
+	fprintf(stdout, "Setting input for player %d\n", controllerNumber);
 
 	luaL_checktype(L, index, LUA_TTABLE);
 
@@ -2256,7 +2290,7 @@ DEFINE_LUA_FUNCTION(joy_set, "[controller=1,]inputtable")
 			lua_pop(L,1);
 		}
 	}
-	pcejin.pads[0]=mask;
+	pcejin.pads[controllerNumber-1]=mask;
 
 //	SetNextInputCondensed(input, mask);
 
