@@ -2119,6 +2119,75 @@ static int joy_get(lua_State *L) {
 	return 1;
 }
 
+static const struct ButtonDesc
+{
+	unsigned short controllerNum;
+	unsigned short bit;
+	const char* name;
+}
+
+s_buttonDescs [] =
+{
+	{1, 0, "I"},
+	{1, 1, "II"},
+	{1, 2, "Select"},
+	{1, 3, "Run"},
+	{1, 4, "Up"},
+	{1, 5, "Right"},
+	{1, 6, "Down"},
+	{1, 7, "Left"},
+	{2, 0, "I"},
+	{2, 1, "II"},
+	{2, 2, "Select"},
+	{2, 3, "Run"},
+	{2, 4, "Up"},
+	{2, 5, "Right"},
+	{2, 6, "Down"},
+	{2, 7, "Left"},
+	{3, 0, "I"},
+	{3, 1, "II"},
+	{3, 2, "Select"},
+	{3, 3, "Run"},
+	{3, 4, "Up"},
+	{3, 5, "Right"},
+	{3, 6, "Down"},
+	{3, 7, "Left"},
+	{4, 0, "I"},
+	{4, 1, "II"},
+	{4, 2, "Select"},
+	{4, 3, "Run"},
+	{4, 4, "Up"},
+	{4, 5, "Right"},
+	{4, 6, "Down"},
+	{4, 7, "Left"},
+	{5, 0, "I"},
+	{5, 1, "II"},
+	{5, 2, "Select"},
+	{5, 3, "Run"},
+	{5, 4, "Up"},
+	{5, 5, "Right"},
+	{5, 6, "Down"},
+	{5, 7, "Left"},
+};
+
+static int joy_set(lua_State *L) {
+  int mask = 0;
+  int controllerNumber = luaL_checkinteger(L,1);
+  luaL_checktype(L, 2, LUA_TTABLE);
+  for(int i = 0; i < sizeof(s_buttonDescs)/sizeof(*s_buttonDescs); i++)
+  {
+    const ButtonDesc& bd = s_buttonDescs[i];
+    if(bd.controllerNum == controllerNumber)
+    {
+      lua_getfield(L, 2, bd.name);
+      if (!lua_isnil(L,-1) && lua_toboolean(L,-1)) mask |= 1u << bd.bit;
+      lua_pop(L,1);
+    }
+  }
+  pcejin.pads[controllerNumber-1] = mask;
+  return 1;
+}
+
 /*
 static const struct ButtonDesc
 {
@@ -2169,7 +2238,6 @@ s_buttonDescs [] =
 	{0x1C, 22, "C"},
 	{0x1C, 23, "start"},
 };
-*/
 
 int joy_getArgControllerNum(lua_State* L, int& index)
 {
@@ -2181,12 +2249,12 @@ int joy_getArgControllerNum(lua_State* L, int& index)
 		if(type == LUA_TSTRING)
 		{
 			const char* str = lua_tostring(L,index);
-			if(!stricmp(str, "1C"))
-				controllerNumber = 0x1C;
-			else if(!stricmp(str, "1B"))
-				controllerNumber = 0x1B;
-			else if(!stricmp(str, "1A"))
-				controllerNumber = 0x1A;
+//			if(!stricmp(str, "1C"))
+//				controllerNumber = 0x1C;
+//			else if(!stricmp(str, "1B"))
+//				controllerNumber = 0x1B;
+//			else if(!stricmp(str, "1A"))
+//				controllerNumber = 0x1A;
 		}
 		if(!controllerNumber)
 			controllerNumber = luaL_checkinteger(L,index);
@@ -2205,58 +2273,9 @@ int joy_getArgControllerNum(lua_State* L, int& index)
 
 	return controllerNumber;
 }
+*/
 
-static const struct ButtonDesc
-{
-	unsigned short controllerNum;
-	unsigned short bit;
-	const char* name;
-}
-
-s_buttonDescs [] =
-{
-	{1, 0, "I"},
-	{1, 1, "II"},
-	{1, 2, "Select"},
-	{1, 3, "Run"},
-	{1, 4, "Up"},
-	{1, 5, "Right"},
-	{1, 6, "Down"},
-	{1, 7, "Left"},
-        {2, 0, "I"},
-        {2, 1, "II"},
-        {2, 2, "Select"},
-        {2, 3, "Run"},
-        {2, 4, "Up"},
-        {2, 5, "Right"},
-        {2, 6, "Down"},
-        {2, 7, "Left"},
-        {3, 0, "I"},
-        {3, 1, "II"},
-        {3, 2, "Select"},
-        {3, 3, "Run"},
-        {3, 4, "Up"},
-        {3, 5, "Right"},
-        {3, 6, "Down"},
-        {3, 7, "Left"},
-        {4, 0, "I"},
-        {4, 1, "II"},
-        {4, 2, "Select"},
-        {4, 3, "Run"},
-        {4, 4, "Up"},
-        {4, 5, "Right"},
-        {4, 6, "Down"},
-        {4, 7, "Left"},
-        {5, 0, "I"},
-        {5, 1, "II"},
-        {5, 2, "Select"},
-        {5, 3, "Run"},
-        {5, 4, "Up"},
-        {5, 5, "Right"},
-        {5, 6, "Down"},
-        {5, 7, "Left"},
-};
-
+/*
 // joypad.set(controllerNum = 1, inputTable)
 // controllerNum can be 1, 2, '1B', or '1C'
 DEFINE_LUA_FUNCTION(joy_set, "[controller=1,]inputtable")
@@ -2264,7 +2283,7 @@ DEFINE_LUA_FUNCTION(joy_set, "[controller=1,]inputtable")
 	int index = 1;
 	int controllerNumber = joy_getArgControllerNum(L, index);
 
-	fprintf(stdout, "Setting input for player %d\n", controllerNumber);
+//	fprintf(stdout, "Setting input for player %d\n", controllerNumber);
 
 	luaL_checktype(L, index, LUA_TTABLE);
 
@@ -2296,6 +2315,8 @@ DEFINE_LUA_FUNCTION(joy_set, "[controller=1,]inputtable")
 
 	return 0;
 }
+*/
+
 /*
 // joypad.get(controllerNum = 1)
 // controllerNum can be 1, 2, '1B', or '1C'
