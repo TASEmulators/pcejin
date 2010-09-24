@@ -37,7 +37,6 @@
 
 #include "shellapi.h"
 
-#include "recentroms.h"
 #include "ParseCmdLine.h"
 
 Pcejin pcejin;
