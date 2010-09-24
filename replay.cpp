@@ -6,6 +6,8 @@
 #include "main.h"
 #include "movie.h"
 #include "utils/xstring.h"
+#include "git.h"
+#include "mednafen.h"
 
 #undef close
 
@@ -37,10 +39,15 @@ void Describe(HWND hwndDlg)
 	MovieData md;
 	LoadFM2(md, &fs, INT_MAX, false);
 	fs.close();
-
+	double tempCount;
 	u32 num_frames = md.records.size();
-
-	double tempCount = num_frames / (33513982.0/6/355/263);
+	if (MDFNGameInfo->VideoSystem != VIDSYS_PAL){	
+		//Calculate NTSC frames
+		tempCount = num_frames / (7159090.90909090 / 455 / 263);
+	} else {
+		//Calculate PAL frames
+		tempCount = num_frames / (20000000 / (259 * 384 * 4));
+	}
 	int num_seconds = (int)tempCount;
 	int fraction = ((int)(tempCount * 100)) % 100;
 	int seconds = num_seconds % 60;
