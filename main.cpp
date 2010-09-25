@@ -636,6 +636,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 					RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
 				}
 				UpdateRecentRoms(filename);
+				SetWindowText(g_hWnd, fileDropped.c_str());
 				////////////////////////////////
 			}
 		}
