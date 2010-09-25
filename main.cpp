@@ -36,8 +36,9 @@
 #include "lua-engine.h"
 
 #include "shellapi.h"
-
 #include "ParseCmdLine.h"
+
+
 
 Pcejin pcejin;
 
@@ -1008,7 +1009,7 @@ void emulate(){
 	pcejin.pads[3] = joypads [3];
 	pcejin.pads[4] = joypads [4];
 
-	FCEUMOV_AddInputState();
+
 
 	VTLineWidths[VTBackBuffer][0].w = ~0;
 
@@ -1026,6 +1027,8 @@ void emulate(){
 		espec.skip = 0;
 
 	CallRegisteredLuaFunctions(LUACALL_BEFOREEMULATION);
+	
+	FCEUMOV_AddInputState();
 
 	MDFNGameInfo->Emulate(&espec);
 
