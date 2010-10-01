@@ -9,6 +9,7 @@
 #include "resource.h"
 #include "mednafen.h"
 #include "pcejin.h"
+#include "movie.h"
 
 using namespace std;
 
@@ -221,8 +222,10 @@ void ClearRecentRoms()
 
 void OpenRecentROM(int listNum)
 {
+	
 	if (listNum > MAX_RECENT_ROMS) return; //Just in case
-	char filename[MAX_PATH];
+	soundDriver->pause();	
+	char filename[MAX_PATH];	
 	strcpy(filename, RecentRoms[listNum].c_str());
 	
 	pcejin.romLoaded = true;
@@ -241,4 +244,6 @@ void OpenRecentROM(int listNum)
 			RemoveRecentRom(RecentRoms[listNum]);
 		}	
 	}
+	pcejin.tempUnPause();
+	ResetFrameCount();
 }
