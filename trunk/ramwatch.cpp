@@ -49,9 +49,9 @@ unsigned int GetCurrentValue(AddressWatcher& watch)
 
 	switch (watch.Size)
 	{
-	case 0x62: return BaseRAM[watch.Address];
-	case 0x77: return BaseRAM[watch.Address];
-	case 0x64: return BaseRAM[watch.Address];
+	case 0x62: return BaseRAM[watch.Address-0x001F0000];  //DarkKobold: Base RAM doesn't start at 0x1F0000!
+	case 0x77: return BaseRAM[watch.Address-0x001F0000];
+	case 0x64: return BaseRAM[watch.Address-0x001F0000];
 	default: return 0;
 	}
 	return 1;
