@@ -188,7 +188,8 @@ private:
 extern int currFrameCounter;
 extern EMOVIEMODE movieMode;		//adelikat: main needs this for frame counter display
 extern MovieData currMovieData;		//adelikat: main needs this for frame counter display
-
+void ResetFrameCount();		       //Need to be able to reset frame counter outside of movies. 
+	
 bool FCEUI_MovieGetInfo(std::istream* fp, MOVIE_INFO& info, bool skipFrameCount);
 void FCEUI_SaveMovie(const char *fname, std::string author, int controllers);
 void FCEUI_LoadMovie(const char *fname, bool _read_only, bool tasedit, int _pauseframe);

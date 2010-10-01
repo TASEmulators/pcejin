@@ -424,7 +424,10 @@ static void StopRecording()
 	closeRecordingMovie();
 }
 
-
+void ResetFrameCount() {
+	//for loading roms
+	currFrameCounter = 0;
+}
 
 void FCEUI_StopMovie()
 {

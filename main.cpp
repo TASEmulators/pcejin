@@ -297,6 +297,7 @@ void LoadGame(){
 			RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
 		}
 		FCEUI_StopMovie();
+		ResetFrameCount();
 		UpdateRecentRoms(szChoice);
 
 		std::string romname = RemovePath(szChoice);
@@ -307,6 +308,29 @@ void LoadGame(){
 		SetWindowText(g_hWnd, temp.c_str());
 	}
 }
+void LoadGameShort(char filename[256]) {
+	pcejin.romLoaded = true;
+	pcejin.started = true;
+if(!MDFNI_LoadGame(filename)) {
+			pcejin.started = false;
+			pcejin.romLoaded = false;
+			
+		}
+		if (AutoRWLoad)
+		{
+			//Open Ram Watch if its auto-load setting is checked
+			OpenRWRecentFile(0);
+			RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
+		}
+		FCEUI_StopMovie();
+		UpdateRecentRoms(filename);
+
+		std::string romname = RemovePath(filename);
+		std::string temp = pcejin.versionName;
+		temp.append(" ");
+		temp.append(romname);		
+		SetWindowText(g_hWnd, temp.c_str());
+	}
 
 void RecordAvi()
 {

@@ -19,7 +19,7 @@ extern MDFN_Rect *VTLineWidths[2];
 extern volatile int VTBackBuffer ;
 
 extern int CurrentState;
-
+void initialize();
 extern void LoadInputConfig();
 extern BOOL di_init();
 extern INT_PTR CALLBACK DlgInputConfig(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam);
