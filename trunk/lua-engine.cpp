@@ -1567,6 +1567,35 @@ DEFINE_LUA_FUNCTION(gens_wait, "")
 }
 */
 
+static int emu_frameadvance(lua_State *L) {
+	// We're going to sleep for a frame-advance. Take notes.
+	emulateLua();
+	return 0;
+/*	pcejin.started = true;
+	pcejin.LuaframeAdvance = true;
+	// Now we can yield to the main 
+	lua_settop(L, 0);
+	lua_getfield(L, LUA_REGISTRYINDEX, idstring);
+			
+			if (lua_isfunction(L, -1))
+			{
+				bool wasRunning = info.running;
+				info.running = true;
+				RefreshScriptSpeedStatus();
+				int errorcode = lua_pcall(L, 0, 0, 0);
+				info.running = wasRunning;
+				RefreshScriptSpeedStatus();
+				if (errorcode)
+					HandleCallbackError(L,info,uid,true);
+			}
+			else
+			{
+				lua_pop(L, 1);
+			}
+	return lua_yield(L, 0);
+	*/
+}
+
 
 
 /*
@@ -3698,7 +3727,7 @@ static const struct luaL_reg styluslib [] =
 
 static const struct luaL_reg emulib [] =
 {
-//	{"frameadvance", emu_frameadvance},
+	{"frameadvance", emu_frameadvance},
 //	{"speedmode", emu_speedmode},
 //	{"wait", emu_wait},
 //	{"pause", emu_pause},
@@ -5531,4 +5560,3 @@ void RefreshScriptSpeedStatus()
 		++iter;
 	}
 }
-
