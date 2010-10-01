@@ -17,7 +17,6 @@ int MDFNSS_Load(const char *fname, const char *suffix);
 extern uint32 *VTBuffer[2];
 extern MDFN_Rect *VTLineWidths[2];
 extern volatile int VTBackBuffer ;
-
 extern int CurrentState;
 void initialize();
 extern void LoadInputConfig();
@@ -55,4 +54,5 @@ void IncreaseSpeed();
 void DecreaseSpeed();
 void InitSpeedThrottle();
 int SpeedThrottle();
+void emulateLua();
 std::string LoadMCM(const char* path, bool load);

@@ -1013,6 +1013,36 @@ void initvideo(){
 
 extern u32 joypads [8];
 
+void emulateLua()
+{
+	pcejin.isLagFrame = true;
+
+	S9xUpdateJoypadButtons();
+
+	pcejin.pads[0] = joypads [0];
+	pcejin.pads[1] = joypads [1];
+	pcejin.pads[2] = joypads [2];
+	pcejin.pads[3] = joypads [3];
+	pcejin.pads[4] = joypads [4];
+	VTLineWidths[VTBackBuffer][0].w = ~0;
+
+	memset(&espec, 0, sizeof(EmulateSpecStruct));
+
+	espec.pixels = (uint32 *)VTBuffer[VTBackBuffer];
+	espec.LineWidths = (MDFN_Rect *)VTLineWidths[VTBackBuffer];
+	espec.SoundBuf = &sound;
+	espec.SoundBufSize = &ssize;
+	espec.soundmultiplier = 1;
+	MDFNGameInfo->Emulate(&espec);
+	
+	if (pcejin.isLagFrame)
+		pcejin.lagFrameCounter++;
+	FCEUMOV_AddInputState();
+	MDFNGameInfo->Emulate(&espec);
+
+	
+}
+
 void emulate(){
 	
 	if(!pcejin.started  || !pcejin.romLoaded)
@@ -1049,22 +1079,22 @@ void emulate(){
 		espec.skip = 1;
 	else
 		espec.skip = 0;
-
-	CallRegisteredLuaFunctions(LUACALL_BEFOREEMULATION);
+		CallRegisteredLuaFunctions(LUACALL_BEFOREEMULATION);
 	
 	FCEUMOV_AddInputState();
 
 	MDFNGameInfo->Emulate(&espec);
 
-	CallRegisteredLuaFunctions(LUACALL_AFTEREMULATION);
+	
 
-	Update_RAM_Search();
-	Update_RAM_Watch();
+		CallRegisteredLuaFunctions(LUACALL_AFTEREMULATION);
+		Update_RAM_Search();
+		Update_RAM_Watch();
 
 	soundDriver->write((u16*)*espec.SoundBuf, *espec.SoundBufSize);
-
 	DRV_AviSoundUpdate(*espec.SoundBuf, *espec.SoundBufSize);
 	DRV_AviVideoUpdate((uint16*)espec.pixels, &espec);
+
 
 	if (pcejin.frameAdvance)
 	{
