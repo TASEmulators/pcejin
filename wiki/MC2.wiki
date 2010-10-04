@@ -13,6 +13,11 @@ Integer keys (also used for Booleans, with a 1 or 0) will have a value that is a
  * rerecordCount (optional) - the rerecord count
  * PCECD (bool) (optional) - true if the movie was recording on a CD game
  * ports (note C) - indicates the number of control inputs (valid ranges are 1-5)
+ 
+ * comment (optional) - simply a memo.
+ * by convention, the first token in the comment value is the subject of the comment.
+ * by convention, subsequent comments with the same subject will have their ordering preserved and may be used to approximate multiline comments.
+ * by convention, the author of the movie should be stored in comment(s) with a subject of: author
 
 =Inputlog=
 
