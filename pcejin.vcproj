@@ -75,6 +75,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AdditionalManifestFiles="pcejin_x86.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -162,6 +163,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AdditionalManifestFiles="pcejin_x86.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -247,6 +249,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AdditionalManifestFiles="pcejin_x86.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -853,6 +856,14 @@
 			>
 		</File>
 		<File
+			RelativePath=".\CWindow.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\CWindow.h"
+			>
+		</File>
+		<File
 			RelativePath=".\dd.cpp"
 			>
 		</File>
@@ -898,6 +909,14 @@
 		</File>
 		<File
 			RelativePath=".\main.h"
+			>
+		</File>
+		<File
+			RelativePath=".\memView.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\memView.h"
 			>
 		</File>
 		<File
