@@ -41,16 +41,16 @@ enum RegionType {
 	MEMVIEW_RAM = 0
 };
 
-struct MemoryRegion
+struct MemViewRegion
 {
 	char name[16]; // name of this region (ex. SRAM)
 	HWAddressType hardwareAddress; // hardware address of the start of this region
 	unsigned int size; // number of bytes to the end of this region
 };
 
-static const MemoryRegion s_ramRegion = { "RAM", 0x1f0000, 0x8000 };
+static const MemViewRegion s_ramRegion = { "RAM", 0x1f0000, 0x8000 };
 
-typedef std::vector<MemoryRegion> MemoryList;
+typedef std::vector<MemViewRegion> MemoryList;
 static MemoryList s_memoryRegions;
 
 //////////////////////////////////////////////////////////////////////////////
@@ -59,7 +59,7 @@ extern uint8 BaseRAM[32768];
 
 uint8_t memRead8 (RegionType regionType, HWAddressType address)
 {
-	MemoryRegion& region = s_memoryRegions[regionType];
+	MemViewRegion& region = s_memoryRegions[regionType];
 	if (address < region.hardwareAddress || address >= (region.hardwareAddress + region.size))
 	{
 		return 0;
@@ -75,7 +75,7 @@ uint8_t memRead8 (RegionType regionType, HWAddressType address)
 
 uint16_t memRead16 (RegionType regionType, HWAddressType address)
 {
-	MemoryRegion& region = s_memoryRegions[regionType];
+	MemViewRegion& region = s_memoryRegions[regionType];
 	if (address < region.hardwareAddress || (address + 1) >= (region.hardwareAddress + region.size))
 	{
 		return 0;
@@ -91,7 +91,7 @@ uint16_t memRead16 (RegionType regionType, HWAddressType address)
 
 uint32_t memRead32 (RegionType regionType, HWAddressType address)
 {
-	MemoryRegion& region = s_memoryRegions[regionType];
+	MemViewRegion& region = s_memoryRegions[regionType];
 	if (address < region.hardwareAddress || (address + 3) >= (region.hardwareAddress + region.size))
 	{
 		return 0;
@@ -115,7 +115,7 @@ void memRead(uint8_t* buffer, RegionType regionType, HWAddressType address, size
 
 void memWrite8 (RegionType regionType, HWAddressType address, uint8_t value)
 {
-	MemoryRegion& region = s_memoryRegions[regionType];
+	MemViewRegion& region = s_memoryRegions[regionType];
 	switch (regionType)
 	{
 	case MEMVIEW_RAM:
@@ -126,7 +126,7 @@ void memWrite8 (RegionType regionType, HWAddressType address, uint8_t value)
 
 void memWrite16 (RegionType regionType, HWAddressType address, uint16_t value)
 {
-	MemoryRegion& region = s_memoryRegions[regionType];
+	MemViewRegion& region = s_memoryRegions[regionType];
 	switch (regionType)
 	{
 	case MEMVIEW_RAM:
@@ -137,7 +137,7 @@ void memWrite16 (RegionType regionType, HWAddressType address, uint16_t value)
 
 void memWrite32 (RegionType regionType, HWAddressType address, uint32_t value)
 {
-	MemoryRegion& region = s_memoryRegions[regionType];
+	MemViewRegion& region = s_memoryRegions[regionType];
 	switch (regionType)
 	{
 	case MEMVIEW_RAM:
@@ -196,7 +196,7 @@ INT_PTR CALLBACK MemView_DlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 			wnd->font = CreateFont(16, 0, 0, 0, FW_MEDIUM, FALSE, FALSE, FALSE, DEFAULT_CHARSET, 
 				OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, GetFontQuality(), FIXED_PITCH, "Courier New");
 
-			MemoryRegion& region = s_memoryRegions[wnd->region];
+			MemViewRegion& region = s_memoryRegions[wnd->region];
 
 			cur = GetDlgItem(hDlg, IDC_REGION);
 			for(MemoryList::iterator iter = s_memoryRegions.begin(); iter != s_memoryRegions.end(); ++iter)
@@ -240,7 +240,7 @@ INT_PTR CALLBACK MemView_DlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 			{
 				wnd->region = SendMessage((HWND)lParam, CB_GETCURSEL, 0, 0);
 
-				MemoryRegion& region = s_memoryRegions[wnd->region];
+				MemViewRegion& region = s_memoryRegions[wnd->region];
 				wnd->address = region.hardwareAddress;
 				SetScrollRange(GetDlgItem(hDlg, IDC_MEMVIEWBOX), SB_VERT, 0x00000000, (region.size - 1) >> 4, TRUE);
 				SetScrollPos(GetDlgItem(hDlg, IDC_MEMVIEWBOX), SB_VERT, 0x00000000, TRUE);
@@ -276,7 +276,7 @@ INT_PTR CALLBACK MemView_DlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 				int shift;
 				BOOL error = FALSE;
 				u32 address = 0x00000000;
-				MemoryRegion& region = s_memoryRegions[wnd->region];
+				MemViewRegion& region = s_memoryRegions[wnd->region];
 				HWAddressType addrMin = (region.hardwareAddress) & 0xFFFFFF00;
 				HWAddressType addrMax = max(addrMin, (region.hardwareAddress + region.size - 0x100 - 1) & 0xFFFFFF00);
 
@@ -452,7 +452,7 @@ INT_PTR CALLBACK MemView_DlgProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPa
 							FILE *f = fopen(fileName, "wb");
 							if (f)
 							{
-								MemoryRegion& region = s_memoryRegions[wnd->region];
+								MemViewRegion& region = s_memoryRegions[wnd->region];
 								for (HWAddressType address = region.hardwareAddress;
 									address < region.hardwareAddress + region.size; address += blocksize)
 								{
@@ -819,7 +819,7 @@ LRESULT CALLBACK MemView_ViewBoxProc(HWND hCtl, UINT uMsg, WPARAM wParam, LPARAM
 					}
 					else if(wnd->selAddress >= (wnd->address + 0x100))
 					{
-						MemoryRegion& region = s_memoryRegions[wnd->region];
+						MemViewRegion& region = s_memoryRegions[wnd->region];
 						HWAddressType addrMin = (region.hardwareAddress) & 0xFFFFFF00;
 						HWAddressType addrMax = max(addrMin, (region.hardwareAddress + region.size - 0x100 - 1) & 0xFFFFFF00);
 						if (wnd->address + 0x10 <= addrMax)
@@ -847,7 +847,7 @@ LRESULT CALLBACK MemView_ViewBoxProc(HWND hCtl, UINT uMsg, WPARAM wParam, LPARAM
 	case WM_VSCROLL:
 		{
 			int firstpos = GetScrollPos(hCtl, SB_VERT);
-			MemoryRegion& region = s_memoryRegions[wnd->region];
+			MemViewRegion& region = s_memoryRegions[wnd->region];
 			HWAddressType addrMin = (region.hardwareAddress) & 0xFFFFFF00;
 			HWAddressType addrMax = (region.hardwareAddress + region.size - 1) & 0xFFFFFF00;
 
