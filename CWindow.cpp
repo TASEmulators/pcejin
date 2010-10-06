@@ -458,7 +458,7 @@ void CToolBar::AppendButton(int uID, int uBitmapID, DWORD dwState, bool bDropdow
 	// And finally add the button
 	memset(&btn, 0, sizeof(TBBUTTON));
 	btn.fsStyle = bDropdown ? TBSTYLE_DROPDOWN : TBSTYLE_BUTTON;
-	btn.fsState = dwState;
+	btn.fsState = (BYTE) dwState;
 	btn.idCommand = uID;
 	btn.iString = -1;
 	btn.iBitmap = bmpid;
@@ -587,7 +587,7 @@ bool WINCLASS::setMenu(HMENU menu)
 
 bool WINCLASS::addMenuItem(u32 item, bool byPos, LPCMENUITEMINFO info)
 {
-	return InsertMenuItem(hmenu, item, byPos ? TRUE : FALSE, info);
+	return InsertMenuItem(hmenu, item, byPos ? TRUE : FALSE, info) != FALSE;
 }
 
 DWORD WINCLASS::checkMenu(UINT idd, bool check)
