@@ -18,6 +18,8 @@
 #include "mednafen.h"
 #include "general.h"
 
+#include "CWindow.h"
+#include "memView.h"
 #include "ramwatch.h"
 #include "ramsearch.h"
 #include "Mmsystem.h"
@@ -209,6 +211,8 @@ int WINAPI WinMain( HINSTANCE hInstance,
 
 	timeEndPeriod (wmTimerRes);
 
+	CloseAllToolWindows();
+
 	UnregisterClass( "MY_WINDOWS_CLASS", winClass.hInstance );
 	
 	return uMsg.wParam;
@@ -357,6 +361,13 @@ void RecordAvi()
 void StopAvi()
 {
 	DRV_AviEnd();
+}
+
+void UpdateToolWindows()
+{
+	Update_RAM_Search();	//Update_RAM_Watch() is also called; hotkey.cpp - HK_StateLoadSlot & State_Load also call these functions
+
+	RefreshAllToolWindows();
 }
 
 DWORD checkMenu(UINT idd, bool check)
@@ -606,8 +617,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 					if ((fileDropped[fileDropped.length()-1] >= '0' && fileDropped[fileDropped.length()-1] <= '9'))
 					{
 						MDFNSS_Load(filename, NULL);
-						Update_RAM_Watch();			
-						Update_RAM_Search();		
+						UpdateToolWindows();
 					}
 				}
 			}
@@ -841,6 +851,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			}
 			else
 				SetForegroundWindow(RamWatchHWnd);
+			return 0;
+		case IDM_MEMORY:
+			if (!RegWndClass("MemView_ViewBox", MemView_ViewBoxProc, 0, sizeof(CMemView*)))
+				return 0;
+
+			OpenToolWindow(new CMemView());
 			return 0;
 		case IDM_ABOUT:
 			soundDriver->pause();
@@ -1088,8 +1104,7 @@ void emulate(){
 	
 
 		CallRegisteredLuaFunctions(LUACALL_AFTEREMULATION);
-		Update_RAM_Search();
-		Update_RAM_Watch();
+		UpdateToolWindows();
 
 	soundDriver->write((u16*)*espec.SoundBuf, *espec.SoundBufSize);
 	DRV_AviSoundUpdate(*espec.SoundBuf, *espec.SoundBufSize);
