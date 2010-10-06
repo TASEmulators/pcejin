@@ -45,13 +45,13 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\__bins\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Debug\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">2010_Debug\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\__bins\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Release\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">2010_Release\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseFastBuild|Win32'">$(SolutionDir)\__bins\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseFastBuild|Win32'">ReleaseFastBuild\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseFastBuild|Win32'">2010_ReleaseFastBuild\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='ReleaseFastBuild|Win32'" />
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
