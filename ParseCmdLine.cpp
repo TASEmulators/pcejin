@@ -30,7 +30,7 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 	string RomToLoad = "";		//ROM filename
 	string MovieToLoad = "";	//Movie filename
 	string StateToLoad = "";	//Savestate filename
-	vector<string> ScriptsToLoad;	//Lua script filenames
+	string ScriptToLoad = "";	//Lua script filenames
 	string FileToLoad = "";		//Any file
 	string PauseGame = "";		//adelikat: If user puts anything after -pause it will flag true, documentation will probably say put "1".  There is no case for "-paused 0" since, to my knowledge, it would serve no purpose
 	string ReadWrite = "";		//adelikat: Read Only is the default so this will be the same situation as above, any value will set to read+write status
@@ -84,7 +84,7 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 			PauseGame = newCommand;
 			break;
 		case 6:	//-lua
-			ScriptsToLoad.push_back(newCommand);
+			ScriptToLoad = newCommand;
 			break;
 		case 7: //  (a filename on its own, this must come BEFORE any other options on the commandline)
 			if(newCommand[0] != '-')
@@ -160,16 +160,12 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 	}
 
 	//Lua Scripts
-	//for(unsigned int i = 0; i < ScriptsToLoad.size(); i++)
-	//{
-	//	if(ScriptsToLoad[i][0])
-	//	{
-	//		const char* error = GensOpenScript(ScriptsToLoad[i].c_str());
-	//		if(error)
-	//			fprintf(stderr, "failed to start script \"%s\" because: %s\n", ScriptsToLoad[i].c_str(), error);
-	//	}
-	//}
-
-	//Paused
+	if (ScriptToLoad[0])
+	{
+		char temp[1024];
+		strcpy(temp, ScriptToLoad.c_str());
+		ScriptLoad(temp);
+	}
+	
 	if (PauseGame[0]) startPaused = true; 
 }

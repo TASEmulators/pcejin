@@ -878,6 +878,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hWnd, Message, wParam, lParam);
 }
 
+void ScriptLoad(char* ScriptFile)
+{
+	if(LuaScriptHWnds.size() < 16)
+				{
+					char temp [1024];
+					strcpy(temp, ScriptFile);
+					HWND IsScriptFileOpen(const char* Path);
+					if(!IsScriptFileOpen(temp))
+					{
+						HWND hDlg = CreateDialog(g_hInstance, MAKEINTRESOURCE(IDD_LUA), g_hWnd, (DLGPROC) LuaScriptProc);
+						SendDlgItemMessage(hDlg,IDC_EDIT_LUAPATH,WM_SETTEXT,0,(LPARAM)temp);
+					}
+				}
+}
+
+
 // Command message handler
 void OnCommand(HWND hWnd, int iID, HWND hwndCtl, UINT uNotifyCode)
 {
@@ -1049,12 +1065,13 @@ void emulateLua()
 	espec.SoundBuf = &sound;
 	espec.SoundBufSize = &ssize;
 	espec.soundmultiplier = 1;
+	
+	FCEUMOV_AddInputState();
 	MDFNGameInfo->Emulate(&espec);
 	
 	if (pcejin.isLagFrame)
 		pcejin.lagFrameCounter++;
-	FCEUMOV_AddInputState();
-	MDFNGameInfo->Emulate(&espec);
+
 
 	
 }
