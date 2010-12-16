@@ -1196,6 +1196,10 @@ LRESULT CustomDraw (LPARAM lParam)
 //extern "C" int disableRamSearchUpdate;
 void Update_RAM_Search() //keeps RAM values up to date in the search and watch windows
 {
+	if(RamWatchHWnd) //Moved by DarkKobold - If the Ram Search Window isn't open - Ram Watch didn't update.
+	{
+		Update_RAM_Watch();
+	}
 	if (!RamSearchHWnd) return;
 //	if(disableRamSearchUpdate)
 //		return;
@@ -1273,12 +1277,8 @@ void Update_RAM_Search() //keeps RAM values up to date in the search and watch w
 				}
 			}
 		}
-	}
-
-	if(RamWatchHWnd)
-	{
-		Update_RAM_Watch();
-	}
+	}	
+	
 }
 
 static int rs_lastPercent = -1;

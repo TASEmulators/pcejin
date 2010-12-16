@@ -427,6 +427,7 @@ static void StopRecording()
 void ResetFrameCount() {
 	//for loading roms
 	currFrameCounter = 0;
+	LagFrameCounter = 0;
 }
 
 void FCEUI_StopMovie()
