@@ -366,7 +366,6 @@ void StopAvi()
 void UpdateToolWindows()
 {
 	Update_RAM_Search();	//Update_RAM_Watch() is also called; hotkey.cpp - HK_StateLoadSlot & State_Load also call these functions
-
 	RefreshAllToolWindows();
 }
 
@@ -681,6 +680,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		EnableMenuItem(GetMenu(hWnd), IDM_RECORD_MOVIE, MF_BYCOMMAND | (movieMode == MOVIEMODE_INACTIVE && pcejin.romLoaded) ? MF_ENABLED : MF_GRAYED);
 		EnableMenuItem(GetMenu(hWnd), IDM_PLAY_MOVIE, MF_BYCOMMAND | (movieMode == MOVIEMODE_INACTIVE && pcejin.romLoaded) ? MF_ENABLED : MF_GRAYED);
 		EnableMenuItem(GetMenu(hWnd), IDM_STOPMOVIE, MF_BYCOMMAND | (movieMode != MOVIEMODE_INACTIVE) ? MF_ENABLED : MF_GRAYED);
+		EnableMenuItem(GetMenu(hWnd), IDM_RESTARTMOVIE, MF_BYCOMMAND | (movieMode != MOVIEMODE_INACTIVE) ? MF_ENABLED : MF_GRAYED);
 		EnableMenuItem(GetMenu(hWnd), IDM_FILE_STOPAVI, MF_BYCOMMAND | (DRV_AviIsRecording()) ? MF_ENABLED : MF_GRAYED);
 		EnableMenuItem(GetMenu(hWnd), IDM_FILE_RECORDAVI, MF_BYCOMMAND | (!DRV_AviIsRecording()) ? MF_ENABLED : MF_GRAYED);
 		
@@ -834,6 +834,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			FCEUI_StopMovie();
 			return 0;
 			break;
+		case IDM_RESTARTMOVIE:
+			PCE_Power();
+			ResetFrameCount();
+			return 0;
+			break; 
 		case ID_RAM_SEARCH:
 			if(!RamSearchHWnd)
 			{
