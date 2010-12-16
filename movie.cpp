@@ -428,6 +428,7 @@ void ResetFrameCount() {
 	//for loading roms
 	currFrameCounter = 0;
 	LagFrameCounter = 0;
+	pcejin.lagFrameCounter = 0;
 }
 
 void FCEUI_StopMovie()

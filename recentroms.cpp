@@ -245,5 +245,6 @@ void OpenRecentROM(int listNum)
 		}	
 	}
 	pcejin.tempUnPause();
+	FCEUI_StopMovie();	
 	ResetFrameCount();
 }
