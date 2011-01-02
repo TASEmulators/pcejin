@@ -243,23 +243,9 @@ int MovieData::dump(std::ostream *os, bool binary)
 	*os << "cdVersion " << cdip->version << endl;
 	*os << "cdDate " << cdip->date << endl;
 	*os << "cdRegion " << cdip->region << endl;
-	*os << "emulatedBios " << yabsys.emulatebios << endl;
-	*os << "isPal " << yabsys.IsPal << endl;
-#ifdef WIN32
-	*os << "sh2CoreType " << int(sh2coretype) << endl;
-	*os << "sndCoreType " << int(sndcoretype) << endl;
-	*os << "vidCoreType " << int(vidcoretype) << endl;
-	*os << "cartType " << carttype << endl;
 
-	*os << "cdRomPath " << RemovePath(cdrompath) << endl;
-	*os << "biosFilename " << RemovePath(biosfilename) << endl;
-	*os << "cartFilename " << RemovePath(cartfilename) << endl;
-#endif
 */
-//	fwrite("YMV", sizeof("YMV"), 1, fp);
-//	fwrite(VERSION, sizeof(VERSION), 1, fp);
 
-	////
 //	*os << "romChecksum " << BytesToString(romChecksum.data,MD5DATA::size) << endl;
 //	*os << "guid " << guid.toString() << endl;
 
@@ -446,29 +432,16 @@ void ClearPCESRAM(void) {
 //begin playing an existing movie
 void FCEUI_LoadMovie(const char *fname, bool _read_only, bool tasedit, int _pauseframe)
 {
-	//if(!tasedit && !FCEU_IsValidUI(FCEUI_PLAYMOVIE))
-	//	return;
-
 	assert(fname);
 
-	//mbg 6/10/08 - we used to call StopMovie here, but that cleared curMovieFilename and gave us crashes...
 	if(movieMode == MOVIEMODE_PLAY)
 		StopPlayback();
 	else if(movieMode == MOVIEMODE_RECORD)
 		StopRecording();
-	//--------------
 
 	currMovieData = MovieData();
 	
 	strcpy(curMovieFilename, fname);
-	//FCEUFILE *fp = FCEU_fopen(fname,0,"rb",0);
-	//if (!fp) return;
-	//if(fp->isArchive() && !_read_only) {
-	//	FCEU_PrintError("Cannot open a movie in read+write from an archive.");
-	//	return;
-	//}
-
-	//LoadFM2(currMovieData, fp->stream, INT_MAX, false);
 
 	currMovieData.ports = 1;	
 	
@@ -503,10 +476,8 @@ void FCEUI_LoadMovie(const char *fname, bool _read_only, bool tasedit, int _paus
 
 	if(movie_readonly)
 		DisplayMessage("Replay started Read-Only.");
-	//	driver->USR_InfoMessage("Replay started Read-Only.");
 	else
 		DisplayMessage("Replay started Read+Write.");
-	//	driver->USR_InfoMessage("Replay started Read+Write.");
 }
 
 static void openRecordingMovie(const char* fname)
@@ -522,9 +493,6 @@ static void openRecordingMovie(const char* fname)
 //TODO - BUG - the record-from-another-savestate doesnt work.
  void FCEUI_SaveMovie(const char *fname, std::string author, int controllers)
 {
-	//if(!FCEU_IsValidUI(FCEUI_RECORDMOVIE))
-	//	return;
-
 	assert(fname);
 
 	FCEUI_StopMovie();
@@ -561,7 +529,6 @@ static void openRecordingMovie(const char* fname)
 	movie_readonly = false;
 	currRerecordCount = 0;
 	ClearPCESRAM();
-//	BupFormat(0);
 	LagFrameCounter=0;
 
 	DisplayMessage("Movie recording started.");
@@ -596,12 +563,6 @@ extern void *PortDataCache[16];
  //either dumps the current joystick state or loads one state from the movie
 void FCEUMOV_AddInputState()
  {
-//	 uint16 pad;
-	 //todo - for tasedit, either dump or load depending on whether input recording is enabled
-	 //or something like that
-	 //(input recording is just like standard read+write movie recording with input taken from gamepad)
-	 //otherwise, it will come from the tasedit data.
-
 	 if(LagFrameFlag == 1)
 		 LagFrameCounter++;
 	 LagFrameFlag=1;
