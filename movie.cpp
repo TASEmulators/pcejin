@@ -15,8 +15,6 @@ using namespace std;
 bool freshMovie = false;	  //True when a movie loads, false when movie is altered.  Used to determine if a movie has been altered since opening
 bool autoMovieBackup = true;
 
-#define FCEU_PrintError LOG
-
 #define MOVIE_VERSION 1
 #define DESMUME_VERSION_NUMERIC 9
 
@@ -483,8 +481,8 @@ void FCEUI_LoadMovie(const char *fname, bool _read_only, bool tasedit, int _paus
 static void openRecordingMovie(const char* fname)
 {
 	osRecordingMovie = new fstream(fname,std::ios_base::out);
-	/*if(!osRecordingMovie)	//adelikat: TODO: Implement this error checking!
-		FCEU_PrintError("Error opening movie output file: %s",fname);*/
+	if(!osRecordingMovie)
+		MDFN_PrintError("Error opening movie output file: %s",fname);
 	strcpy(curMovieFilename, fname);
 }
 
@@ -726,23 +724,54 @@ bool mov_loadstate(std::istream* is, int size)//std::istream* is
 	if(!LoadFM2(tempMovieData, is, size, false)) 		
 		return false;
 
-	//complex TAS logic for when a savestate is loaded:
 	//----------------
-	//if we are playing or recording and toggled read-only:
-	//  then, the movie we are playing must match the guid of the one stored in the savestate or else error.
-	//  the savestate is assumed to be in the same timeline as the current movie.
-	//  if the current movie is not long enough to get to the savestate's frame#, then it is an error. 
-	//  the movie contained in the savestate will be discarded.
-	//  the emulator will be put into play mode.
-	//if we are playing or recording and toggled read+write
-	//  then, the movie we are playing must match the guid of the one stored in the savestate or else error.
-	//  the movie contained in the savestate will be loaded into memory
-	//  the frames in the movie after the savestate frame will be discarded
-	//  the in-memory movie will have its rerecord count incremented
-	//  the in-memory movie will be dumped to disk as fcm.
-	//  the emulator will be put into record mode.
-	//if we are doing neither:
-	//  then, we must discard this movie and just load the savestate
+	//complex TAS logic for loadstate
+	//fully conforms to the savestate logic documented in the Laws of TAS
+	//http://tasvideos.org/LawsOfTAS/OnSavestates.html
+	//----------------
+		
+	/*
+	Playback or Recording + Read-only
+
+    * Check that GUID of movie and savestate-movie must match or else error
+          o on error: a message informing that the savestate doesn't belong to this movie. This is a GUID mismatch error. Give user a choice to load it anyway.
+                + failstate: if use declines, loadstate attempt canceled, movie can resume as if not attempted if user has backup savstates enabled else stop movie
+    * Check that movie and savestate-movie are in same timeline. If not then this is a wrong timeline error.
+          o on error: a message informing that the savestate doesn't belong to this movie
+                + failstate: loadstate attempt canceled, movie can resume as if not attempted if user has backup savestates enabled else stop movie
+    * Check that savestate-movie is not greater than movie. If not then this is a future event error and is not allowed in read-only
+          o on error: message informing that the savestate is from a frame after the last frame of the movie
+                + failstate - loadstate attempt cancelled, movie can resume if user has backup savesattes enabled, else stop movie
+    * Check that savestate framcount <= savestate movie length. If not this is a post-movie savestate
+          o on post-movie: See post-movie event section. 
+    * All error checks have passed, state will be loaded
+    * Movie contained in the savestate will be discarded
+    * Movie is now in Playback mode 
+
+	Playback, Recording + Read+write
+
+    * Check that GUID of movie and savestate-movie must match or else error
+          o on error: a message informing that the savestate doesn't belong to this movie. This is a GUID mismatch error. Give user a choice to load it anyway.
+                + failstate: if use declines, loadstate attempt canceled, movie can resume as if not attempted (stop movie if resume fails)canceled, movie can resume if backup savestates enabled else stopmovie
+    * Check that savestate framcount <= savestate movie length. If not this is a post-movie savestate
+          o on post-movie: See post-movie event section. 
+    * savestate passed all error checks and will now be loaded in its entirety and replace movie (note: there will be no truncation yet)
+    * current framecount will be set to savestate framecount
+    * on the next frame of input, movie will be truncated to framecount
+          o (note: savestate-movie can be a future event of the movie timeline, or a completely new timeline and it is still allowed) 
+    * Rerecord count of movie will be incremented
+    * Movie is now in record mode 
+
+	Post-movie savestate event
+
+    * Whan a savestate is loaded and is determined that the savestate-movie length is less than the savestate framecount then it is a post-movie savestate. These occur when a savestate was made during Movie Finished mode. 
+	* If read+write, the entire savestate movie will be loaded and replace current movie.
+    * If read-only, the savestate movie will be discarded
+    * Mode will be switched to Move Finished
+    * Savestate will be loaded
+    * Current framecount changes to savestate framecount
+    * User will have control of input as if Movie inactive mode 
+	*/
 
 
 	if(movieMode == MOVIEMODE_PLAY || movieMode == MOVIEMODE_RECORD)
@@ -758,7 +787,7 @@ bool mov_loadstate(std::istream* is, int size)//std::istream* is
 				//if(result == IDCANCEL)
 				//	return false;
 			#else
-				FCEU_PrintError("Mismatch between savestate's movie and current movie.\ncurrent: %s\nsavestate: %s\n",currMovieData.guid.toString().c_str(),tempMovieData.guid.toString().c_str());
+				DisplayMessage("Mismatch between savestate's movie and current movie.\ncurrent: %s\nsavestate: %s\n",currMovieData.guid.toString().c_str(),tempMovieData.guid.toString().c_str());
 				return false;
 			#endif
 		}*/
@@ -786,7 +815,7 @@ bool mov_loadstate(std::istream* is, int size)//std::istream* is
 			//if the frame counter is longer than our current movie, then error
 			if(currFrameCounter > (int)currMovieData.records.size())
 			{
-//				FCEU_PrintError("Savestate is from a frame (%d) after the final frame in the movie (%d). This is not permitted.", currFrameCounter, currMovieData.records.size()-1);
+				MDFN_PrintError("Savestate is from a frame (%d) after the final frame in the movie (%d). This is not permitted.", currFrameCounter, currMovieData.records.size()-1);
 				return false;
 			}
 
@@ -797,16 +826,12 @@ bool mov_loadstate(std::istream* is, int size)//std::istream* is
 			//truncate before we copy, just to save some time
 			tempMovieData.truncateAt(currFrameCounter);
 			currMovieData = tempMovieData;
-			
-		//	#ifdef _S9XLUA_H
-		//	if(!FCEU_LuaRerecordCountSkip())
-				currRerecordCount++;
-		//	#endif
+
+			currRerecordCount++;
 			
 			currMovieData.rerecordCount = currRerecordCount;
 
 			openRecordingMovie(curMovieFilename);
-			//printf("DUMPING MOVIE: %d FRAMES\n",currMovieData.records.size());
 			currMovieData.dump(osRecordingMovie, false);
 			movieMode = MOVIEMODE_RECORD;
 		}
@@ -940,7 +965,6 @@ void LoadFM2_binarychunk(MovieData& movieData, std::istream* fp, int size)	//Loa
 	int todo = std::min(size, flen);
 
 	int numRecords = todo/recordsize;
-	//printf("LOADED MOVIE: %d records; currFrameCounter: %d\n",numRecords,currFrameCounter);
 	movieData.records.resize(numRecords);
 	for(int i=0;i<numRecords;i++)
 	{
@@ -1020,18 +1044,24 @@ void FCEUI_MakeBackupMovie(bool dispMessage)
 	}
 
 	MovieData md = currMovieData;								//Get current movie data
-	std::fstream* outf = new fstream(backupFn.c_str(),std::ios_base::out); //FCEUD_UTF8_fstream(backupFn, "wb");	//open/create file
+	std::fstream* outf = new fstream(backupFn.c_str(),std::ios_base::out);
 	md.dump(outf,false);										//dump movie data
 	delete outf;												//clean up, delete file object
 	
+	char* temp;
 	//TODO, decide if fstream successfully opened the file and print error message if it doesn't
-
-	if (dispMessage)	//If we should inform the user	//adelikat: TODO: implement this, the only thing holding it back is using the correct display message function call
+	if (dispMessage)	//If we should inform the user
 	{
-//		if (overflow)
-//			FCEUI_DispMessage("Backup overflow, overwriting %s",backupFn.c_str()); //Inform user of overflow
-//		else
-//			FCEUI_DispMessage("%s created",backupFn.c_str()); //Inform user of backup filename
+		if (overflow)
+		{
+			sprintf(temp, "Backup overflow, overwriting %s", backupFn.c_str());	//Inform user of overflow
+			DisplayMessage(temp);
+		}
+		else;
+		{
+			sprintf(temp, "%s created", backupFn.c_str());	//Inform user of backup filename
+			DisplayMessage(temp);
+		}
 	}
 }
 
