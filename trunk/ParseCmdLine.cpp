@@ -142,7 +142,7 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 	if (MovieToLoad[0]) 
 	{
 		if (pcejin.romLoaded)	
-			FCEUI_LoadMovie(MovieToLoad.c_str(), readwrite, false, false);	
+			LoadMovie(MovieToLoad.c_str(), readwrite, false, false);	
 		if (AutoRWLoad)
 		{
 			//Open Ram Watch if its auto-load setting is checked

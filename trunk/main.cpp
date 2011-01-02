@@ -300,7 +300,7 @@ void LoadGame(){
 			OpenRWRecentFile(0);
 			RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
 		}
-		FCEUI_StopMovie();
+		StopMovie();
 		ResetFrameCount();
 		UpdateRecentRoms(szChoice);
 
@@ -326,7 +326,7 @@ if(!MDFNI_LoadGame(filename)) {
 			OpenRWRecentFile(0);
 			RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
 		}
-		FCEUI_StopMovie();
+		StopMovie();
 		UpdateRecentRoms(filename);
 
 		std::string romname = RemovePath(filename);
@@ -440,7 +440,7 @@ void RecordMovie(HWND hWnd){
 	ofn.Flags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
 
 	if(GetSaveFileName(&ofn))
-		FCEUI_SaveMovie(szChoice, a, 1);
+		SaveMovie(szChoice, a, 1);
 
 	//If user did not specify an extension, add .dsm for them
 	// fname = szChoice;
@@ -480,7 +480,7 @@ void PlayMovie(HWND hWnd){
 	if(GetOpenFileName(&ofn)) {
 
 		if(toupper(strright(szChoice,4)) == ".MC2")
-			FCEUI_LoadMovie(szChoice, 1, 0, 0);
+			LoadMovie(szChoice, 1, 0, 0);
 		else if(toupper(strright(szChoice,4)) == ".MCM")
 			LoadMCM(szChoice, true);
 	}
@@ -603,7 +603,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 					pcejin.tempUnPause();
 				}
 				if (pcejin.romLoaded && !(fileDropped.find(".mc2") == std::string::npos))	
-					FCEUI_LoadMovie(fileDropped.c_str(), 1, false, false);		 
+					LoadMovie(fileDropped.c_str(), 1, false, false);		 
 			}
 			
 			//-------------------------------------------------------
@@ -831,7 +831,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			soundDriver->doUserMute();
 			break;
 		case IDM_STOPMOVIE:
-			FCEUI_StopMovie();
+			StopMovie();
 			return 0;
 			break;
 		case IDM_RESTARTMOVIE:
@@ -1071,7 +1071,7 @@ void emulateLua()
 	espec.SoundBufSize = &ssize;
 	espec.soundmultiplier = 1;
 	
-	FCEUMOV_AddInputState();
+	MOV_AddInputState();
 	MDFNGameInfo->Emulate(&espec);
 	
 	if (pcejin.isLagFrame)
@@ -1119,7 +1119,7 @@ void emulate(){
 		espec.skip = 0;
 		CallRegisteredLuaFunctions(LUACALL_BEFOREEMULATION);
 	
-	FCEUMOV_AddInputState();
+	MOV_AddInputState();
 
 	MDFNGameInfo->Emulate(&espec);
 
@@ -1385,7 +1385,7 @@ std::string LoadMCM(const char* path, bool load) {
 	mc2 += ".mc2";
 	mcmdump(path, mc2);
 	if(load)
-		FCEUI_LoadMovie(mc2.c_str(), 1, 0, 0);
+		LoadMovie(mc2.c_str(), 1, 0, 0);
 
 	return mc2;
 }

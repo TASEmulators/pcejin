@@ -3223,7 +3223,7 @@ DEFINE_LUA_FUNCTION(movie_getname, "")
 DEFINE_LUA_FUNCTION(movie_play, "[filename]")
 {
 	const char* filename = lua_isstring(L,1) ? lua_tostring(L,1) : NULL;
-	FCEUI_LoadMovie(filename, true, false, 0);
+	LoadMovie(filename, true, false, 0);
 //	const char* errorMsg = 
 //	if(errorMsg)
 //		luaL_error(L, errorMsg);
@@ -3240,7 +3240,7 @@ DEFINE_LUA_FUNCTION(movie_replay, "")
 DEFINE_LUA_FUNCTION(movie_close, "")
 {
 	
-	FCEUI_StopMovie();
+	StopMovie();
 	return 0;
 }
 

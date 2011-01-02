@@ -3191,7 +3191,7 @@ void HK_ToggleReadOnly(int)
 void HK_PlayMovie(int)   {PlayMovie(g_hWnd);}
 void HK_PlayMovieFromBeginning(int)   {FCEUI_MoviePlayFromBeginning();}
 void HK_RecordMovie(int) {}//RecordMovie(g_hWnd);}
-void HK_StopMovie(int)   {FCEUI_StopMovie();}
+void HK_StopMovie(int)   {StopMovie();}
 
 bool VDC_ToggleLayer(int which);
 

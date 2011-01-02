@@ -11,7 +11,7 @@
 
 #undef close
 
-bool LoadFM2(MovieData& movieData, std::istream* fp, int size, bool stopAfterHeader);
+bool LoadMC2(MovieData& movieData, std::istream* fp, int size, bool stopAfterHeader);
 
 bool replayreadonly=1;
 
@@ -37,7 +37,7 @@ void Describe(HWND hwndDlg)
 {
 	std::fstream fs (playfilename);
 	MovieData md;
-	LoadFM2(md, &fs, INT_MAX, false);
+	LoadMC2(md, &fs, INT_MAX, false);
 	fs.close();
 	double tempCount;
 	u32 num_frames = md.records.size();
@@ -107,7 +107,7 @@ BOOL CALLBACK ReplayDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 				return true;
 
 			case IDOK:	
-				FCEUI_LoadMovie(playfilename, replayreadonly, false, 80000);
+				LoadMovie(playfilename, replayreadonly, false, 80000);
 				ZeroMemory(&playfilename, sizeof(playfilename));
 				EndDialog(hwndDlg, 0);
 				return true;
@@ -154,7 +154,7 @@ static BOOL CALLBACK RecordDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LP
 				fname = GetDlgItemText<MAX_PATH>(hwndDlg,IDC_EDIT_FILENAME);
 				if (fname.length())
 				{
-					FCEUI_SaveMovie(fname.c_str(), author, controllers);//, flag, sramfname);
+					SaveMovie(fname.c_str(), author, controllers);//, flag, sramfname);
 					EndDialog(hwndDlg, 0);
 				}
 				return true;
@@ -247,7 +247,7 @@ void Replay_LoadMovie()
 
 	if(fn)
 	{
-		FCEUI_LoadMovie(fn, movie_readonly, false, -1);
+		LoadMovie(fn, movie_readonly, false, -1);
 
 		free(fn);
 	}
