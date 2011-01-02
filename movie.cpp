@@ -271,7 +271,7 @@ int MovieData::dump(std::ostream *os, bool binary)
 }
 
 //yuck... another custom text parser.
-bool LoadFM2(MovieData& movieData, std::istream* fp, int size, bool stopAfterHeader)
+bool LoadMC2(MovieData& movieData, std::istream* fp, int size, bool stopAfterHeader)
 {
 	//TODO - start with something different. like 'PCEjin movie version 1"
 	std::ios::pos_type curr = fp->tellg();
@@ -303,7 +303,7 @@ bool LoadFM2(MovieData& movieData, std::istream* fp, int size, bool stopAfterHea
 		isnewline = (c==10||c==13);
 		if(isrecchar && movieData.binaryFlag && !stopAfterHeader)
 		{
-			LoadFM2_binarychunk(movieData, fp, size);
+			LoadMC2_binarychunk(movieData, fp, size);
 			return true;
 		}
 		switch(state)
@@ -407,7 +407,7 @@ void ResetFrameCount() {
 	pcejin.lagFrameCounter = 0;
 }
 
-void FCEUI_StopMovie()
+void StopMovie()
 {
 	if(movieMode == MOVIEMODE_PLAY)
 		StopPlayback();
@@ -428,7 +428,7 @@ void ClearPCESRAM(void) {
 
 }
 //begin playing an existing movie
-void FCEUI_LoadMovie(const char *fname, bool _read_only, bool tasedit, int _pauseframe)
+void LoadMovie(const char *fname, bool _read_only, bool tasedit, int _pauseframe)
 {
 	assert(fname);
 
@@ -444,7 +444,7 @@ void FCEUI_LoadMovie(const char *fname, bool _read_only, bool tasedit, int _paus
 	currMovieData.ports = 1;	
 	
 	fstream fs (fname);
-	LoadFM2(currMovieData, &fs, INT_MAX, false);
+	LoadMC2(currMovieData, &fs, INT_MAX, false);
 	fs.close();
 
 	//TODO
@@ -489,11 +489,11 @@ static void openRecordingMovie(const char* fname)
 
 //begin recording a new movie
 //TODO - BUG - the record-from-another-savestate doesnt work.
- void FCEUI_SaveMovie(const char *fname, std::string author, int controllers)
+ void SaveMovie(const char *fname, std::string author, int controllers)
 {
 	assert(fname);
 
-	FCEUI_StopMovie();
+	StopMovie();
 
 	openRecordingMovie(fname);
 
@@ -559,7 +559,7 @@ void NDS_setPadFromMovie(uint16 pad[])
 extern void *PortDataCache[16];
  //the main interaction point between the emulator and the movie system.
  //either dumps the current joystick state or loads one state from the movie
-void FCEUMOV_AddInputState()
+void MOV_AddInputState()
  {
 	 if(LagFrameFlag == 1)
 		 LagFrameCounter++;
@@ -645,7 +645,7 @@ void FCEUMOV_AddInputState()
 
 
 //TODO 
-static void FCEUMOV_AddCommand(int cmd)
+static void MOV_AddCommand(int cmd)
 {
 	// do nothing if not recording a movie
 	if(movieMode != MOVIEMODE_RECORD)
@@ -717,11 +717,11 @@ bool mov_loadstate(std::istream* is, int size)//std::istream* is
 	size -= 4;
 
 	if (!movie_readonly && autoMovieBackup && freshMovie) //If auto-backup is on, movie has not been altered this session and the movie is in read+write mode
-		FCEUI_MakeBackupMovie(false);	//Backup the movie before the contents get altered, but do not display messages						  
+		MakeBackupMovie(false);	//Backup the movie before the contents get altered, but do not display messages						  
 
 	MovieData tempMovieData = MovieData();
 	std::ios::pos_type curr = is->tellg();
-	if(!LoadFM2(tempMovieData, is, size, false)) 		
+	if(!LoadMC2(tempMovieData, is, size, false)) 		
 		return false;
 
 	//----------------
@@ -803,9 +803,9 @@ bool mov_loadstate(std::istream* is, int size)//std::istream* is
 			//-------------------------------------------------------------
 			//{
 			//	fstream fs (curMovieFilename);
-			//	if(!LoadFM2(tempMovieData, &fs, INT_MAX, false))
+			//	if(!LoadMC2(tempMovieData, &fs, INT_MAX, false))
 			//	{
-			//		FCEU_PrintError("Failed to reload DSM after loading savestate");
+			//		MDFN_PrintError("Failed to reload DSM after loading savestate");
 			//	}
 			//	fs.close();
 			//	currMovieData = tempMovieData;
@@ -877,12 +877,12 @@ void LoadStateMovie(char* filename) {
 	fb.close();
 }
 
-static void FCEUMOV_PreLoad(void)
+static void MOV_PreLoad(void)
 {
-	load_successful=0;
+	load_successful = 0;
 }
 
-static bool FCEUMOV_PostLoad(void)
+static bool MOV_PostLoad(void)
 {
 	if(movieMode == MOVIEMODE_INACTIVE)
 		return true;
@@ -891,11 +891,11 @@ static bool FCEUMOV_PostLoad(void)
 }
 
 
-bool FCEUI_MovieGetInfo(std::istream* fp, MOVIE_INFO& info, bool skipFrameCount)
+bool MovieGetInfo(std::istream* fp, MOVIE_INFO& info, bool skipFrameCount)
 {
 	//adelikat: TODO: implement this !
 	//MovieData md;
-	//if(!LoadFM2(md, fp, INT_MAX, skipFrameCount))
+	//if(!LoadMC2(md, fp, INT_MAX, skipFrameCount))
 	//	return false;
 	//
 	//info.movie_version = md.version;
@@ -945,7 +945,7 @@ void MovieRecord::dumpBinary(MovieData* md, std::ostream* os, int index)
 //	os->write((char *) &md->records[index].touch.touch, sizeof md->records[index].touch.touch);
 }
 
-void LoadFM2_binarychunk(MovieData& movieData, std::istream* fp, int size)	//Load MC2 file
+void LoadMC2_binarychunk(MovieData& movieData, std::istream* fp, int size)	//Load MC2 file
 {
 	int recordsize = 1; //1 for the command
 
@@ -998,7 +998,7 @@ static bool CheckFileExists(const char* filename)
 	}
 }
 
-void FCEUI_MakeBackupMovie(bool dispMessage)
+void MakeBackupMovie(bool dispMessage)
 {
 	//This function generates backup movie files
 	string currentFn;					//Current movie fillename
@@ -1093,7 +1093,7 @@ void FCEUI_MoviePlayFromBeginning(void)
 	if (movieMode != MOVIEMODE_INACTIVE)
 	{
 		char *fname = strdup(curMovieFilename);
-		FCEUI_LoadMovie(fname, true, false, 0);
+		LoadMovie(fname, true, false, 0);
 		MDFN_DispMessage("Movie is now Read-Only. Playing from beginning.");
 		free(fname);
 	}

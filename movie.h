@@ -190,16 +190,15 @@ extern EMOVIEMODE movieMode;		//adelikat: main needs this for frame counter disp
 extern MovieData currMovieData;		//adelikat: main needs this for frame counter display
 void ResetFrameCount();		       //Need to be able to reset frame counter outside of movies. 
 	
-bool FCEUI_MovieGetInfo(std::istream* fp, MOVIE_INFO& info, bool skipFrameCount);
-void FCEUI_SaveMovie(const char *fname, std::string author, int controllers);
-void FCEUI_LoadMovie(const char *fname, bool _read_only, bool tasedit, int _pauseframe);
-void FCEUI_StopMovie();
-void NDS_setTouchFromMovie(void);
+bool MovieGetInfo(std::istream* fp, MOVIE_INFO& info, bool skipFrameCount);
+void SaveMovie(const char *fname, std::string author, int controllers);
+void LoadMovie(const char *fname, bool _read_only, bool tasedit, int _pauseframe);
+void StopMovie();
 //void mov_savestate(std::ostream* os);
 //bool mov_loadstate(std::istream* is, int size);
-void LoadFM2_binarychunk(MovieData& movieData, std::istream* fp, int size);
+void LoadMC2_binarychunk(MovieData& movieData, std::istream* fp, int size);
 extern bool movie_readonly;
-void FCEUI_MakeBackupMovie(bool dispMessage);
+void MakeBackupMovie(bool dispMessage);
 void ToggleReadOnly();
 //#endif
 
@@ -213,7 +212,7 @@ void PauseOrUnpause(void);
 void MakeMovieStateName(const char *filename);
 char* GetMovieLengthStr();
 
-void FCEUMOV_AddInputState();
+void MOV_AddInputState();
 
 void SaveStateMovie(char* filename);
 void LoadStateMovie(char* filename);
