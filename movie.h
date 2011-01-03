@@ -8,7 +8,7 @@
 #include <istream>
 #include "prefix.h"
 //#include "../../core.h"
-//#include "utils/guid.h"
+#include "utils/guid.h"
 //#include "utils/md5.h"
 
 typedef struct
@@ -91,9 +91,6 @@ public:
 */
 	void clear();
 	
-	//a waste of memory in lots of cases..  maybe make it a pointer later?
-	//std::vector<char> savestate;
-
 	void parse(MovieData* md, std::istream* is);
 	bool parseBinary(MovieData* md, std::istream* is);
 	void dump(MovieData* md, std::ostream* os, int index);
@@ -126,7 +123,7 @@ public:
 	std::vector<std::string> comments;
 	
 	int rerecordCount;
-//	Desmume_Guid guid;
+	FCEU_Guid guid;
 
 	//was the frame data stored in binary?
 	bool binaryFlag;
@@ -171,7 +168,7 @@ public:
 	
 	static bool loadSavestateFrom(std::vector<char>* buf);
 	static void dumpSavestateTo(std::vector<char>* buf, int compressionLevel);
-	//void TryDumpIncremental();
+
 
 private:
 	void installInt(std::string& val, int& var)
