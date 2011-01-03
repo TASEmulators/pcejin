@@ -1,9 +1,9 @@
 #include <assert.h>
 #include <limits.h>
 #include <fstream>
-//#include "utils/guid.h"
 #include "utils/xstring.h"
 #include "movie.h"
+#include "utils/guid.h"
 #include "main.h"
 #include "pcejin.h"
 
@@ -166,7 +166,7 @@ MovieData::MovieData()
 	, emuVersion(DESMUME_VERSION_NUMERIC)
 	, rerecordCount(1)
 	, binaryFlag(false)
-	//, greenZoneCount(0)
+
 {
 //	memset(&romChecksum,0,sizeof(MD5DATA));
 }
@@ -195,7 +195,7 @@ void MovieData::installValue(std::string& key, std::string& val)
 //	else if(key == "romChecksum")							//adelikat: TODO: implemement this header info one day
 //		StringToBytes(val,&romChecksum,MD5DATA::size);
 //	else if(key == "guid")
-//		guid = Desmume_Guid::fromString(val);
+//		guid = FCEU_Guid::fromString(val);
 	else if(key == "comment")
 		comments.push_back(val);
 	else if(key == "binary")
