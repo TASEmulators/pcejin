@@ -8,6 +8,7 @@
 #include "GPU_osd.h"
 #include "pcejin.h"
 #include "main.h"
+#include "movie.h"
 
 MDFNS FSettings;
 
@@ -108,8 +109,7 @@ std::string MDFN_MakeFName(MakeFName_Type type, int id1, const char *cd1)
 				eff_dir = overpath;
 			else
 				eff_dir = std::string(BaseDirectory) + std::string(PSS) + std::string("mcm");
-		}
-
+		}		
 		snprintf(tmp_path, 4096, "%s"PSS"%s.%d.mcm", eff_dir.c_str(), FileBase.c_str(), id1);
 
 		if(tmp_dfmd5 && stat(tmp_path, &tmpstat) == -1)
@@ -130,15 +130,28 @@ std::string MDFN_MakeFName(MakeFName_Type type, int id1, const char *cd1)
 		}
 
 		sprintf(numtmp, "nc%d", id1);
+		if (pcejin.AssociateSSMovie & MovieIsActive()) 
+		{
+			if(MDFNGameInfo->GameSetMD5Valid)
+				snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s.%s", eff_dir.c_str(), MDFNGameInfo->shortname, md5_context::asciistr(MDFNGameInfo->GameSetMD5, 0).c_str(),curMovieFilename,cd1?cd1:numtmp);
+			else
+			{
+				snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s", eff_dir.c_str(), FileBase.c_str(),curMovieFilename, cd1?cd1:numtmp);	
+				if(tmp_dfmd5 && stat(tmp_path, &tmpstat) == -1)
+					snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s.%s", eff_dir.c_str(), FileBase.c_str(), md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str(),curMovieFilename,cd1?cd1:numtmp);
+			}
+		}
 
-		if(MDFNGameInfo->GameSetMD5Valid)
-			snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s", eff_dir.c_str(), MDFNGameInfo->shortname, md5_context::asciistr(MDFNGameInfo->GameSetMD5, 0).c_str(),cd1?cd1:numtmp);
 		else
 		{
-			snprintf(tmp_path, 4096, "%s"PSS"%s.%s", eff_dir.c_str(), FileBase.c_str(), cd1?cd1:numtmp);
-
-			if(tmp_dfmd5 && stat(tmp_path, &tmpstat) == -1)
-				snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s", eff_dir.c_str(), FileBase.c_str(), md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str(),cd1?cd1:numtmp);
+			if(MDFNGameInfo->GameSetMD5Valid)
+				snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s", eff_dir.c_str(), MDFNGameInfo->shortname, md5_context::asciistr(MDFNGameInfo->GameSetMD5, 0).c_str(),cd1?cd1:numtmp);
+			else
+			{
+				snprintf(tmp_path, 4096, "%s"PSS"%s.%s", eff_dir.c_str(), FileBase.c_str(), cd1?cd1:numtmp);	
+				if(tmp_dfmd5 && stat(tmp_path, &tmpstat) == -1)
+					snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s", eff_dir.c_str(), FileBase.c_str(), md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str(),cd1?cd1:numtmp);
+			}
 		}
 		break;
 

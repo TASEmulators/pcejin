@@ -837,6 +837,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		case IDM_RESTARTMOVIE:
 			PCE_Power();
 			ResetFrameCount();
+			movieMode = MOVIEMODE_PLAY;
+			movie_readonly = true;
 			return 0;
 			break; 
 		case ID_RAM_SEARCH:
