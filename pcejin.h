@@ -21,7 +21,7 @@ public:
 	bool started;
 	bool romLoaded;
 	bool maximized;
-
+	char ShortMovieName[256];
 	bool isLagFrame;
 	int lagFrameCounter;
 	char inputDisplayString[128];
