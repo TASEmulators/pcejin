@@ -440,6 +440,8 @@ void LoadMovie(const char *fname, bool _read_only, bool tasedit, int _pauseframe
 	currMovieData = MovieData();
 	
 	strcpy(curMovieFilename, fname);
+	memcpy(pcejin.ShortMovieName,strrchr(curMovieFilename,'\\')+1,strchr(curMovieFilename,'.')-strrchr(curMovieFilename,'\\')-1);
+	pcejin.ShortMovieName[strchr(curMovieFilename,'.')-strrchr(curMovieFilename,'\\')-1] = '\0';
 
 	currMovieData.ports = 1;	
 	
@@ -484,7 +486,10 @@ static void openRecordingMovie(const char* fname)
 	if(!osRecordingMovie)
 		MDFN_PrintError("Error opening movie output file: %s",fname);
 	strcpy(curMovieFilename, fname);
+	memcpy(pcejin.ShortMovieName,strrchr(curMovieFilename,'\\')+1,strchr(curMovieFilename,'.')-strrchr(curMovieFilename,'\\')-1);
+	pcejin.ShortMovieName[strchr(curMovieFilename,'.')-strrchr(curMovieFilename,'\\')-1] = '\0';
 }
+
 
 
 //begin recording a new movie

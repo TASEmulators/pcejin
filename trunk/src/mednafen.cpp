@@ -133,12 +133,12 @@ std::string MDFN_MakeFName(MakeFName_Type type, int id1, const char *cd1)
 		if (pcejin.AssociateSSMovie & MovieIsActive()) 
 		{
 			if(MDFNGameInfo->GameSetMD5Valid)
-				snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s.%s", eff_dir.c_str(), MDFNGameInfo->shortname, md5_context::asciistr(MDFNGameInfo->GameSetMD5, 0).c_str(),curMovieFilename,cd1?cd1:numtmp);
+				snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s.%s", eff_dir.c_str(), MDFNGameInfo->shortname, md5_context::asciistr(MDFNGameInfo->GameSetMD5, 0).c_str(),pcejin.ShortMovieName,cd1?cd1:numtmp);
 			else
 			{
-				snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s", eff_dir.c_str(), FileBase.c_str(),curMovieFilename, cd1?cd1:numtmp);	
+				snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s", eff_dir.c_str(), FileBase.c_str(),pcejin.ShortMovieName, cd1?cd1:numtmp);	
 				if(tmp_dfmd5 && stat(tmp_path, &tmpstat) == -1)
-					snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s.%s", eff_dir.c_str(), FileBase.c_str(), md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str(),curMovieFilename,cd1?cd1:numtmp);
+					snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s.%s", eff_dir.c_str(), FileBase.c_str(), md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str(),pcejin.ShortMovieName,cd1?cd1:numtmp);
 			}
 		}
 
