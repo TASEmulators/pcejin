@@ -36,6 +36,7 @@
 #include "svnrev.h"
 #include "xstring.h"
 #include "lua-engine.h"
+#include "recentmenu.h"
 
 #include "shellapi.h"
 #include "ParseCmdLine.h"
@@ -86,6 +87,10 @@ void SaveIniSettings();
 DWORD hKeyInputTimer;
 int KeyInDelayMSec = 0;
 int KeyInRepeatMSec = 16;
+
+RecentMenu RecentROMs;
+RecentMenu RecentMovies;
+RecentMenu RecentLua;
 
 WNDCLASSEX winClass;
 int WINAPI WinMain( HINSTANCE hInstance,
