@@ -41,7 +41,7 @@
 #include "shellapi.h"
 #include "ParseCmdLine.h"
 
-
+const int RECENTMOVIE_START = 65000;
 
 Pcejin pcejin;
 
@@ -117,6 +117,8 @@ int WINAPI WinMain( HINSTANCE hInstance,
 
 	OpenConsole();
 
+	
+
 	if( !RegisterClassEx(&winClass) )
 		return E_FAIL;
 
@@ -142,6 +144,13 @@ int WINAPI WinMain( HINSTANCE hInstance,
 
 	LoadIniSettings();
 	InitSpeedThrottle();
+
+	RecentMovies.SetGUI_hWnd(g_hWnd);
+	RecentMovies.SetID(RECENTMOVIE_START);
+	RecentMovies.SetMenuID(ID_MOVIE_RECENT);
+	RecentMovies.SetType("Movie");
+	RecentMovies.MakeRecentMenu(hInstance);
+	RecentMovies.GetRecentItemsFromIni(IniName, "General");
 
 	DirectDrawInit();
 
