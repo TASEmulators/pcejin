@@ -26,7 +26,6 @@
 #include "sound.h"
 #include "aviout.h"
 #include "video.h"
-#include "recentroms.h"
 
 #include "aggdraw.h"
 #include "GPU_osd.h"
@@ -41,7 +40,16 @@
 #include "shellapi.h"
 #include "ParseCmdLine.h"
 
-const int RECENTMOVIE_START = 65000;
+const int RECENTROM_START = 65000;
+const int RECENTMOVIE_START = 65020;
+const int RECENTLUA_START = 65040;
+char Tmp_Str[1024];
+//TODO:
+//Hook up autoload parameters
+//Change recentmenu class to have a SetAutoLoad() that runs CheckMenu() (so driver code doesn't need to run something in the ENTERMENULOOP)
+//Remove recentroms code from commandline file, and add in recentmenu code instead
+
+
 
 Pcejin pcejin;
 
@@ -56,12 +64,6 @@ LRESULT CALLBACK LuaScriptProc(HWND, UINT, WPARAM, LPARAM);
 std::vector<HWND> LuaScriptHWnds;
 BOOL Register( HINSTANCE hInst );
 HWND Create( int nCmdShow, int w, int h );
-
-//adelikat: Bleh, for now
-extern const unsigned int MAX_RECENT_ROMS = 10;	//To change the recent rom max, simply change this number
-extern const unsigned int clearid = IDM_RECENT_RESERVED0;			// ID for the Clear recent ROMs item
-extern const unsigned int baseid = IDM_RECENT_RESERVED1;			//Base identifier for the recent ROMs items
-
 
 // Prototypes
 std::string RemovePath(std::string filename);
@@ -145,12 +147,26 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	LoadIniSettings();
 	InitSpeedThrottle();
 
+	RecentROMs.SetGUI_hWnd(g_hWnd);
+	RecentROMs.SetID(RECENTROM_START);
+	RecentROMs.SetMenuID(ID_FILE_RECENTROM);
+	RecentROMs.SetType("ROM");
+	RecentROMs.MakeRecentMenu(hInstance);
+	RecentROMs.GetRecentItemsFromIni(IniName, "General");
+
 	RecentMovies.SetGUI_hWnd(g_hWnd);
 	RecentMovies.SetID(RECENTMOVIE_START);
 	RecentMovies.SetMenuID(ID_MOVIE_RECENT);
 	RecentMovies.SetType("Movie");
 	RecentMovies.MakeRecentMenu(hInstance);
 	RecentMovies.GetRecentItemsFromIni(IniName, "General");
+
+	RecentLua.SetGUI_hWnd(g_hWnd);
+	RecentLua.SetID(RECENTLUA_START);
+	RecentLua.SetMenuID(ID_LUA_RECENT);
+	RecentLua.SetType("Lua");
+	RecentLua.MakeRecentMenu(hInstance);
+	RecentLua.GetRecentItemsFromIni(IniName, "General");
 
 	DirectDrawInit();
 
@@ -316,7 +332,7 @@ void LoadGame(){
 		}
 		StopMovie();
 		ResetFrameCount();
-		UpdateRecentRoms(szChoice);
+		RecentROMs.UpdateRecentItems(szChoice);
 
 		std::string romname = RemovePath(szChoice);
 		std::string temp = pcejin.versionName;
@@ -341,7 +357,7 @@ if(!MDFNI_LoadGame(filename)) {
 			RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
 		}
 		StopMovie();
-		UpdateRecentRoms(filename);
+		RecentROMs.UpdateRecentItems(filename);
 
 		std::string romname = RemovePath(filename);
 		std::string temp = pcejin.versionName;
@@ -431,7 +447,9 @@ void SaveIniSettings(){
 			sprintf(str, "Recent Watch %d", i+1);
 			WritePrivateProfileString("Watches", str, &rw_recent_files[i][0], IniName);	
 		}
-	SaveRecentRoms();
+	RecentROMs.SaveRecentItemsToIni(IniName, "General");
+	RecentMovies.SaveRecentItemsToIni(IniName, "General");
+	RecentLua.SaveRecentItemsToIni(IniName, "General");
 
 }
 
@@ -539,8 +557,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 	switch(Message)
 	{
 	case WM_INITMENU:
-		recentromsmenu = LoadMenu(g_hInstance, "RECENTROMS");
-		GetRecentRoms();
+		RecentROMs.GetRecentItemsFromIni(IniName, "General");
+		RecentMovies.GetRecentItemsFromIni(IniName, "General");
+		RecentLua.GetRecentItemsFromIni(IniName, "General");
 		break;
 	case WM_KEYDOWN:
 		if(wParam != VK_PAUSE)
@@ -616,8 +635,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 					LoadGame();
 					pcejin.tempUnPause();
 				}
-				if (pcejin.romLoaded && !(fileDropped.find(".mc2") == std::string::npos))	
-					LoadMovie(fileDropped.c_str(), 1, false, false);		 
+				if (pcejin.romLoaded && !(fileDropped.find(".mc2") == std::string::npos))
+				{
+					LoadMovie(fileDropped.c_str(), 1, false, false);
+					RecentMovies.UpdateRecentItems(fileDropped);
+				}
 			}
 			
 			//-------------------------------------------------------
@@ -645,6 +667,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 					char temp [1024];
 					strcpy(temp, fileDropped.c_str());
 					HWND IsScriptFileOpen(const char* Path);
+					RecentLua.UpdateRecentItems(fileDropped);
 					if(!IsScriptFileOpen(temp))
 					{
 						HWND hDlg = CreateDialog(g_hInstance, MAKEINTRESOURCE(IDD_LUA), hWnd, (DLGPROC) LuaScriptProc);
@@ -683,7 +706,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 					OpenRWRecentFile(0);
 					RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
 				}
-				UpdateRecentRoms(filename);
+				RecentROMs.UpdateRecentItems(filename);
 				SetWindowText(g_hWnd, fileDropped.c_str());
 				////////////////////////////////
 			}
@@ -728,16 +751,58 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		// HANDLE_MSG(hWnd, WM_PAINT, OnPaint);
 		// HANDLE_MSG(hwnd, WM_COMMAND, OnCommand);
 	case WM_COMMAND:
-		if(wParam >= baseid && wParam <= baseid + MAX_RECENT_ROMS - 1)
+			//Recent ROMs
+			if(wParam >= RECENTROM_START && wParam <= RECENTROM_START + RecentROMs.MAX_RECENT_ITEMS - 1)
 			{
-				int x = wParam - baseid;
-				OpenRecentROM(x);					
+				strcpy(Tmp_Str, RecentROMs.GetRecentItem(wParam - RECENTROM_START).c_str());
+				RecentROMs.UpdateRecentItems(Tmp_Str);
+				MDFNI_LoadGame(Tmp_Str);
+				break;
 			}
-			else if(wParam == clearid)
+			else if (wParam == RecentROMs.GetClearID())
 			{
-				/* Clear all the recent ROMs */
-				if(IDOK == MessageBox(g_hWnd, "OK to clear recent ROMs list?","DeSmuME",MB_OKCANCEL))
-					ClearRecentRoms();
+				RecentROMs.ClearRecentItems();
+				break;
+			}
+			else if (wParam == RecentROMs.GetAutoloadID())
+			{
+				RecentROMs.autoload ^= 1;
+				break;
+			}
+			//Recent Movies
+			if(wParam >= RECENTMOVIE_START && wParam <= RECENTMOVIE_START + RecentMovies.MAX_RECENT_ITEMS - 1)
+			{
+				strcpy(Tmp_Str, RecentMovies.GetRecentItem(wParam - RECENTMOVIE_START).c_str());
+				RecentMovies.UpdateRecentItems(Tmp_Str);
+				//WIN32_StartMovieReplay(Str_Tmp);
+				break;
+			}
+			else if (wParam == RecentMovies.GetClearID())
+			{
+				RecentMovies.ClearRecentItems();
+				break;
+			}
+			else if (wParam == RecentMovies.GetAutoloadID())
+			{
+				RecentMovies.autoload ^= 1;
+				break;
+			}
+			//Recent Lua
+			if(wParam >= RECENTLUA_START && wParam <= RECENTLUA_START + RecentLua.MAX_RECENT_ITEMS - 1)
+			{
+				//PSXjin_LoadLuaCode(RecentLua.GetRecentItem(wParam - RECENTLUA_START).c_str());
+				RecentLua.UpdateRecentItems(RecentLua.GetRecentItem(wParam - RECENTLUA_START));
+				break;
+			}
+			else if (wParam == RecentLua.GetClearID())
+			{
+				RecentLua.ClearRecentItems();
+				break;
+			}
+			else if (wParam == RecentLua.GetAutoloadID())
+			{
+				RecentLua.autoload ^= 1;
+				break;
 			}
 		wmId = LOWORD(wParam);
 		wmEvent = HIWORD(wParam);
