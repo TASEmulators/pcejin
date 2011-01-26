@@ -976,14 +976,6 @@
 			>
 		</File>
 		<File
-			RelativePath=".\recentmenu.h"
-			>
-		</File>
-		<File
-			RelativePath=".\recentroms.cpp"
-			>
-		</File>
-		<File
 			RelativePath=".\recentroms.h"
 			>
 		</File>
