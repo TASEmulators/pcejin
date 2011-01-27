@@ -99,14 +99,7 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 	//adelikat: for now assume ROM
 	if (FileToLoad[0])
 	{
-		//adelikat: This code is currently in LoadGame, Drag&Drop, Recent ROMs, and here, time for a function
-		pcejin.romLoaded = true;
-		pcejin.started = true;
-		if(!MDFNI_LoadGame(RomToLoad.c_str())) {
-			pcejin.started = false;
-			pcejin.romLoaded = false;
-			
-		}
+		ALoad(FileToLoad.c_str());
 	}
 	//{
 	//	GensOpenFile(FileToLoad.c_str());
@@ -124,14 +117,7 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 	//ROM
 	if (RomToLoad[0]) 
 	{
-		//adelikat: This code is currently in LoadGame, Drag&Drop, Recent ROMs, and here, time for a function
-		pcejin.romLoaded = true;
-		pcejin.started = true;
-		if(!MDFNI_LoadGame(RomToLoad.c_str())) {
-			pcejin.started = false;
-			pcejin.romLoaded = false;
-			
-		}
+		ALoad(RomToLoad.c_str());
 	}
 	
 	//Read+Write
