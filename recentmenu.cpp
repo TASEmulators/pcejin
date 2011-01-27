@@ -154,6 +154,18 @@ std::string RecentMenu::GetType()
 	return rtype;
 }
 
+bool RecentMenu::GetAutoLoad()
+{
+	return autoload;
+}
+
+void RecentMenu::FlipAutoLoad()
+{
+	autoload ^= 1;
+	CheckMenuItem(recentmenu,ClearID+1,MF_BYCOMMAND   | (autoload ? MF_CHECKED:MF_UNCHECKED));
+}
+
+
 //*******************************************************************
 //Private functions
 //*******************************************************************

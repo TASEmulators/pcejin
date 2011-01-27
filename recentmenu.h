@@ -10,8 +10,7 @@ class RecentMenu
 {
 public:
 	static const unsigned int MAX_RECENT_ITEMS = 8;		//Max number of items that can be in the recent menu (this class will use MAX + 2 resource numbers, keep that in mind when reserving!)
-	bool autoload;				//For auto-loading the most recent item
-
+	
 	RecentMenu(int baseID, HWND GUI_hWnd, HINSTANCE instance, int menuItem, std::string type); //Constructor - Needs a base ID to start building the menu item list
 	RecentMenu();
 
@@ -41,6 +40,9 @@ public:
 	std::string GetRecentItem(unsigned int listNum);	//Retrieves the filename by list number (use for opening when user selects menu item)
 	//TODO: GetRecentItems - returns a vector of strings, for emulators that don't save to Ini
 
+	void FlipAutoLoad();
+	bool GetAutoLoad();
+
 private:
 	int BaseID;					//The user will decide an ID for which to build the menu items from (one that doesn't class with other resoruce file items!)
 	int ClearID;				//Menu item for the clear list (will be one baseID + MAX
@@ -48,7 +50,8 @@ private:
 	HWND GhWnd;					//Handle to the Windows GUI
 	std::string rtype;			//Type of recent files, will be used when saving to ini files
 	std::string autoloadstr;	//Name of autoload parameter saved to ini "Autoload" + rtype
-
+	bool autoload;				//For auto-loading the most recent item
+	
 	std::vector<std::string> RecentItems;	 //The list of recent filenames
 	HMENU recentmenu;						 //Handle to the recent ROMs submenu
 
