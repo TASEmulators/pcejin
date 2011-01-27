@@ -43,10 +43,6 @@ bool skipAutoLoadROM = false;
 bool skipAutoLoadMovie = false;
 bool skipAutoLoadLua = false;
 
-//TODO:
-//Hook up autoload Lua (has to happen in the message loop somehow, inimenu? Same for ramwatch autoload when done from rom autolod or commandline
-//If trying to open an invalid recent item, ask to remove it from the list
-
 Pcejin pcejin;
 
 SoundDriver * soundDriver = 0;
@@ -221,26 +217,24 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	if (RecentROMs.GetAutoLoad() && (!skipAutoLoadROM))
 	{
 		ALoad(RecentROMs.GetRecentItem(0).c_str());
+	
 	}
-
+	
 	//Intentionally does not prompt for a game if no game specified, user should be forced to autoload roms as well, for this to work properly
 	if (RecentMovies.GetAutoLoad() && (!skipAutoLoadMovie))
 	{	
 		LoadMovie(RecentMovies.GetRecentItem(0).c_str(), 1, false, false);
 	}
-/*
+
 	if (RecentLua.GetAutoLoad() && (!skipAutoLoadLua))
 	{
 		char temp [1024];
 		strcpy(temp, RecentLua.GetRecentItem(0).c_str());
-		HWND IsScriptFileOpen(const char* Path);
-		if(!IsScriptFileOpen(temp))
-		{
-			HWND hDlg = CreateDialog(g_hInstance, MAKEINTRESOURCE(IDD_LUA), g_hWnd, (DLGPROC) LuaScriptProc);
-			SendDlgItemMessage(hDlg,IDC_EDIT_LUAPATH,WM_SETTEXT,0,(LPARAM)temp);
-		}
+		HWND hDlg = CreateDialog(g_hInstance, MAKEINTRESOURCE(IDD_LUA), g_hWnd, (DLGPROC) LuaScriptProc);
+		SendDlgItemMessage(hDlg,IDC_EDIT_LUAPATH,WM_SETTEXT,0,(LPARAM)temp);
+		
 	}
-*/ //adelikat: Fail
+
 	while( uMsg.message != WM_QUIT )
 	{
 		if( PeekMessage( &uMsg, NULL, 0, 0, PM_REMOVE ) )
@@ -593,6 +587,7 @@ void ALoad(const char* filename)
 LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
 	int wmId, wmEvent;
+	HWND hDlg;
 	switch(Message)
 	{
 	case WM_KEYDOWN:
