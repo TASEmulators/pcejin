@@ -100,6 +100,7 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 	if (FileToLoad[0])
 	{
 		ALoad(FileToLoad.c_str());
+		skipAutoLoadROM = true;
 	}
 	//{
 	//	GensOpenFile(FileToLoad.c_str());
@@ -118,6 +119,7 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 	if (RomToLoad[0]) 
 	{
 		ALoad(RomToLoad.c_str());
+		skipAutoLoadROM = true;
 	}
 	
 	//Read+Write
@@ -131,6 +133,7 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 		{
 			LoadMovie(MovieToLoad.c_str(), readwrite, false, false);	
 			UpdateRecentMovieMenu(MovieToLoad);
+			skipAutoLoadMovie = true;
 			if (AutoRWLoad)
 			{
 				//Open Ram Watch if its auto-load setting is checked
@@ -154,6 +157,7 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 		char temp[1024];
 		strcpy(temp, ScriptToLoad.c_str());
 		ScriptLoad(temp);
+		skipAutoLoadLua = true;
 	}
 	
 	if (PauseGame[0]) startPaused = true; 
