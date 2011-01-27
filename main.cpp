@@ -37,9 +37,14 @@ const int RECENTROM_START = 65000;
 const int RECENTMOVIE_START = 65020;
 const int RECENTLUA_START = 65040;
 char Tmp_Str[1024];
+
+//These are so that the commandline arguments can override autoload ones
+bool skipAutoLoadROM = false;
+bool skipAutoLoadMovie = false;
+bool skipAutoLoadLua = false;
+
 //TODO:
-//Hook up autoload Lua (has to happen in the message loop somehow, inimenu? Same for ramwatch autoload when done from rom autolod or commandlien
-//Have commandline override autoloads
+//Hook up autoload Lua (has to happen in the message loop somehow, inimenu? Same for ramwatch autoload when done from rom autolod or commandline
 //If trying to open an invalid recent item, ask to remove it from the list
 
 Pcejin pcejin;
@@ -213,19 +218,18 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	
 	if (lpCmdLine[0])ParseCmdLine(lpCmdLine, g_hWnd);
 
-	//TODO: take commandlines into accound and have them override these
-	if (RecentROMs.GetAutoLoad())
+	if (RecentROMs.GetAutoLoad() && (!skipAutoLoadROM))
 	{
 		ALoad(RecentROMs.GetRecentItem(0).c_str());
 	}
 
 	//Intentionally does not prompt for a game if no game specified, user should be forced to autoload roms as well, for this to work properly
-	if (RecentMovies.GetAutoLoad())
+	if (RecentMovies.GetAutoLoad() && (!skipAutoLoadMovie))
 	{	
 		LoadMovie(RecentMovies.GetRecentItem(0).c_str(), 1, false, false);
 	}
 /*
-	if (RecentLua.GetAutoLoad())
+	if (RecentLua.GetAutoLoad() && (!skipAutoLoadLua))
 	{
 		char temp [1024];
 		strcpy(temp, RecentLua.GetRecentItem(0).c_str());
@@ -567,17 +571,23 @@ void ALoad(const char* filename)
 	pcejin.started = true;
 	if(!MDFNI_LoadGame(filename))
 	{
-		if (AutoRWLoad)
-		{
-			//Open Ram Watch if its auto-load setting is checked
-			OpenRWRecentFile(0);
-			RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
-		}
-		RecentROMs.UpdateRecentItems(filename);
 		pcejin.started = false;
 		pcejin.romLoaded = false;		
-		SetWindowText(g_hWnd, filename);
+		SetWindowText(g_hWnd, pcejin.versionName.c_str());
 	}
+	
+	if (AutoRWLoad)
+	{
+		//Open Ram Watch if its auto-load setting is checked
+		OpenRWRecentFile(0);
+		RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
+	}
+	RecentROMs.UpdateRecentItems(filename);
+	std::string romname = RemovePath(filename);
+	std::string temp = pcejin.versionName;
+	temp.append(" ");
+	temp.append(romname);		
+	SetWindowText(g_hWnd, temp.c_str());
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
