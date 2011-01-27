@@ -10,14 +10,10 @@
 #include "types.h"
 #include "movie.h"
 #include <ddraw.h>
-
 #include "hotkey.h"
-
 #include "CommDlg.h"
-
 #include "mednafen.h"
 #include "general.h"
-
 #include "CWindow.h"
 #include "memView.h"
 #include "ramwatch.h"
@@ -26,17 +22,14 @@
 #include "sound.h"
 #include "aviout.h"
 #include "video.h"
-
 #include "aggdraw.h"
 #include "GPU_osd.h"
-
 #include "replay.h"
 #include "pcejin.h"
 #include "svnrev.h"
 #include "xstring.h"
 #include "lua-engine.h"
 #include "recentmenu.h"
-
 #include "shellapi.h"
 #include "ParseCmdLine.h"
 
@@ -46,10 +39,8 @@ const int RECENTLUA_START = 65040;
 char Tmp_Str[1024];
 //TODO:
 //Hook up autoload Lua (has to happen in the message loop somehow, inimenu? Same for ramwatch autoload when done from rom autolod or commandlien
-//Hook commandline to recent menus
-//If someone selects an invalid recent ROM it crashes
-//Hook up recent menu adding to movie replay & record dialog
-//Hook up recent lua to lua console & drag & drop
+//Have commandline override autoloads
+//If trying to open an invalid recent item, ask to remove it from the list
 
 Pcejin pcejin;
 
@@ -775,9 +766,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			//Recent ROMs
 			if(wParam >= RECENTROM_START && wParam <= RECENTROM_START + RecentROMs.MAX_RECENT_ITEMS - 1)
 			{
-				strcpy(Tmp_Str, RecentROMs.GetRecentItem(wParam - RECENTROM_START).c_str());
-				RecentROMs.UpdateRecentItems(Tmp_Str);
-				MDFNI_LoadGame(Tmp_Str);
+				ALoad(RecentROMs.GetRecentItem(wParam - RECENTROM_START).c_str());
 				break;
 			}
 			else if (wParam == RecentROMs.GetClearID())
@@ -1526,8 +1515,13 @@ std::string RemovePath(std::string filename)
 	}
 }
 
-//So other files can update this object without access to it
+//So other files can update recent menus without access to objects
 void UpdateRecentMovieMenu(std::string filename)
 {
 	RecentMovies.UpdateRecentItems(filename);
+}
+
+void UpdateRecentLuaMenu(std::string filename)
+{
+	RecentLua.UpdateRecentItems(filename);
 }
