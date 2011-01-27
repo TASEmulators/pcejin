@@ -641,6 +641,7 @@ LRESULT CALLBACK LuaScriptProc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 					snprintf(PhysicalName, MAX_PATH, "%s", Str_Tmp);
 					Update_Recent_Script(LogicalName, info.subservient);
 					RunLuaScriptFile((int)hDlg, PhysicalName);
+					UpdateRecentLuaMenu(PhysicalName);
 				}	break;
 				case IDC_BUTTON_LUASTOP:
 				{

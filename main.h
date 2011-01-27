@@ -62,3 +62,4 @@ std::string LoadMCM(const char* path, bool load);
 
 void ALoad(const char* filename);
 void UpdateRecentMovieMenu(std::string filename);
+void UpdateRecentLuaMenu(std::string filename);

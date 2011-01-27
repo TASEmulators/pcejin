@@ -108,6 +108,7 @@ BOOL CALLBACK ReplayDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
 
 			case IDOK:	
 				LoadMovie(playfilename, replayreadonly, false, 80000);
+				UpdateRecentMovieMenu(playfilename);
 				ZeroMemory(&playfilename, sizeof(playfilename));
 				EndDialog(hwndDlg, 0);
 				return true;
@@ -155,6 +156,7 @@ static BOOL CALLBACK RecordDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LP
 				if (fname.length())
 				{
 					SaveMovie(fname.c_str(), author, controllers);//, flag, sramfname);
+					UpdateRecentMovieMenu(fname);
 					EndDialog(hwndDlg, 0);
 				}
 				return true;
