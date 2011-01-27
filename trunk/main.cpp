@@ -764,7 +764,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			}
 			else if (wParam == RecentROMs.GetAutoloadID())
 			{
-				RecentROMs.autoload ^= 1;
+				RecentROMs.FlipAutoLoad();
 				break;
 			}
 			//Recent Movies
@@ -782,7 +782,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			}
 			else if (wParam == RecentMovies.GetAutoloadID())
 			{
-				RecentMovies.autoload ^= 1;
+				RecentMovies.FlipAutoLoad();
 				break;
 			}
 			//Recent Lua
@@ -799,7 +799,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			}
 			else if (wParam == RecentLua.GetAutoloadID())
 			{
-				RecentLua.autoload ^= 1;
+				RecentLua.FlipAutoLoad();
 				break;
 			}
 		wmId = LOWORD(wParam);
