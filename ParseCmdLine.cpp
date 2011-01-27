@@ -127,13 +127,16 @@ void ParseCmdLine(LPSTR lpCmdLine, HWND HWnd)
 	//Movie
 	if (MovieToLoad[0]) 
 	{
-		if (pcejin.romLoaded)	
-			LoadMovie(MovieToLoad.c_str(), readwrite, false, false);	
-		if (AutoRWLoad)
+		if (pcejin.romLoaded)
 		{
-			//Open Ram Watch if its auto-load setting is checked
-			OpenRWRecentFile(0);
-			RamWatchHWnd = CreateDialog(g_hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
+			LoadMovie(MovieToLoad.c_str(), readwrite, false, false);	
+			UpdateRecentMovieMenu(MovieToLoad);
+			if (AutoRWLoad)
+			{
+				//Open Ram Watch if its auto-load setting is checked
+				OpenRWRecentFile(0);
+				RamWatchHWnd = CreateDialog(g_hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
+			}
 		}
 	}
 	

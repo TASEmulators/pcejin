@@ -48,7 +48,7 @@ char Tmp_Str[1024];
 //Hook up autoload Lua (has to happen in the message loop somehow, inimenu? Same for ramwatch autoload when done from rom autolod or commandlien
 //Hook commandline to recent menus
 //If someone selects an invalid recent ROM it crashes
-//Hook up recent menu adding to movie replay & record dialogs, & drag & drop
+//Hook up recent menu adding to movie replay & record dialog
 //Hook up recent lua to lua console & drag & drop
 
 Pcejin pcejin;
@@ -999,16 +999,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 void ScriptLoad(char* ScriptFile)
 {
 	if(LuaScriptHWnds.size() < 16)
-				{
-					char temp [1024];
-					strcpy(temp, ScriptFile);
-					HWND IsScriptFileOpen(const char* Path);
-					if(!IsScriptFileOpen(temp))
-					{
-						HWND hDlg = CreateDialog(g_hInstance, MAKEINTRESOURCE(IDD_LUA), g_hWnd, (DLGPROC) LuaScriptProc);
-						SendDlgItemMessage(hDlg,IDC_EDIT_LUAPATH,WM_SETTEXT,0,(LPARAM)temp);
-					}
-				}
+	{
+		char temp [1024];
+		strcpy(temp, ScriptFile);
+		HWND IsScriptFileOpen(const char* Path);
+		if(!IsScriptFileOpen(temp))
+		{
+			HWND hDlg = CreateDialog(g_hInstance, MAKEINTRESOURCE(IDD_LUA), g_hWnd, (DLGPROC) LuaScriptProc);
+			SendDlgItemMessage(hDlg,IDC_EDIT_LUAPATH,WM_SETTEXT,0,(LPARAM)temp);
+			RecentLua.UpdateRecentItems(ScriptFile);
+		}
+	}
 }
 
 
@@ -1498,7 +1499,10 @@ std::string LoadMCM(const char* path, bool load) {
 	mc2 += ".mc2";
 	mcmdump(path, mc2);
 	if(load)
+	{
 		LoadMovie(mc2.c_str(), 1, 0, 0);
+		RecentMovies.UpdateRecentItems(mc2);
+	}
 
 	return mc2;
 }
@@ -1520,4 +1524,10 @@ std::string RemovePath(std::string filename)
 	{
 		return filename;	
 	}
+}
+
+//So other files can update this object without access to it
+void UpdateRecentMovieMenu(std::string filename)
+{
+	RecentMovies.UpdateRecentItems(filename);
 }
