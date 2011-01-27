@@ -46,7 +46,6 @@ const int RECENTLUA_START = 65040;
 char Tmp_Str[1024];
 //TODO:
 //Hook up autoload parameters
-//Change recentmenu class to have a SetAutoLoad() that runs CheckMenu() (so driver code doesn't need to run something in the ENTERMENULOOP)
 //Remove recentroms code from commandline file, and add in recentmenu code instead
 //If someone selects an invalid recent ROM it crashes
 
@@ -222,6 +221,37 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	
 	if (lpCmdLine[0])ParseCmdLine(lpCmdLine, g_hWnd);
 
+	//TODO: take commandlines into accound and have them override these
+	if (RecentROMs.GetAutoLoad())
+	{
+		//adelikat: This code is currently in LoadGame, Drag&Drop, Recent ROMs, and here, time for a function
+		pcejin.romLoaded = true;
+		pcejin.started = true;
+		if(!MDFNI_LoadGame(RecentROMs.GetRecentItem(0).c_str())) {
+			pcejin.started = false;
+			pcejin.romLoaded = false;
+			
+		}
+	}
+
+	//Intentionally does not prompt for a game if no game specified, user should be forced to autoload roms as well, for this to work properly
+	if (RecentMovies.GetAutoLoad())
+	{	
+		LoadMovie(RecentMovies.GetRecentItem(0).c_str(), 1, false, false);
+	}
+/*
+	if (RecentLua.GetAutoLoad())
+	{
+		char temp [1024];
+		strcpy(temp, RecentLua.GetRecentItem(0).c_str());
+		HWND IsScriptFileOpen(const char* Path);
+		if(!IsScriptFileOpen(temp))
+		{
+			HWND hDlg = CreateDialog(g_hInstance, MAKEINTRESOURCE(IDD_LUA), g_hWnd, (DLGPROC) LuaScriptProc);
+			SendDlgItemMessage(hDlg,IDC_EDIT_LUAPATH,WM_SETTEXT,0,(LPARAM)temp);
+		}
+	}
+*/ //adelikat: Fail
 	while( uMsg.message != WM_QUIT )
 	{
 		if( PeekMessage( &uMsg, NULL, 0, 0, PM_REMOVE ) )
@@ -425,9 +455,6 @@ void LoadIniSettings(){
 		sprintf(str, "Recent Watch %d", i+1);
 		GetPrivateProfileString("Watches", str, "", &rw_recent_files[i][0], 1024, IniName);
 	}
-//	RecentROMs.GetRecentItemsFromIni(IniName, "General");
-//	RecentMovies.GetRecentItemsFromIni(IniName, "General");
-//	RecentLua.GetRecentItemsFromIni(IniName, "General");
 }
 
 void SaveIniSettings(){
@@ -788,8 +815,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			//Recent Lua
 			if(wParam >= RECENTLUA_START && wParam <= RECENTLUA_START + RecentLua.MAX_RECENT_ITEMS - 1)
 			{
-				//PSXjin_LoadLuaCode(RecentLua.GetRecentItem(wParam - RECENTLUA_START).c_str());
-				RecentLua.UpdateRecentItems(RecentLua.GetRecentItem(wParam - RECENTLUA_START));
+				if(LuaScriptHWnds.size() < 16)
+				{
+					char temp [1024];
+					strcpy(temp, RecentLua.GetRecentItem(wParam - RECENTROM_START).c_str());
+					HWND IsScriptFileOpen(const char* Path);
+					RecentLua.UpdateRecentItems(temp);
+					if(!IsScriptFileOpen(temp))
+					{
+						HWND hDlg = CreateDialog(g_hInstance, MAKEINTRESOURCE(IDD_LUA), hWnd, (DLGPROC) LuaScriptProc);
+						SendDlgItemMessage(hDlg,IDC_EDIT_LUAPATH,WM_SETTEXT,0,(LPARAM)temp);
+					}
+				}
+
 				break;
 			}
 			else if (wParam == RecentLua.GetClearID())
