@@ -59,3 +59,5 @@ void InitSpeedThrottle();
 int SpeedThrottle();
 void emulateLua();
 std::string LoadMCM(const char* path, bool load);
+
+void ALoad(const char* filename);

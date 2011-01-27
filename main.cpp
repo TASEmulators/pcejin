@@ -45,10 +45,11 @@ const int RECENTMOVIE_START = 65020;
 const int RECENTLUA_START = 65040;
 char Tmp_Str[1024];
 //TODO:
-//Hook up autoload parameters
-//Remove recentroms code from commandline file, and add in recentmenu code instead
+//Hook up autoload Lua (has to happen in the message loop somehow, inimenu? Same for ramwatch autoload when done from rom autolod or commandlien
+//Hook commandline to recent menus
 //If someone selects an invalid recent ROM it crashes
-
+//Hook up recent menu adding to movie replay & record dialogs, & drag & drop
+//Hook up recent lua to lua console & drag & drop
 
 Pcejin pcejin;
 
@@ -224,14 +225,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
 	//TODO: take commandlines into accound and have them override these
 	if (RecentROMs.GetAutoLoad())
 	{
-		//adelikat: This code is currently in LoadGame, Drag&Drop, Recent ROMs, and here, time for a function
-		pcejin.romLoaded = true;
-		pcejin.started = true;
-		if(!MDFNI_LoadGame(RecentROMs.GetRecentItem(0).c_str())) {
-			pcejin.started = false;
-			pcejin.romLoaded = false;
-			
-		}
+		ALoad(RecentROMs.GetRecentItem(0).c_str());
 	}
 
 	//Intentionally does not prompt for a game if no game specified, user should be forced to autoload roms as well, for this to work properly
@@ -510,10 +504,6 @@ void RecordMovie(HWND hWnd){
 	// if (x < 0)
 	// fname.append(".mc2");
 
-
-
-	
-
 	// SetDlgItemText(hwndDlg, IDC_EDIT_FILENAME, fname.c_str());
 	//if(GetSaveFileName(&ofn))
 	// UpdateRecordDialogPath(hwndDlg,szChoice);
@@ -548,7 +538,6 @@ void PlayMovie(HWND hWnd){
 	}
 	
 	pcejin.tempUnPause();
-
 }
 
 void ConvertMCM(HWND hWnd){
@@ -579,6 +568,25 @@ void ConvertMCM(HWND hWnd){
 	}
 
 	pcejin.tempUnPause();
+}
+
+void ALoad(const char* filename)
+{
+	pcejin.romLoaded = true;
+	pcejin.started = true;
+	if(!MDFNI_LoadGame(filename))
+	{
+		if (AutoRWLoad)
+		{
+			//Open Ram Watch if its auto-load setting is checked
+			OpenRWRecentFile(0);
+			RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
+		}
+		RecentROMs.UpdateRecentItems(filename);
+		pcejin.started = false;
+		pcejin.romLoaded = false;		
+		SetWindowText(g_hWnd, filename);
+	}
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
@@ -719,21 +727,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			//Else load it as a ROM
 			//-------------------------------------------------------
 			
-			else if(MDFNI_LoadGame(filename))
+			else
 			{
-				pcejin.romLoaded = true;
-				pcejin.started = true;
-				//TODO: adelikat: This code is copied directly from the LoadGame() function, it should be come a separate function and called in both places
-				////////////////////////////////
-				if (AutoRWLoad)
-				{
-					//Open Ram Watch if its auto-load setting is checked
-					OpenRWRecentFile(0);
-					RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
-				}
-				RecentROMs.UpdateRecentItems(filename);
-				SetWindowText(g_hWnd, fileDropped.c_str());
-				////////////////////////////////
+				ALoad(fileDropped.c_str());
 			}
 		}
 		return 0;
