@@ -48,7 +48,7 @@ char Tmp_Str[1024];
 //Hook up autoload parameters
 //Change recentmenu class to have a SetAutoLoad() that runs CheckMenu() (so driver code doesn't need to run something in the ENTERMENULOOP)
 //Remove recentroms code from commandline file, and add in recentmenu code instead
-
+//If someone selects an invalid recent ROM it crashes
 
 
 Pcejin pcejin;
@@ -425,6 +425,9 @@ void LoadIniSettings(){
 		sprintf(str, "Recent Watch %d", i+1);
 		GetPrivateProfileString("Watches", str, "", &rw_recent_files[i][0], 1024, IniName);
 	}
+//	RecentROMs.GetRecentItemsFromIni(IniName, "General");
+//	RecentMovies.GetRecentItemsFromIni(IniName, "General");
+//	RecentLua.GetRecentItemsFromIni(IniName, "General");
 }
 
 void SaveIniSettings(){
@@ -556,11 +559,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 	int wmId, wmEvent;
 	switch(Message)
 	{
-	case WM_INITMENU:
-		RecentROMs.GetRecentItemsFromIni(IniName, "General");
-		RecentMovies.GetRecentItemsFromIni(IniName, "General");
-		RecentLua.GetRecentItemsFromIni(IniName, "General");
-		break;
 	case WM_KEYDOWN:
 		if(wParam != VK_PAUSE)
 			break;
