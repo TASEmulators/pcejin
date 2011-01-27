@@ -203,6 +203,7 @@
     <ClCompile Include="libcdio-0.81\lib\driver\sector.c" />
     <ClCompile Include="libcdio-0.81\lib\driver\track.c" />
     <ClCompile Include="libcdio-0.81\lib\driver\util.c" />
+    <ClCompile Include="recentmenu.cpp" />
     <ClCompile Include="src\endian.cpp" />
     <ClCompile Include="src\md5.cpp" />
     <ClCompile Include="src\mednafen.cpp" />
@@ -241,7 +242,6 @@
     <ClCompile Include="ParseCmdLine.cpp" />
     <ClCompile Include="ramsearch.cpp" />
     <ClCompile Include="ramwatch.cpp" />
-    <ClCompile Include="recentroms.cpp" />
     <ClCompile Include="replay.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="throttle.cpp" />
@@ -289,6 +289,7 @@
     <ClInclude Include="libcdio-0.81\include\cdio\util.h" />
     <ClInclude Include="libcdio-0.81\include\cdio\version.h" />
     <ClInclude Include="libcdio-0.81\include\cdio\xa.h" />
+    <ClInclude Include="recentmenu.h" />
     <ClInclude Include="src\config.h" />
     <ClInclude Include="src\endian.h" />
     <ClInclude Include="src\file.h" />
@@ -341,7 +342,6 @@
     <ClInclude Include="prefix.h" />
     <ClInclude Include="ramsearch.h" />
     <ClInclude Include="ramwatch.h" />
-    <ClInclude Include="recentroms.h" />
     <ClInclude Include="replay.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="sound.h" />
