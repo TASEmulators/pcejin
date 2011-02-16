@@ -1,11 +1,9 @@
 //RamWatch dialog was copied and adapted from GENS11: http://code.google.com/p/gens-rerecording/
 //Authors: Upthorn, Nitsuja, adelikat
 
-//#include "main.h"
+#include "main.h"
 #include "types.h"
 #include "resource.h"
-//#include "common.h"
-//#include "NDSSystem.h"
 #include "ramwatch.h"
 #include "ramsearch.h"
 #include <assert.h>
@@ -474,7 +472,7 @@ int Change_File_S(char *Dest, char *Dir, char *Titre, char *Filter, char *Ext, H
 
 bool Save_Watches()
 {
-//	Rom_Name = GetRomName();
+	Rom_Name = GetGameName();
 	strncpy(Str_Tmp,Rom_Name.c_str(),512);
 	strcat(Str_Tmp,".wch");
 	if(Change_File_S(Str_Tmp, Gens_Path, "Save Watches", "Watchlist\0*.wch\0All Files\0*.*\0\0", "wch", RamWatchHWnd))
@@ -608,7 +606,7 @@ int Change_File_L(char *Dest, char *Dir, char *Titre, char *Filter, char *Ext, H
 
 bool Load_Watches(bool clear)
 {
-//	Rom_Name = GetRomName();
+	Rom_Name = GetGameName();
 	strncpy(Str_Tmp,Rom_Name.c_str(),512);
 	strcat(Str_Tmp,".wch");
 	if(Change_File_L(Str_Tmp, Watch_Dir, "Load Watches", "GENs Watchlist\0*.wch\0All Files\0*.*\0\0", "wch", RamWatchHWnd))

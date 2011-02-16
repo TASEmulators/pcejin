@@ -43,6 +43,8 @@ bool skipAutoLoadROM = false;
 bool skipAutoLoadMovie = false;
 bool skipAutoLoadLua = false;
 
+std::string GameName = "";
+
 Pcejin pcejin;
 
 SoundDriver * soundDriver = 0;
@@ -347,11 +349,11 @@ void LoadGame(){
 		ResetFrameCount();
 		RecentROMs.UpdateRecentItems(szChoice);
 
-		std::string romname = RemovePath(szChoice);
+		std::string romname = noExtension(RemovePath(szChoice));
 		std::string temp = pcejin.versionName;
+		GameName = romname;
 		temp.append(" ");
 		temp.append(romname);
-		
 		SetWindowText(g_hWnd, temp.c_str());
 	}
 }
@@ -372,10 +374,12 @@ if(!MDFNI_LoadGame(filename)) {
 		StopMovie();
 		RecentROMs.UpdateRecentItems(filename);
 
-		std::string romname = RemovePath(filename);
+		std::string romname = noExtension(RemovePath(filename));
+		GameName = romname;
 		std::string temp = pcejin.versionName;
 		temp.append(" ");
-		temp.append(romname);		
+		temp.append(romname);
+		
 		SetWindowText(g_hWnd, temp.c_str());
 	}
 
@@ -566,7 +570,8 @@ void ALoad(const char* filename)
 	if(!MDFNI_LoadGame(filename))
 	{
 		pcejin.started = false;
-		pcejin.romLoaded = false;		
+		pcejin.romLoaded = false;
+		GameName = "";
 		SetWindowText(g_hWnd, pcejin.versionName.c_str());
 	}
 	
@@ -577,7 +582,8 @@ void ALoad(const char* filename)
 		RamWatchHWnd = CreateDialog(winClass.hInstance, MAKEINTRESOURCE(IDD_RAMWATCH), g_hWnd, (DLGPROC) RamWatchProc);
 	}
 	RecentROMs.UpdateRecentItems(filename);
-	std::string romname = RemovePath(filename);
+	std::string romname = noExtension(RemovePath(filename));
+	GameName = romname;
 	std::string temp = pcejin.versionName;
 	temp.append(" ");
 	temp.append(romname);		
@@ -1529,4 +1535,9 @@ void UpdateRecentMovieMenu(std::string filename)
 void UpdateRecentLuaMenu(std::string filename)
 {
 	RecentLua.UpdateRecentItems(filename);
+}
+
+std::string GetGameName()
+{
+	return GameName;
 }

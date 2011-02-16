@@ -63,6 +63,8 @@ std::string LoadMCM(const char* path, bool load);
 void ALoad(const char* filename);
 void UpdateRecentMovieMenu(std::string filename);
 void UpdateRecentLuaMenu(std::string filename);
+std::string GetGameName();
+std::string noExtension(std::string path);
 
 //These are so that the commandline arguments can override autoload ones
 extern bool skipAutoLoadROM;
