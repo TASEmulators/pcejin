@@ -1,4 +1,4 @@
-PCEjin changelog for PCEjin SVN192 (compared to previous release of SVN128)
+PCEjin changelog for PCEjin SVN194 (compared to previous release of SVN128)
 
 
 
