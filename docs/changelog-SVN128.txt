@@ -1,0 +1,5 @@
+PCEjin changelog for PCEjin SVN128 (compared to previous release of SVN112)
+
+Movie file - 5 Player support !
+Movie file format contains a PCECD flag
+Fix the recent ROMs menu

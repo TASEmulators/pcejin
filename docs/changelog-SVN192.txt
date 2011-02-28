@@ -1,0 +1,41 @@
+PCEjin changelog for PCEjin SVN192 (compared to previous release of SVN128)
+
+
+
+Add Memory Viewer dialog (ported from DeSmuME
+
+Improved Recent Roms menus including Recent Movies & Recent Lua scripts.  Each recent menu also comes with an auto-load option which will load the most recently used file on emulator start up.
+
+Fix so loading a recent rom properly initalizes the sound driver.  Prevents the game from going to auto-turbo.
+Fix so Lag counter resets when loading a new Rom
+Bind movies to Savestates option
+
+Loading a ROM stops movie playback/record
+Comments feature of movie files works
+
+If Drag & Drop .mcm or .m2 with no ROM loaded, user is prompted to for one
+ROM name is now displayed on window if loaded via Drag & Drop
+
+Replay Dialog:
+fix bug where fractions of the movie time where being truncated
+Fix time to report based on the correct fps (~57 fps) instead of 60fps
+
+
+Ram Watch:
+"Add Separator" button
+Improved multiple selection support
+change text "GENS watchlist" to "Watchlist"
+Use game name as default in the SaveFile dialog
+
+Ram Search:
+Fix bug where the reset button was not updating the previous values
+Fix change counts
+Redraw the list when search size/format is changed
+Address offset of 0x1F0000 
+Improved multiple selection support
+
+Lua - emu.frameadvance() implemented
+Lua - joypad.set now reads all pads
+Lua - Multitrack lua script added
+-lua commandline argument added
+fix memory.readdword - was returning signed values before
