@@ -1,0 +1,11 @@
+PCEjin changelog for PCEjin SVN112 (compared to previous release of SVN83)
+
+Lua console dialog has vertical scrollbar  - gocha
+Drag & Drop for .mcm files.  Auto-converts to .mc2 and plays resulting file.	-adelikat
+Recent ROMs menu now works	-adelikat
+Saves window position		-adelikat
+Romname and SVN version diplayed at top of window	-adelikat/gocha
+PCEjin has a snazzy icon now!				-adelikat/arukAdo
+Commandline support for ROMs, movies, savestates, read-only setting, pause/unpause setting	-adelikat
+Ram Search "Watch" button now works	-adelikat
+Minor menu & Dialog cleanup	-adeliakt
