@@ -12,6 +12,8 @@
 #include "windows.h"
 #include "pcejin.h"
 #include "debug.h"
+#include "pce.h"
+#include "psg.h"
 
 // the emulator must provide these so that we can implement
 // the various functions the user can call from their lua script
@@ -3244,6 +3246,198 @@ DEFINE_LUA_FUNCTION(movie_close, "")
 	return 0;
 }
 
+DEFINE_LUA_FUNCTION(sound_get, "")
+{
+	extern t_psg psg;
+
+	lua_newtable(L);
+	lua_newtable(L);
+	for (int channel = 0; channel < 6; channel++)
+	{
+		bool noise = ((psg.channel[channel].noisectrl & 0x80) != 0);
+		bool dda = ((psg.channel[channel].control & 0x40) != 0);
+		bool waveon = ((psg.channel[channel].control & 0x80) != 0);
+		uint8 chanvolume = psg.channel[channel].control & 0x1f;
+		uint8 balanceleft = psg.channel[channel].balance >> 4;
+		uint8 balanceright = psg.channel[channel].balance & 0xf;
+		uint8 leftvoltotal = chanvolume + balanceleft + psg.lmal;
+		uint8 rightvoltotal = chanvolume + balanceright + psg.rmal;
+		double panpot = ((leftvoltotal + rightvoltotal) != 0) ?
+			((double) leftvoltotal / (leftvoltotal + rightvoltotal)) : 0.5;
+
+		lua_newtable(L);
+		if (noise)
+		{
+			lua_pushinteger(L, psg.channel[channel].noisectrl & 0x0f);
+			lua_setfield(L, -2, "noise");
+		}
+		if (dda)
+		{
+			lua_pushinteger(L, psg.channel[channel].dda);
+			lua_setfield(L, -2, "dda");
+		}
+		if (waveon)
+		{
+			lua_newtable(L);
+			for (int i = 0; i < 32; i++)
+			{
+				lua_pushinteger(L, psg.channel[channel].waveform[i]);
+				lua_rawseti(L, -2, 1 + i);
+			}
+			lua_setfield(L, -2, "waveform");
+		}
+		lua_pushnumber(L, (leftvoltotal + rightvoltotal) / 122.0);
+		lua_setfield(L, -2, "volume");
+		lua_pushnumber(L, panpot);
+		lua_setfield(L, -2, "panpot");
+		lua_pushinteger(L, psg.channel[channel].frequency);
+		lua_setfield(L, -2, "freqreg");
+		//double freq = (14300000.0 + 1800000.0 / 99) / 4 / 32 / (((psg.channel[channel].frequency - 1) & 0xFFF) + 1);
+		double freq = 3579545.0 / 32.0 / (((psg.channel[channel].frequency - 1) & 0xFFF) + 1);
+		lua_pushnumber(L, freq);
+		lua_setfield(L, -2, "frequency");
+		lua_pushnumber(L, (log(freq / 440.0) * 12 / log(2.0)) + 69);
+		lua_setfield(L, -2, "midikey");
+		lua_rawseti(L, -2, 1 + channel);
+	}
+	lua_setfield(L, -2, "channel");
+	return 1;
+
+
+
+	/*
+	extern ENVUNIT EnvUnits[3];
+	extern int CheckFreq(uint32 cf, uint8 sr);
+	extern int32 curfreq[2];
+	extern uint8 PSG[0x10];
+	extern int32 lengthcount[4]; 
+	extern uint8 TriCount;
+	extern const uint32 *NoiseFreqTable;
+	extern int32 DMCPeriod;
+	extern uint8 DMCAddressLatch, DMCSizeLatch;
+	extern uint8 DMCFormat;
+	extern char DMCHaveSample;
+	extern uint8 InitialRawDALatch;
+
+	int freqReg;
+	double freq;
+
+	lua_newtable(L);
+
+	// rp2a03 start
+	lua_newtable(L);
+	// rp2a03 info setup
+	double nesVolumes[3];
+	for (int i = 0; i < 3; i++)
+	{
+		if ((EnvUnits[i].Mode & 1) != 0)
+			nesVolumes[i] = EnvUnits[i].Speed;
+		else
+			nesVolumes[i] = EnvUnits[i].decvolume;
+		nesVolumes[i] /= 15.0;
+	}
+	// rp2a03/square1
+	lua_newtable(L);
+	if((curfreq[0] < 8 || curfreq[0] > 0x7ff) ||
+			(CheckFreq(curfreq[0], PSG[1]) == 0) ||
+			(lengthcount[0] == 0))
+		lua_pushnumber(L, 0.0);
+	else
+		lua_pushnumber(L, nesVolumes[0]);
+	lua_setfield(L, -2, "volume");
+	lua_pushinteger(L, curfreq[0]);
+	lua_setfield(L, -2, "freqreg");
+	freq = (39375000.0/352.0) / curfreq[0];
+	lua_pushnumber(L, freq);
+	lua_setfield(L, -2, "frequency");
+	lua_pushnumber(L, (log(freq / 440.0) * 12 / log(2.0)) + 69);
+	lua_setfield(L, -2, "midikey");
+	lua_pushinteger(L, (PSG[0] & 0xC0) >> 6);
+	lua_setfield(L, -2, "duty");
+	lua_setfield(L, -2, "square1");
+	// rp2a03/square2
+	lua_newtable(L);
+	if((curfreq[1] < 8 || curfreq[1] > 0x7ff) ||
+			(CheckFreq(curfreq[1], PSG[5]) == 0) ||
+			(lengthcount[1] == 0))
+		lua_pushnumber(L, 0.0);
+	else
+		lua_pushnumber(L, nesVolumes[1]);
+	lua_setfield(L, -2, "volume");
+	lua_pushinteger(L, curfreq[1]);
+	lua_setfield(L, -2, "freqreg");
+	freq = (39375000.0/352.0) / curfreq[1];
+	lua_pushnumber(L, freq);
+	lua_setfield(L, -2, "frequency");
+	lua_pushnumber(L, (log(freq / 440.0) * 12 / log(2.0)) + 69);
+	lua_setfield(L, -2, "midikey");
+	lua_pushinteger(L, (PSG[4] & 0xC0) >> 6);
+	lua_setfield(L, -2, "duty");
+	lua_setfield(L, -2, "square2");
+	// rp2a03/triangle
+	lua_newtable(L);
+	if(lengthcount[2] == 0 || TriCount == 0)
+		lua_pushnumber(L, 0.0);
+	else
+		lua_pushnumber(L, 1.0);
+	lua_setfield(L, -2, "volume");
+	freqReg = PSG[0xa] | ((PSG[0xb] & 7) << 8);
+	lua_pushinteger(L, freqReg);
+	lua_setfield(L, -2, "freqreg");
+	freq = (39375000.0/704.0) / freqReg;
+	lua_pushnumber(L, freq);
+	lua_setfield(L, -2, "frequency");
+	lua_pushnumber(L, (log(freq / 440.0) * 12 / log(2.0)) + 69);
+	lua_setfield(L, -2, "midikey");
+	lua_setfield(L, -2, "triangle");
+	// rp2a03/noise
+	lua_newtable(L);
+	if(lengthcount[3] == 0)
+		lua_pushnumber(L, 0.0);
+	else
+		lua_pushnumber(L, nesVolumes[2]);
+	lua_setfield(L, -2, "volume");
+	freqReg = PSG[0xE] & 0xF;
+	lua_pushinteger(L, freqReg);
+	lua_setfield(L, -2, "freqreg");
+	lua_pushboolean(L, (PSG[0xE] & 0x80) != 0);
+	lua_setfield(L, -2, "short");
+	freq = (39375000.0/44.0) / NoiseFreqTable[freqReg]; // probably wrong
+	lua_pushnumber(L, freq);
+	lua_setfield(L, -2, "frequency");
+	lua_pushnumber(L, (log(freq / 440.0) * 12 / log(2.0)) + 69);
+	lua_setfield(L, -2, "midikey");
+	lua_setfield(L, -2, "noise");
+	// rp2a03/dpcm
+	lua_newtable(L);
+	if (DMCHaveSample == 0)
+		lua_pushnumber(L, 0.0);
+	else
+		lua_pushnumber(L, 1.0);
+	lua_setfield(L, -2, "volume");
+	lua_pushinteger(L, DMCFormat & 0xF);
+	lua_setfield(L, -2, "freqreg");
+	freq = (39375000.0/2.0) / DMCPeriod;
+	lua_pushnumber(L, freq);
+	lua_setfield(L, -2, "frequency");
+	lua_pushnumber(L, (log(freq / 440.0) * 12 / log(2.0)) + 69);
+	lua_setfield(L, -2, "midikey");
+	lua_pushinteger(L, 0xC000 + (DMCAddressLatch << 6));
+	lua_setfield(L, -2, "dmcaddress");
+	lua_pushinteger(L, (DMCSizeLatch << 4) + 1);
+	lua_setfield(L, -2, "dmcsize");
+	lua_pushboolean(L, DMCFormat & 0x40);
+	lua_setfield(L, -2, "dmcloop");
+	lua_pushinteger(L, InitialRawDALatch);
+	lua_setfield(L, -2, "dmcseed");
+	lua_setfield(L, -2, "dpcm");
+	// rp2a03 end
+	lua_setfield(L, -2, "rp2a03");
+
+	return 1;
+	*/
+}
+
 DEFINE_LUA_FUNCTION(sound_clear, "")
 {
 //	Clear_Sound_Buffer();
@@ -3890,6 +4084,7 @@ static const struct luaL_reg movielib [] =
 };
 static const struct luaL_reg soundlib [] =
 {
+	{"get", sound_get},
 //	{"clear", sound_clear},
 	{NULL, NULL}
 };
