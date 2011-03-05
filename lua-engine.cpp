@@ -3278,12 +3278,7 @@ DEFINE_LUA_FUNCTION(sound_get, "")
 		}
 		if (waveon)
 		{
-			lua_newtable(L);
-			for (int i = 0; i < 32; i++)
-			{
-				lua_pushinteger(L, psg.channel[channel].waveform[i]);
-				lua_rawseti(L, -2, 1 + i);
-			}
+			lua_pushlstring(L, (const char *) psg.channel[channel].waveform, 32);
 			lua_setfield(L, -2, "waveform");
 		}
 		lua_pushnumber(L, (leftvoltotal + rightvoltotal) / 122.0);
