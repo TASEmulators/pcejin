@@ -3249,6 +3249,8 @@ DEFINE_LUA_FUNCTION(movie_close, "")
 DEFINE_LUA_FUNCTION(sound_get, "")
 {
 	extern t_psg psg;
+	uint8 globalleft = psg.globalbalance >> 4;
+	uint8 globalright = psg.globalbalance & 0xf;
 
 	lua_newtable(L);
 	lua_newtable(L);
@@ -3260,10 +3262,9 @@ DEFINE_LUA_FUNCTION(sound_get, "")
 		uint8 chanvolume = psg.channel[channel].control & 0x1f;
 		uint8 balanceleft = psg.channel[channel].balance >> 4;
 		uint8 balanceright = psg.channel[channel].balance & 0xf;
-		uint8 leftvoltotal = chanvolume + balanceleft + psg.lmal;
-		uint8 rightvoltotal = chanvolume + balanceright + psg.rmal;
-		double panpot = ((leftvoltotal + rightvoltotal) != 0) ?
-			((double) leftvoltotal / (leftvoltotal + rightvoltotal)) : 0.5;
+		double leftvolscale = pow(10.0, (-1.5 * (0x1f - chanvolume) - 3.0 * (0xf - balanceleft) - 3.0 * (0xf - globalleft)) / 20.0);
+		double rightvolscale = pow(10.0, (-1.5 * (0x1f - chanvolume) - 3.0 * (0xf - balanceright) - 3.0 * (0xf - globalright)) / 20.0);
+		double panpot = leftvolscale / (leftvolscale + rightvolscale);
 
 		lua_newtable(L);
 		if (noise)
@@ -3281,7 +3282,7 @@ DEFINE_LUA_FUNCTION(sound_get, "")
 			lua_pushlstring(L, (const char *) psg.channel[channel].waveform, 32);
 			lua_setfield(L, -2, "waveform");
 		}
-		lua_pushnumber(L, (leftvoltotal + rightvoltotal) / 122.0);
+		lua_pushnumber(L, (leftvolscale + rightvolscale) / 2.0);
 		lua_setfield(L, -2, "volume");
 		lua_pushnumber(L, panpot);
 		lua_setfield(L, -2, "panpot");
