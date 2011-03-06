@@ -814,7 +814,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 				if(LuaScriptHWnds.size() < 16)
 				{
 					char temp [1024];
-					strcpy(temp, RecentLua.GetRecentItem(wParam - RECENTROM_START).c_str());
+					strcpy(temp, RecentLua.GetRecentItem(wParam - RECENTLUA_START).c_str());
 					HWND IsScriptFileOpen(const char* Path);
 					RecentLua.UpdateRecentItems(temp);
 					if(!IsScriptFileOpen(temp))
