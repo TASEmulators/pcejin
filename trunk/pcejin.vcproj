@@ -40,10 +40,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				Optimization="0"
 				AdditionalIncludeDirectories="blip;compress;zlib;trio;.;&quot;libcdio-0.81\include\&quot;;&quot;libcdio-0.81\lib\driver&quot;;src;src\pce;agg\include;directx;utils;lua"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;WANT_PCE_EMU;NEED_CDEMU;EXTERNAL_LIBCDIO_CONFIG_H;NO_CODECS;HAVE_DIRECTSOUND"
-				MinimalRebuild="true"
+				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
@@ -117,6 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/MP"
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="1"

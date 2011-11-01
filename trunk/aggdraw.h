@@ -61,6 +61,8 @@ public:
 
 	virtual void clear() = 0;
 
+	virtual agg::rendering_buffer & buf() = 0;
+
     // Setup
 	virtual void  attach(unsigned char* buf, unsigned width, unsigned height, int stride) = 0;
 //	virtual void  attach(Agg2DBase::Image& img) {attach(img);};
@@ -256,6 +258,8 @@ public:
 
 		BASE::viewport(0, 0, width-1, height-1, 0, 0, width-1, height-1, TAGG2D::Anisotropic);
 	}
+
+	virtual agg::rendering_buffer & buf() { return BASE::buf(); }
 
 	virtual void clear() { 
 		if(!empty)
