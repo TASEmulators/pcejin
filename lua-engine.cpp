@@ -3545,6 +3545,19 @@ static int line(lua_State *L) {
 	return 0;
 }
 
+static int pixel(lua_State *L) {
+
+	int x1,y1;
+	x1 = luaL_checkinteger(L,1);
+	y1 = luaL_checkinteger(L,2);
+
+	//zero 31-oct-2011 - quick hack to get basic stuffs working
+	//TODO - dont draw out of bounds! yikes! no way to set a pixel in aggdraw?? yuck.
+	((AggColor*)aggDraw.target->buf().row(y1).ptr)[x1] = aggDraw.target->lineColor();
+
+	return 0;
+}
+
 static int triangle(lua_State *L) {
 
 	double x1,y1,x2,y2,x3,y3;
@@ -3647,6 +3660,7 @@ static int curve(lua_State *L) {
 
 static const struct luaL_reg aggbasicshapes [] =
 {
+	{"pixel", pixel},
 	{"line", line},
 	{"triangle", triangle},
 	{"rectangle", rectangle},
