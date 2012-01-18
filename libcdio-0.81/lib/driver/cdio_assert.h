@@ -34,14 +34,14 @@
  { \
    if (GNUC_UNLIKELY (!(expr))) cdio_log (CDIO_LOG_ASSERT, \
      "file %s: line %d (%s): assertion failed: (%s)", \
-     __FILE__, __LINE__, __PRETTY_FUNCTION__, #expr); \
+     __FILE__, __LINE__, __FUNCTION__, #expr); \
  }
 
 #define cdio_assert_not_reached() \
  { \
    cdio_log (CDIO_LOG_ASSERT, \
      "file %s: line %d (%s): should not be reached", \
-     __FILE__, __LINE__, __PRETTY_FUNCTION__); \
+     __FILE__, __LINE__, __FUNCTION__); \
  }
 
 #else /* non GNU C */
