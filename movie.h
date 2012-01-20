@@ -211,8 +211,8 @@ char* GetMovieLengthStr();
 
 void MOV_AddInputState();
 
-void SaveStateMovie(char* filename);
-void LoadStateMovie(char* filename);
+void SaveStateMovie(const char* filename);
+void LoadStateMovie(const char* filename);
 
 void FCEUI_MoviePlayFromBeginning(void);
 

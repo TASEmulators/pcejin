@@ -853,21 +853,21 @@ bool mov_loadstate(std::istream* is, int size)//std::istream* is
 	return true;
 }
 
-void SaveStateMovie(char* filename) {
-
-	strcat (filename, "mov");
+void SaveStateMovie(const char* filename)
+{
+	std::string fname = (std::string)filename + "mov";
 	filebuf fb;
-	fb.open (filename, ios::out | ios::binary);//ios::out
+	fb.open (fname.c_str(), ios::out | ios::binary);//ios::out
 	ostream os(&fb);
 	mov_savestate(&os);
 	fb.close();
 }
 
-void LoadStateMovie(char* filename) {
+void LoadStateMovie(const char* filename) {
 
 	std::string fname = (std::string)filename + "mov";
 
-    FILE * fp = fopen( fname.c_str(), "r" );
+  FILE * fp = fopen( fname.c_str(), "r" );
 	if(!fp)
 		return;
 	

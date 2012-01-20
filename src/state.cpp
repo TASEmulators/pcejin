@@ -471,7 +471,7 @@ int MDFNSS_Save(const char *fname, const char *suffix, uint32 *fb, MDFN_Rect *Li
 		return(0);
 	}
 
-	SaveStateMovie((char*)MDFN_MakeFName(MDFNMKF_STATE,CurrentState,suffix).c_str());
+	SaveStateMovie((const char*)MDFN_MakeFName(MDFNMKF_STATE,CurrentState,suffix).c_str());
 
 	free(st.data);
 
