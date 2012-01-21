@@ -283,6 +283,7 @@ static void convert16(const uint8* buffer, EmulateSpecStruct *espec){
 	}
 }
 
+bool AviNextSegment();
 void render() {
 
 	if(!pcejin.romLoaded || espec.skip)
@@ -294,6 +295,7 @@ void render() {
 		CreateDDrawBuffers();
 		if(!pcejin.maximized)
 			ScaleScreen(pcejin.windowSize);
+		AviNextSegment();
 	}
 
 	pcejin.width = MDFNGameInfo->DisplayRect.w;

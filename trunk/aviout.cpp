@@ -300,6 +300,11 @@ static void do_video_conversion(const uint8* buffer, EmulateSpecStruct *espec) {
 
 uint8 *pb_ptr = avi_file->convert_buffer;//pixel_buffer;
 
+	int width = pcejin.width;
+	int height = pcejin.height;
+	int dpitch = pcejin.width * 3;
+	if(dpitch%4 != 0) dpitch += 4-(dpitch%4);
+
  for(int y = MDFNGameInfo->DisplayRect.y + MDFNGameInfo->DisplayRect.h; y > MDFNGameInfo->DisplayRect.y; y--)
  {
   uint16 meow_width = (espec->LineWidths[0].w == ~0) ? MDFNGameInfo->DisplayRect.w : espec->LineWidths[y].w;
@@ -319,13 +324,39 @@ uint8 *pb_ptr = avi_file->convert_buffer;//pixel_buffer;
    *pb_ptr++ = r;
    
   }
+		pb_ptr += (dpitch-width*3);
  }
+
+	//int width = pcejin.width;
+	//int height = pcejin.height;
+	//int dpitch = pcejin.width * 3;
+	//if(dpitch%4 != 0) dpitch += 4-(dpitch%4);
+
+	//for(int y=height-1;y>=0;y--)
+	//{
+	//	uint32 *fb_line = espec->pixels + y * (MDFNGameInfo->pitch >> 2);
+	//	for(int x = 0; x < width; x++)
+	//	{
+	//		 uint32 pixel = fb_line[x];
+	//		 int r, g, b;
+
+	//	 //  espec->surface->DecodeColor(pixel, r, g, b);
+	//		 DECOMP_COLOR(pixel, r, g, b);
+	//	  
+	//		 *pb_ptr++ = b;
+	//		 *pb_ptr++ = g;
+	//		 *pb_ptr++ = r;			
+	//	}
+	//	pb_ptr += (dpitch-width*3);
+	//}
 }
 
 
 
-static bool AviNextSegment()
+bool AviNextSegment()
 {
+	if(!avi_file) return false;
+
 	char avi_fname[MAX_PATH];
 	strcpy(avi_fname,saved_avi_fname);
 	char avi_fname_temp[MAX_PATH];
@@ -351,7 +382,9 @@ bool DRV_AviBegin(const char* fname)
 	bi.biBitCount = 24;
 	bi.biWidth = pcejin.width;
 	bi.biHeight = pcejin.height;
-	bi.biSizeImage = 3 * pcejin.width * pcejin.height;
+	int pitch = pcejin.width * 3;
+	if(pitch%4 != 0) pitch += 4-(pitch%4);
+	bi.biSizeImage = pitch * pcejin.height;
 
 	WAVEFORMATEX wf;
 	wf.cbSize = sizeof(WAVEFORMATEX);
