@@ -50,6 +50,26 @@ void WritePrivateProfileInt(char* appname, char* keyname, int val, char* file)
 	WritePrivateProfileString(appname, keyname, temp, file);
 }
 
+
+static int pce_cdpsgvolume;
+static int pce_cddavolume;
+static int pce_adpcmvolume;
+
+void LoadSettings()
+{
+	pce_cdpsgvolume = GetPrivateProfileInt("Sound","pce.cdpsgvolume",100,IniName);
+	pce_cddavolume = GetPrivateProfileInt("Sound","pce.cddavolume",100,IniName);
+	pce_adpcmvolume = GetPrivateProfileInt("Sound","pce.adpcmvolume",100,IniName);
+}
+
+void SaveSettings()
+{
+	WritePrivateProfileInt("Sound","pce.cdpsgvolume",pce_cdpsgvolume,IniName);
+	WritePrivateProfileInt("Sound","pce.cddavolume",pce_cddavolume,IniName);
+	WritePrivateProfileInt("Sound","pce.adpcmvolume",pce_adpcmvolume,IniName);
+}
+
+
 bool MDFN_GetSettingB(const char *name)
 {
 	std::string nm = std::string(name);
@@ -79,13 +99,14 @@ bool MDFN_GetSettingB(const char *name)
 
 uint64 MDFN_GetSettingUI(const char *name)
 {
+	//ZOOM
 	std::string nm = std::string(name);
-	if(nm == "pce.cdpsgvolume")
-		return 100;
-	if(nm == "pce.cddavolume")
-		return 100;
-	if(nm == "pce.adpcmvolume")
-		return 100;
+	if(nm == "pce.cdpsgvolume") 
+		return pce_cdpsgvolume;
+	if(nm == "pce.cddavolume") 
+		return pce_cddavolume;
+	if(nm == "pce.adpcmvolume") 
+		return pce_adpcmvolume;
 	if(nm == "pce.ocmultiplier")
 		return 1;
 	if(nm == "pce.cdspeed")
