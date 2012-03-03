@@ -8,6 +8,8 @@ void WritePrivateProfileInt(char* appname, char* keyname, int val, char* file);
 extern char IniName[MAX_PATH];
 
 void GetINIPath();
+void LoadSettings();
+void SaveSettings();
 
 extern HWND g_hWnd;
 extern HINSTANCE g_hInstance;

@@ -119,6 +119,7 @@ int WINAPI WinMain( HINSTANCE hInstance,
 		return E_FAIL;
 
 	GetINIPath();
+	LoadSettings();
 
 	pcejin.aspectRatio = GetPrivateProfileInt("Video", "aspectratio", 0, IniName);
 	pcejin.windowSize = GetPrivateProfileInt("Video", "pcejin.windowSize", 1, IniName);
@@ -445,6 +446,8 @@ void LoadIniSettings(){
 }
 
 void SaveIniSettings(){
+
+	SaveSettings();
 
 	WritePrivateProfileInt("Video", "aspectratio", pcejin.aspectRatio, IniName);
 	WritePrivateProfileInt("Video", "pcejin.windowSize", pcejin.windowSize, IniName);
