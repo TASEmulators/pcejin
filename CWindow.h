@@ -20,7 +20,7 @@
     along with DeSmuME; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-
+ 
 #ifndef CWINDOW_H
 #define CWINDOW_H
 
