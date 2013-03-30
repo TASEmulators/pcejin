@@ -3287,6 +3287,11 @@ DEFINE_LUA_FUNCTION(sound_get, "")
 		double rightvolscale = pow(10.0, (-1.5 * (0x1f - chanvolume) - 3.0 * (0xf - balanceright) - 3.0 * (0xf - globalright)) / 20.0);
 		double panpot = rightvolscale / (leftvolscale + rightvolscale);
 
+		//if (chanvolume == 0) {
+		//	leftvolscale = 0.0
+		//	rightvolscale = 0.0
+		//}
+
 		lua_newtable(L);
 		if (noise)
 		{
@@ -3316,17 +3321,24 @@ DEFINE_LUA_FUNCTION(sound_get, "")
 		lua_setfield(L, -2, "panpot");
 		int freqreg = psg.channel[channel].frequency ? psg.channel[channel].frequency : 4096;
 		//double freq = (14300000.0 + 1800000.0 / 99) / 4 / 32 / (((psg.channel[channel].frequency - 1) & 0xFFF) + 1);
-		double freq = 3579545.0 / 32.0 / freqreg;
+		double freq = (3579545.0 + (45.0/99.0)) / 32.0 / freqreg;
 		lua_pushnumber(L, freq);
 		lua_setfield(L, -2, "frequency");
 		lua_pushnumber(L, (log(freq / 440.0) * 12 / log(2.0)) + 69);
 		lua_setfield(L, -2, "midikey");
-		lua_rawseti(L, -2, 1 + channel);
 
 		lua_newtable(L);
 		lua_pushinteger(L, psg.channel[channel].frequency);
 		lua_setfield(L, -2, "frequency");
+		lua_pushinteger(L, chanvolume);
+		lua_setfield(L, -2, "volume");
+		lua_pushinteger(L, leftvolscale);
+		lua_setfield(L, -2, "leftvolume");
+		lua_pushinteger(L, rightvolscale);
+		lua_setfield(L, -2, "rightvolume");
 		lua_setfield(L, -2, "regs");
+
+		lua_rawseti(L, -2, 1 + channel);
 	}
 	lua_setfield(L, -2, "channel");
 	return 1;
