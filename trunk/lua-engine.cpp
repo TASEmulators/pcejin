@@ -3332,9 +3332,9 @@ DEFINE_LUA_FUNCTION(sound_get, "")
 		lua_setfield(L, -2, "frequency");
 		lua_pushinteger(L, chanvolume);
 		lua_setfield(L, -2, "volume");
-		lua_pushinteger(L, leftvolscale);
+		lua_pushinteger(L, balanceleft);
 		lua_setfield(L, -2, "leftvolume");
-		lua_pushinteger(L, rightvolscale);
+		lua_pushinteger(L, balanceright);
 		lua_setfield(L, -2, "rightvolume");
 		lua_setfield(L, -2, "regs");
 
