@@ -110,10 +110,10 @@ std::string MDFN_MakeFName(MakeFName_Type type, int id1, const char *cd1)
 			else
 				eff_dir = std::string(BaseDirectory) + std::string(PSS) + std::string("mcm");
 		}		
-		snprintf(tmp_path, 4096, "%s"PSS"%s.%d.mcm", eff_dir.c_str(), FileBase.c_str(), id1);
+		snprintf(tmp_path, 4096, "%s" PSS "%s.%d.mcm", eff_dir.c_str(), FileBase.c_str(), id1);
 
 		if(tmp_dfmd5 && stat(tmp_path, &tmpstat) == -1)
-			snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%d.mcm",eff_dir.c_str(),FileBase.c_str(),md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str(),id1);
+			snprintf(tmp_path, 4096, "%s" PSS "%s.%s.%d.mcm",eff_dir.c_str(),FileBase.c_str(),md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str(),id1);
 
 		break;
 
@@ -133,24 +133,24 @@ std::string MDFN_MakeFName(MakeFName_Type type, int id1, const char *cd1)
 		if (pcejin.AssociateSSMovie & MovieIsActive()) 
 		{
 			if(MDFNGameInfo->GameSetMD5Valid)
-				snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s.%s", eff_dir.c_str(), MDFNGameInfo->shortname, md5_context::asciistr(MDFNGameInfo->GameSetMD5, 0).c_str(),pcejin.ShortMovieName,cd1?cd1:numtmp);
+				snprintf(tmp_path, 4096, "%s" PSS "%s.%s.%s.%s", eff_dir.c_str(), MDFNGameInfo->shortname, md5_context::asciistr(MDFNGameInfo->GameSetMD5, 0).c_str(),pcejin.ShortMovieName,cd1?cd1:numtmp);
 			else
 			{
-				snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s", eff_dir.c_str(), FileBase.c_str(),pcejin.ShortMovieName, cd1?cd1:numtmp);	
+				snprintf(tmp_path, 4096, "%s" PSS "%s.%s.%s", eff_dir.c_str(), FileBase.c_str(),pcejin.ShortMovieName, cd1?cd1:numtmp);	
 				if(tmp_dfmd5 && stat(tmp_path, &tmpstat) == -1)
-					snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s.%s", eff_dir.c_str(), FileBase.c_str(), md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str(),pcejin.ShortMovieName,cd1?cd1:numtmp);
+					snprintf(tmp_path, 4096, "%s" PSS "%s.%s.%s.%s", eff_dir.c_str(), FileBase.c_str(), md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str(),pcejin.ShortMovieName,cd1?cd1:numtmp);
 			}
 		}
 
 		else
 		{
 			if(MDFNGameInfo->GameSetMD5Valid)
-				snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s", eff_dir.c_str(), MDFNGameInfo->shortname, md5_context::asciistr(MDFNGameInfo->GameSetMD5, 0).c_str(),cd1?cd1:numtmp);
+				snprintf(tmp_path, 4096, "%s" PSS "%s.%s.%s", eff_dir.c_str(), MDFNGameInfo->shortname, md5_context::asciistr(MDFNGameInfo->GameSetMD5, 0).c_str(),cd1?cd1:numtmp);
 			else
 			{
-				snprintf(tmp_path, 4096, "%s"PSS"%s.%s", eff_dir.c_str(), FileBase.c_str(), cd1?cd1:numtmp);	
+				snprintf(tmp_path, 4096, "%s" PSS "%s.%s", eff_dir.c_str(), FileBase.c_str(), cd1?cd1:numtmp);	
 				if(tmp_dfmd5 && stat(tmp_path, &tmpstat) == -1)
-					snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s", eff_dir.c_str(), FileBase.c_str(), md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str(),cd1?cd1:numtmp);
+					snprintf(tmp_path, 4096, "%s" PSS "%s.%s.%s", eff_dir.c_str(), FileBase.c_str(), md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str(),cd1?cd1:numtmp);
 			}
 		}
 		break;
@@ -168,9 +168,9 @@ std::string MDFN_MakeFName(MakeFName_Type type, int id1, const char *cd1)
 		}
 
 		if(MDFN_GetSettingB("snapname"))
-			snprintf(tmp_path, 4096, "%s"PSS"%s.txt", eff_dir.c_str(), FileBase.c_str());
+			snprintf(tmp_path, 4096, "%s" PSS "%s.txt", eff_dir.c_str(), FileBase.c_str());
 		else
-			snprintf(tmp_path, 4096, "%s"PSS"global.txt", eff_dir.c_str());
+			snprintf(tmp_path, 4096, "%s" PSS "global.txt", eff_dir.c_str());
 		break;
 
 	case MDFNMKF_SNAP:
@@ -186,9 +186,9 @@ std::string MDFN_MakeFName(MakeFName_Type type, int id1, const char *cd1)
 		}
 
 		if(MDFN_GetSettingB("snapname"))
-			snprintf(tmp_path, 4096, "%s"PSS"%s-%d.%s", eff_dir.c_str(),FileBase.c_str(),id1,cd1);
+			snprintf(tmp_path, 4096, "%s" PSS "%s-%d.%s", eff_dir.c_str(),FileBase.c_str(),id1,cd1);
 		else
-			snprintf(tmp_path, 4096, "%s"PSS"%d.%s", eff_dir.c_str(),id1,cd1);
+			snprintf(tmp_path, 4096, "%s" PSS "%d.%s", eff_dir.c_str(),id1,cd1);
 
 		break;
 
@@ -205,13 +205,13 @@ std::string MDFN_MakeFName(MakeFName_Type type, int id1, const char *cd1)
 		}
 
 		if(MDFNGameInfo->GameSetMD5Valid)
-			snprintf(tmp_path, 4096, "%s"PSS"%s-%s.%s", eff_dir.c_str(), MDFNGameInfo->shortname, md5_context::asciistr(MDFNGameInfo->GameSetMD5, 0).c_str(),cd1);
+			snprintf(tmp_path, 4096, "%s" PSS "%s-%s.%s", eff_dir.c_str(), MDFNGameInfo->shortname, md5_context::asciistr(MDFNGameInfo->GameSetMD5, 0).c_str(),cd1);
 		else
 		{
-			snprintf(tmp_path, 4096, "%s"PSS"%s.%s", eff_dir.c_str(),FileBase.c_str(),cd1);
+			snprintf(tmp_path, 4096, "%s" PSS "%s.%s", eff_dir.c_str(),FileBase.c_str(),cd1);
 
 			if(tmp_dfmd5 && stat(tmp_path,&tmpstat) == -1)
-				snprintf(tmp_path, 4096, "%s"PSS"%s.%s.%s",eff_dir.c_str(),FileBase.c_str(),md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str(),cd1);
+				snprintf(tmp_path, 4096, "%s" PSS "%s.%s.%s",eff_dir.c_str(),FileBase.c_str(),md5_context::asciistr(MDFNGameInfo->MD5, 0).c_str(),cd1);
 		}
 		break;
 
@@ -220,15 +220,15 @@ std::string MDFN_MakeFName(MakeFName_Type type, int id1, const char *cd1)
 		{
 			std::string overpath = MDFN_GetSettingS("path_cheat");
 			if(overpath != "" && overpath != "0")
-				snprintf(tmp_path, 4096, "%s"PSS"%s.%scht",overpath.c_str(), MDFNGameInfo->shortname, (type == MDFNMKF_CHEAT_TMP) ? "tmp" : "");
+				snprintf(tmp_path, 4096, "%s" PSS "%s.%scht",overpath.c_str(), MDFNGameInfo->shortname, (type == MDFNMKF_CHEAT_TMP) ? "tmp" : "");
 			else
-				snprintf(tmp_path, 4096, "%s"PSS"cheats"PSS"%s.%scht",BaseDirectory.c_str(), MDFNGameInfo->shortname, (type == MDFNMKF_CHEAT_TMP) ? "tmp" : "");
+				snprintf(tmp_path, 4096, "%s" PSS "cheats" PSS "%s.%scht",BaseDirectory.c_str(), MDFNGameInfo->shortname, (type == MDFNMKF_CHEAT_TMP) ? "tmp" : "");
 		}
 		break;
 
-	case MDFNMKF_AUX: snprintf(tmp_path, 4096, "%s"PSS"%s", FileBaseDirectory.c_str(), (char *)cd1); break;
+	case MDFNMKF_AUX: snprintf(tmp_path, 4096, "%s" PSS "%s", FileBaseDirectory.c_str(), (char *)cd1); break;
 
-	case MDFNMKF_IPS: snprintf(tmp_path, 4096, "%s"PSS"%s%s.ips",FileBaseDirectory.c_str(),FileBase.c_str(),FileExt.c_str());
+	case MDFNMKF_IPS: snprintf(tmp_path, 4096, "%s" PSS "%s%s.ips",FileBaseDirectory.c_str(),FileBase.c_str(),FileExt.c_str());
 		break;
 
 	case MDFNMKF_GGROM:
@@ -237,21 +237,21 @@ std::string MDFN_MakeFName(MakeFName_Type type, int id1, const char *cd1)
 			if(overpath != "" && overpath != "0")
 				strncpy(tmp_path, overpath.c_str(), 4096);
 			else
-				snprintf(tmp_path, 4096, "%s"PSS"gg.rom",BaseDirectory.c_str());
+				snprintf(tmp_path, 4096, "%s" PSS "gg.rom",BaseDirectory.c_str());
 		}
 		break;
 
-	case MDFNMKF_LYNXROM: snprintf(tmp_path, 4096, "%s"PSS"lynxboot.img",BaseDirectory.c_str());break;
+	case MDFNMKF_LYNXROM: snprintf(tmp_path, 4096, "%s" PSS "lynxboot.img",BaseDirectory.c_str());break;
 
-	case MDFNMKF_FDSROM:snprintf(tmp_path, 4096, "%s"PSS"disksys.rom",BaseDirectory.c_str());break;
+	case MDFNMKF_FDSROM:snprintf(tmp_path, 4096, "%s" PSS "disksys.rom",BaseDirectory.c_str());break;
 
 	case MDFNMKF_PALETTE:
 		{
 			std::string overpath = MDFN_GetSettingS("path_palette");
 			if(overpath != "" && overpath != "0")
-				snprintf(tmp_path, 4096, "%s"PSS"%s.pal",overpath.c_str(),FileBase.c_str());
+				snprintf(tmp_path, 4096, "%s" PSS "%s.pal",overpath.c_str(),FileBase.c_str());
 			else
-				snprintf(tmp_path, 4096, "%s"PSS"gameinfo"PSS"%s.pal",BaseDirectory.c_str(),FileBase.c_str());
+				snprintf(tmp_path, 4096, "%s" PSS "gameinfo" PSS "%s.pal",BaseDirectory.c_str(),FileBase.c_str());
 		}
 		break;
 	}
@@ -524,7 +524,7 @@ static MDFNFILE *MakeMemWrap(void *tz, int type)
 			goto doret;
 		}
 
-		while((howmany = gzread(tz, tmp->data + cur_size, cur_alloced - cur_size)) > 0)
+		while((howmany = gzread((gzFile)tz, tmp->data + cur_size, cur_alloced - cur_size)) > 0)
 		{
 			cur_size += howmany;
 			cur_alloced <<= 1;
@@ -576,7 +576,7 @@ doret:
 	}
 	else if(type == MDFN_FILETYPE_GZIP)
 	{
-		gzclose(tz);
+		gzclose((gzFile)tz);
 	}
 	else if(type == MDFN_FILETYPE_ZIP)
 	{
@@ -712,7 +712,7 @@ MDFNFILE * MDFN_fopen(const char *path, const char *ipsfn, const char *mode, con
 
 			if(!(fceufp = MakeMemWrap(t, 1)))
 			{
-				gzclose(t);
+				gzclose((gzFile)t);
 				return(0);
 			}
 
